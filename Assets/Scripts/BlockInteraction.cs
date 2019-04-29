@@ -1,20 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockInteraction : MonoBehaviour {
-
+public class BlockInteraction : MonoBehaviour
+{
 	public GameObject cam;
 	Block.BlockType buildtype = Block.BlockType.STONE;
 	
-	// Use this for initialization
-	void Start () {
-		
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+    {
 		if(Input.GetKeyDown("1"))
 			buildtype = Block.BlockType.SAND;
 		if(Input.GetKeyDown("2"))
@@ -106,4 +99,3 @@ public class BlockInteraction : MonoBehaviour {
    		}
 	}
 }
-

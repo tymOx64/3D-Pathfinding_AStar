@@ -19,7 +19,7 @@ public class ChunkMB: MonoBehaviour
 		int y = (int) bpos.y;
 		int z = (int) bpos.z;
 
-		if(owner.chunkData[x,y,z].bType != Block.BlockType.AIR)
+		if(owner.chunkData[x,y,z].blockType != Block.BlockType.AIR)
 			owner.chunkData[x,y,z].Reset();
 	}
 
@@ -29,7 +29,7 @@ public class ChunkMB: MonoBehaviour
 		Block prevBlock = null;
 		for(int i = 0; i < maxdrop; i++)
 		{
-			Block.BlockType previousType = thisBlock.bType;
+			Block.BlockType previousType = thisBlock.blockType;
 			if(previousType != bt)
 				thisBlock.SetType(bt);
 			if(prevBlock != null)
@@ -56,7 +56,7 @@ public class ChunkMB: MonoBehaviour
 		if(maxsize <= 0) yield break;
 		if(b == null) yield break;
 		if(strength <= 0) yield break;
-		if(b.bType != Block.BlockType.AIR) yield break;
+		if(b.blockType != Block.BlockType.AIR) yield break;
 		b.SetType(bt);
 		b.currentHealth = strength;
 		b.owner.Redraw();
@@ -68,7 +68,7 @@ public class ChunkMB: MonoBehaviour
 
 		//flow down if air block beneath
 		Block below = b.GetBlock(x,y-1,z);
-		if(below != null && below.bType == Block.BlockType.AIR)
+		if(below != null && below.blockType == Block.BlockType.AIR)
 		{
 			StartCoroutine(Flow(b.GetBlock(x,y-1,z),bt,strength,--maxsize));
 			yield break;

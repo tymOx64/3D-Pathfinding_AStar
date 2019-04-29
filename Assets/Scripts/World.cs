@@ -1,13 +1,11 @@
 ﻿using System.Collections;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Realtime.Messaging.Internal;
 
 
-public class World : MonoBehaviour {
-
+public class World : MonoBehaviour
+{
 	public GameObject player;
 	public Material textureAtlas;
 	public Material fluidTexture;
@@ -158,7 +156,8 @@ public class World : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		Vector3 ppos = player.transform.position;
 		player.transform.position = new Vector3(ppos.x,
 											Utils.GenerateHeight(ppos.x,ppos.z) + 1,
@@ -188,8 +187,8 @@ public class World : MonoBehaviour {
 											(int)(player.transform.position.z/chunkSize),radius,radius));
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 		Vector3 movement = lastbuildPos - player.transform.position;
 
 		if(movement.magnitude > chunkSize )

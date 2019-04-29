@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Utils {
-
+public class Utils
+{
 	static int maxHeight = 150;
 	static float smooth = 0.01f;
 	static int octaves = 4;
