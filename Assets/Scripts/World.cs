@@ -25,6 +25,11 @@ public class World : MonoBehaviour
 
 	public Vector3 lastbuildPos;
 
+    /// <summary>
+    /// Creates a name for the chunk based on its position
+    /// </summary>
+    /// <param name="v">Position of tje chunk</param>
+    /// <returns>Returns a string witht he chunk's name</returns>
 	public static string BuildChunkName(Vector3 v)
 	{
 		return (int)v.x + "_" + 
@@ -32,26 +37,41 @@ public class World : MonoBehaviour
 			         (int)v.z;
 	}
 
+    /// <summary>
+    /// Creates a name for the column based on its position
+    /// </summary>
+    /// <param name="v">Position of the column</param>
+    /// <returns>Returns a string witht he column's name</returns>
 	public static string BuildColumnName(Vector3 v)
 	{
 		return (int)v.x + "_" + (int)v.z;
 	}
 
+    /// <summary>
+    /// Get block based on world coordinates
+    /// </summary>
+    /// <param name="pos">Rough position of the block to be returned</param>
+    /// <returns>Returns the block related to the input position</returns>
 	public static Block GetWorldBlock(Vector3 pos)
 	{
+        // Cast float to int to specify the actual chunk and block, which might got hit a by a raycast
+        // Chunk
 		int cx = (int) (Mathf.Round(pos.x)/(float)chunkSize) * chunkSize;
 		int cy = (int) (Mathf.Round(pos.y)/(float)chunkSize) * chunkSize;
 		int cz = (int) (Mathf.Round(pos.z)/(float)chunkSize) * chunkSize;
 
+        // Block
 		int blx = (int) (Mathf.Round(pos.x) - cx);
 		int bly = (int) (Mathf.Round(pos.y) - cy);
 		int blz = (int) (Mathf.Round(pos.z) - cz);
 
+        // Create chunk name 
 		string cn = BuildChunkName(new Vector3(cx,cy,cz));
 		Chunk c;
 		Debug.Log("World Hit: " + pos);
 		Debug.Log("Chunk Hit: " + cn);
 		Debug.Log("Block " + blx + " " + bly + " " + blz);
+        // Find block in chunk
 		if(chunks.TryGetValue(cn, out c))
 		{
 			return c.chunkData[blx,bly,blz];
