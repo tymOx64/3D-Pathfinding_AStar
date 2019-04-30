@@ -22,11 +22,18 @@ public class ChunkMB: MonoBehaviour
 			owner.chunkData[x,y,z].Reset();
 	}
 
-	public IEnumerator Drop(Block b, Block.BlockType bt, int maxdrop)
+    /// <summary>
+    /// Coroutine to allow a squence of dropping a Block downwards like sand.
+    /// </summary>
+    /// <param name="b">Block to be dropped</param>
+    /// <param name="bt">BlockType</param>
+    /// <param name="maxDrop">Maximum number of drops</param>
+    /// <returns></returns>
+	public IEnumerator Drop(Block b, Block.BlockType bt, int maxDrop)
 	{
 		Block thisBlock = b;
 		Block prevBlock = null;
-		for(int i = 0; i < maxdrop; i++)
+		for(int i = 0; i < maxDrop; i++)
 		{
 			Block.BlockType previousType = thisBlock.blockType;
 			if(previousType != bt)
@@ -48,11 +55,18 @@ public class ChunkMB: MonoBehaviour
 		}
 	}
 
-	public IEnumerator Flow(Block b, Block.BlockType bt, int strength, int maxsize)
+    /// <summary>
+    /// Coroutine to allow a fluid Block to fall down and spreadout.
+    /// </summary>
+    /// <param name="b"></param>
+    /// <param name="bt"></param>
+    /// <param name="strength"></param>
+    /// <param name="maxSize"></param>
+    /// <returns></returns>
+	public IEnumerator Flow(Block b, Block.BlockType bt, int strength, int maxSize)
 	{
-		//reduce the strenth of the fluid block
-		//with each new block created
-		if(maxsize <= 0) yield break;
+		// Reduce the strenth of the fluid block with each new block created (avoid infinite and exponentially growing number of fluid blocks)
+		if(maxSize <= 0) yield break;
 		if(b == null) yield break;
 		if(strength <= 0) yield break;
 		if(b.blockType != Block.BlockType.AIR) yield break;
@@ -65,39 +79,39 @@ public class ChunkMB: MonoBehaviour
 		int y = (int) b.position.y;
 		int z = (int) b.position.z;
 
-		//flow down if air block beneath
+		// Flow down if air block is beneath
 		Block below = b.GetBlock(x,y-1,z);
 		if(below != null && below.blockType == Block.BlockType.AIR)
 		{
-			StartCoroutine(Flow(b.GetBlock(x,y-1,z),bt,strength,--maxsize));
+			StartCoroutine(Flow(b.GetBlock(x,y-1,z),bt,strength,--maxSize));
 			yield break;
 		}
-		else //flow outward
+		else // Flow outward
 		{
 			--strength;
-			--maxsize;
-			//flow left
-			World.queue.Run(Flow(b.GetBlock(x-1,y,z),bt,strength,maxsize));
+			--maxSize;
+			// Flow left
+			World.queue.Run(Flow(b.GetBlock(x-1,y,z),bt,strength,maxSize));
 			yield return new WaitForSeconds(1);
 
-			//flow right
-			World.queue.Run(Flow(b.GetBlock(x+1,y,z),bt,strength,maxsize));
+			// Flow right
+			World.queue.Run(Flow(b.GetBlock(x+1,y,z),bt,strength,maxSize));
 			yield return new WaitForSeconds(1);
 
-			//flow forward
-			World.queue.Run(Flow(b.GetBlock(x,y,z+1),bt,strength,maxsize));
+			// Flow forward
+			World.queue.Run(Flow(b.GetBlock(x,y,z+1),bt,strength,maxSize));
 			yield return new WaitForSeconds(1);
 
-			//flow back
-			World.queue.Run(Flow(b.GetBlock(x,y,z-1),bt,strength,maxsize));
+			// Flow back
+			World.queue.Run(Flow(b.GetBlock(x,y,z-1),bt,strength,maxSize));
 			yield return new WaitForSeconds(1);
 		}
-
-
-		
 	}
 
-	void SaveProgress()
+    /// <summary>
+    /// Saves the underlying chunk.
+    /// </summary>
+	private void SaveProgress()
 	{
 		if(owner.changed)
 		{
