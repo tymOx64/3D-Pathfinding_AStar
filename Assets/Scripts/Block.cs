@@ -131,7 +131,6 @@ public class Block
 
 	public bool HitBlock()
 	{
-		
 		if(currentHealth == -1) return false;
 		currentHealth--;
 		health++;
