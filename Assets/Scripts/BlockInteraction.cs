@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// MonoBehavior that uses player inputs for interacting with the world using raycasts.
+/// </summary>
 public class BlockInteraction : MonoBehaviour
 {
 	public GameObject cam;
 	Block.BlockType buildtype = Block.BlockType.STONE;
 	
+    /// <summary>
+    /// Unity lifecycle update. Pressing numbers on the keyboard selects a block type for placement.
+    /// Placing a block is done with a right click.
+    /// A left click damages blocks, which got hit by a raycast.
+    /// </summary>
 	void Update ()
     {
 		if(Input.GetKeyDown("1"))
@@ -25,12 +33,7 @@ public class BlockInteraction : MonoBehaviour
         {
             RaycastHit hit;
             
-            //for mouse clicking
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-   			//if ( Physics.Raycast (ray,out hit,10)) 
-   			//{
-            
-   			//for cross hairs
+   			// Raycast starting from the position of the crosshair
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 10))
             {
    				Chunk hitc;
@@ -44,24 +47,19 @@ public class BlockInteraction : MonoBehaviour
    				}
    				else
    				 	hitBlock = hit.point + hit.normal/2.0f;
-
-   				//int x = (int) (Mathf.Round(hitBlock.x) - hit.collider.gameObject.transform.position.x);
-   				//int y = (int) (Mathf.Round(hitBlock.y) - hit.collider.gameObject.transform.position.y);
-   				//int z = (int) (Mathf.Round(hitBlock.z) - hit.collider.gameObject.transform.position.z);
 				
 				Block b = World.GetWorldBlock(hitBlock);
-				Debug.Log(b.position);
 				hitc = b.owner;
 
-				bool update = false;
+				bool update = false; // Update determines whether a block got destroyed.
 				if(Input.GetMouseButtonDown(0))
 					update = b.HitBlock();
 				else
 				{
-					
 					update = b.BuildBlock(buildtype);
 				}
 				
+                // If a block got destroyed, redraw the chunk and affected neighbouring chunks.
 				if(update)
    				{
    					hitc.changed = true;
@@ -70,9 +68,7 @@ public class BlockInteraction : MonoBehaviour
 	   				float thisChunky = hitc.chunk.transform.position.y;
 	   				float thisChunkz = hitc.chunk.transform.position.z;
 
-	   				//updates.Add(hit.collider.gameObject.name);
-
-	   				//update neighbours?
+	   				// Update affected neighbours
 	   				if(b.position.x == 0) 
 	   					updates.Add(World.BuildChunkName(new Vector3(thisChunkx-World.chunkSize,thisChunky,thisChunkz)));
 					if(b.position.x == World.chunkSize - 1) 

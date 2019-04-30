@@ -239,7 +239,7 @@ public class World : MonoBehaviour
     /// </summary>
 	void Update ()
     {
-        // Determine wether to build/load more chunks around the player's location
+        // Determine whether to build/load more chunks around the player's location
 		Vector3 movement = lastbuildPos - player.transform.position;
 
 		if(movement.magnitude > chunkSize )
