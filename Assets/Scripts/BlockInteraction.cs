@@ -29,6 +29,7 @@ public class BlockInteraction : MonoBehaviour
         if (Input.GetKeyDown("6"))
             buildtype = Block.BlockType.WATER;
 
+        // If left or right mouse button
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             RaycastHit hit;
@@ -39,25 +40,27 @@ public class BlockInteraction : MonoBehaviour
    				Chunk hitc;
    				if(!World.chunks.TryGetValue(hit.collider.gameObject.name, out hitc)) return;
 
-   				Vector3 hitBlock;
+   				Vector3 hitBlockPosition;
    				if(Input.GetMouseButtonDown(0))
    				{
-   					hitBlock = hit.point - hit.normal/2.0f;
+   					hitBlockPosition = hit.point - hit.normal/2.0f; // in case we want to hit a block
    					
    				}
    				else
-   				 	hitBlock = hit.point + hit.normal/2.0f;
+   				 	hitBlockPosition = hit.point + hit.normal/2.0f; // in case we want to place a block
 				
-				Block b = World.GetWorldBlock(hitBlock);
+				Block b = World.GetWorldBlock(hitBlockPosition);
 				hitc = b.owner;
 
 				bool update = false; // Update determines whether a block got destroyed.
-				if(Input.GetMouseButtonDown(0))
-					update = b.HitBlock();
-				else
-				{
-					update = b.BuildBlock(buildtype);
-				}
+                if (Input.GetMouseButtonDown(0))
+                {
+                    update = b.HitBlock();
+                }
+                else
+                {
+                    update = b.BuildBlock(buildtype);
+                }
 				
                 // If a block got destroyed, redraw the chunk and affected neighbouring chunks.
 				if(update)

@@ -68,9 +68,6 @@ public class World : MonoBehaviour
         // Create chunk name 
 		string cn = BuildChunkName(new Vector3(cx,cy,cz));
 		Chunk c;
-		Debug.Log("World Hit: " + pos);
-		Debug.Log("Chunk Hit: " + cn);
-		Debug.Log("Block " + blx + " " + bly + " " + blz);
         // Find block in chunk
 		if(chunks.TryGetValue(cn, out c))
 		{

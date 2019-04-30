@@ -107,8 +107,15 @@ public class Block
 		owner.Redraw();
 	}
 
+    /// <summary>
+    /// Sets the type of the to be placed block, which was originally Air or Water, to the desired block to be placed.
+    /// Rewards the chunk.
+    /// </summary>
+    /// <param name="b">BlockType to be set</param>
+    /// <returns>Returns always true after updating the chunk.</returns>
 	public bool BuildBlock(BlockType b)
 	{
+        // If water or sand got placed, activate the drop and flow coroutines respectively.
 		if(b == BlockType.WATER)
 		{
 			owner.mb.StartCoroutine(owner.mb.Flow(this, 
@@ -129,6 +136,10 @@ public class Block
 		return true;
 	}
 
+    /// <summary>
+    /// Reduces the blocks heatlh. Destroys the block if it does not have any health remaining.
+    /// </summary>
+    /// <returns>Returns true if the block was destroyed. Returns false if the block is still alive.</returns>
 	public bool HitBlock()
 	{
 		if(currentHealth == -1) return false;
@@ -154,7 +165,11 @@ public class Block
 		return false;
 	}
 
-	void CreateQuad(Cubeside side)
+    /// <summary>
+    /// Assembles one side of a cube's mesh by selecting the UVs, defining the vertices and calculating the normals.
+    /// </summary>
+    /// <param name="side">Quad to be created for this side</param>
+	private void CreateQuad(Cubeside side)
 	{
 		Mesh mesh = new Mesh();
 	    mesh.name = "ScriptedMesh" + side.ToString(); 
@@ -212,7 +227,6 @@ public class Block
 		Vector3 p5 = new Vector3(  0.5f,   0.5f,  0.5f );
 		Vector3 p6 = new Vector3(  0.5f,   0.5f, -0.5f );
 		Vector3 p7 = new Vector3( -0.5f,   0.5f, -0.5f );
-		
 		
 		switch(side)
 		{
@@ -301,7 +315,7 @@ public class Block
 		if(x < 0 || x >= World.chunkSize || 
 		   y < 0 || y >= World.chunkSize ||
 		   z < 0 || z >= World.chunkSize)
-		{  //block in a neighbouring chunk
+		{  // Block in a neighbouring chunk
 			
 			int newX = x, newY = y, newZ = z;
 			if(x < 0 || x >= World.chunkSize)
@@ -326,7 +340,7 @@ public class Block
 			}
 			else
 				return null;
-		}  //block in this chunk
+		}  // Block in this chunk
 		else
 			chunks = owner.chunkData;
 
@@ -349,7 +363,7 @@ public class Block
 	public void Draw()
 	{
 		if(blockType == BlockType.AIR) return;
-		//solid or same neighbour
+		// Solid or same neighbour
 		if(!HasSolidNeighbour((int)position.x,(int)position.y,(int)position.z + 1))
 			CreateQuad(Cubeside.FRONT);
 		if(!HasSolidNeighbour((int)position.x,(int)position.y,(int)position.z - 1))
