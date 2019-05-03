@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Block object that represents all possible blocks.
+/// It is in charge of rendering a block as weö as managing its state and appearance.
+/// </summary>
 public class Block
 {
 	enum Cubeside {BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK};
@@ -290,6 +294,11 @@ public class Block
 		meshFilter.mesh = mesh;
 	}
 
+    /// <summary>
+    /// Subtracts or adds the world's chunk size to convert a global block position value to local.
+    /// </summary>
+    /// <param name="i">Block position value (e.g. x coordinate)</param>
+    /// <returns>Returns the local value of the block position's coordinate</returns>
 	int ConvertBlockIndexToLocal(int i)
 	{
 		if(i <= -1) 
@@ -298,8 +307,15 @@ public class Block
 			i = i-World.chunkSize;
 		return i;
 	}
-	
-	public BlockType GetBlockType(int x, int y, int z)
+
+    /// <summary>
+    /// Given a position of a block, it returns the type of the specified block.
+    /// </summary>
+    /// <param name="x">x position of the block</param>
+    /// <param name="y">y position of the block</param>
+    /// <param name="z">z position of the block</param>
+    /// <returns>Returns the BlockType of a block that was specified by its position</returns>
+    public BlockType GetBlockType(int x, int y, int z)
 	{
 		Block b = GetBlock(x, y, z);
 		if(b == null)
@@ -308,6 +324,13 @@ public class Block
 			return b.blockType;
 	}
 
+    /// <summary>
+    /// Returns the specified block, but checks first if the the position is found in a neighbouring chunk.
+    /// </summary>
+    /// <param name="x">x position of the block</param>
+    /// <param name="y">y position of the block</param>
+    /// <param name="z">z position of the block</param>
+    /// <returns>Returns the block that was specified by its position</returns>
 	public Block GetBlock(int x, int y, int z)
 	{
 		Block[,,] chunks;
@@ -315,8 +338,8 @@ public class Block
 		if(x < 0 || x >= World.chunkSize || 
 		   y < 0 || y >= World.chunkSize ||
 		   z < 0 || z >= World.chunkSize)
-		{  // Block in a neighbouring chunk
-			
+		{ 
+            // Block in a neighbouring chunk
 			int newX = x, newY = y, newZ = z;
 			if(x < 0 || x >= World.chunkSize)
 				newX = (x - (int)position.x)*World.chunkSize;
@@ -340,14 +363,22 @@ public class Block
 			}
 			else
 				return null;
-		}  // Block in this chunk
+		}
+        // Block in this chunk
 		else
 			chunks = owner.chunkData;
 
 		return chunks[x,y,z];
 	}
-	
-	public bool HasSolidNeighbour(int x, int y, int z)
+
+    /// <summary>
+    /// Tests whether the specificed block is solid or not solid.
+    /// </summary>
+    /// <param name="x">x position of the block</param>
+    /// <param name="y">y position of the block</param>
+    /// <param name="z">z position of the block</param>
+    /// <returns>Returns true if the specified block is solid</returns>
+    public bool HasSolidNeighbour(int x, int y, int z)
 	{
 		try
 		{
@@ -360,6 +391,9 @@ public class Block
 		return false;
 	}
 
+    /// <summary>
+    /// Determines if a side of a cube is to be drawn as a mesh or not, depending on having a solid neighbour or not. If a block is of type AIR, no quads are being created.
+    /// </summary>
 	public void Draw()
 	{
 		if(blockType == BlockType.AIR) return;
