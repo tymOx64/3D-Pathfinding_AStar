@@ -53,29 +53,38 @@ public class World : MonoBehaviour
     /// <param name="pos">Rough position of the block to be returned</param>
     /// <returns>Returns the block related to the input position</returns>
 	public static Block GetWorldBlock(Vector3 pos)
-	{
-        // Cast float to int to specify the actual chunk and block, which might got hit a by a raycast
-        // Chunk
-		int cx = (int) (Mathf.Round(pos.x)/(float)chunkSize) * chunkSize;
-		int cy = (int) (Mathf.Round(pos.y)/(float)chunkSize) * chunkSize;
-		int cz = (int) (Mathf.Round(pos.z)/(float)chunkSize) * chunkSize;
+    {
+        int cx, cy, cz;
 
-        // Block
-		int blx = (int) (Mathf.Round(pos.x) - cx);
-		int bly = (int) (Mathf.Round(pos.y) - cy);
-		int blz = (int) (Mathf.Round(pos.z) - cz);
+        if (pos.x < 0)
+            cx = (int)((Mathf.Round(pos.x - chunkSize) + 1) / (float)chunkSize) * chunkSize;
+        else
+            cx = (int)(Mathf.Round(pos.x) / (float)chunkSize) * chunkSize;
 
-        // Create chunk name 
-		string cn = BuildChunkName(new Vector3(cx,cy,cz));
-		Chunk c;
-        // Find block in chunk
-		if(chunks.TryGetValue(cn, out c))
-		{
-			return c.chunkData[blx,bly,blz];
-		}
-		else
-			return null;
-	}
+        if (pos.y < 0)
+            cy = (int)((Mathf.Round(pos.y - chunkSize) + 1) / (float)chunkSize) * chunkSize;
+        else
+            cy = (int)(Mathf.Round(pos.y) / (float)chunkSize) * chunkSize;
+
+        if (pos.z < 0)
+            cz = (int)((Mathf.Round(pos.z - chunkSize) + 1) / (float)chunkSize) * chunkSize;
+        else
+            cz = (int)(Mathf.Round(pos.z) / (float)chunkSize) * chunkSize;
+
+        int blx = (int)Mathf.Abs((float)Mathf.Round(pos.x) - cx);
+        int bly = (int)Mathf.Abs((float)Mathf.Round(pos.y) - cy);
+        int blz = (int)Mathf.Abs((float)Mathf.Round(pos.z) - cz);
+
+        string cn = BuildChunkName(new Vector3(cx, cy, cz));
+        Chunk c;
+        if (chunks.TryGetValue(cn, out c))
+        {
+
+            return c.chunkData[blx, bly, blz];
+        }
+        else
+            return null;
+    }
 
     /// <summary>
     /// Instantiates a new chunk at a specified location.
