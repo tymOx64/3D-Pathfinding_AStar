@@ -296,6 +296,7 @@ public class Block
 
     /// <summary>
     /// Subtracts or adds the world's chunk size to convert a global block position value to local.
+    /// This is important to determine a neighbouring block, which is located in a neighbouring chunk!
     /// </summary>
     /// <param name="i">Block position value (e.g. x coordinate)</param>
     /// <returns>Returns the local value of the block position's coordinate</returns>
@@ -335,11 +336,14 @@ public class Block
 	{
 		Block[,,] chunks;
 
+        // Test whether the adjacent block is in a neighbouring chunk or not
+        // This is determined upon the indices
+        // If one indice is -1 or is equal to the chunk size, the block is located in a neighbouring chunk
 		if(x < 0 || x >= World.chunkSize || 
 		   y < 0 || y >= World.chunkSize ||
 		   z < 0 || z >= World.chunkSize)
 		{ 
-            // Block in a neighbouring chunk
+            // Determine the adjacent chunk
 			int newX = x, newY = y, newZ = z;
 			if(x < 0 || x >= World.chunkSize)
 				newX = (x - (int)position.x)*World.chunkSize;
@@ -352,6 +356,9 @@ public class Block
 										new Vector3(newX, newY, newZ);
 			string nName = World.BuildChunkName(neighbourChunkPos);
 
+            // Convert the position of the desired block
+            // E.g. from (-1, 2, 2) to (0, 2, 2)
+            // E.g. from (4, 3, 2) to (0, 3, 2) if the chunk size is 5
 			x = ConvertBlockIndexToLocal(x);
 			y = ConvertBlockIndexToLocal(y);
 			z = ConvertBlockIndexToLocal(z);
