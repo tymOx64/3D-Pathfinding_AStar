@@ -7,6 +7,23 @@ using UnityEngine;
 /// </summary>
 public class Block
 {
+    public void printPosition()
+    {
+        Debug.Log(position);
+    }
+
+    public Vector3 getPosition()
+    {
+        return position;
+    }
+
+
+
+
+
+
+
+
 	enum Cubeside {BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK};
 	public enum BlockType {GRASS, DIRT, WATER, STONE, LEAVES, WOOD, WOODBASE, SAND, GOLD, BEDROCK, REDSTONE, DIAMOND, NOCRACK, 
 							CRACK1, CRACK2, CRACK3, CRACK4, AIR};
@@ -146,7 +163,13 @@ public class Block
     /// <returns>Returns true if the block was destroyed. Returns false if the block is still alive.</returns>
 	public bool HitBlock()
 	{
-		if(currentHealth == -1) return false;
+        printPosition();
+        GetBlock((int)getPosition().x, (int)getPosition().y, (int)getPosition().z).printPosition();
+        GetBlock((int)getPosition().x + 1, (int)getPosition().y, (int)getPosition().z).printPosition();
+        GetBlock((int)getPosition().x + 2, (int)getPosition().y, (int)getPosition().z).printPosition();
+        GetBlock((int)getPosition().x + 3, (int)getPosition().y, (int)getPosition().z).printPosition();
+
+        if (currentHealth == -1) return false;
 		currentHealth--;
 		health++;
 
