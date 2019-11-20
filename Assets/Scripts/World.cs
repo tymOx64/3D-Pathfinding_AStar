@@ -237,12 +237,11 @@ public class World : MonoBehaviour
                 // World Height equals 6 Chunks
                   BuildChunkAt(x,startY,z);
                   BuildChunkAt(x, startY+1, z);
-                  BuildChunkAt(x, startY -1 , z);
                   BuildChunkAt(x, startY, z);
-                  BuildChunkAt(x, startY +2, z);
+                  BuildChunkAt(x, startY - 1, z);
                   BuildChunkAt(x, startY - 2, z);
-
-
+                  BuildChunkAt(x, startY - 3, z);
+                  
 
 
                 Debug.Log("236");

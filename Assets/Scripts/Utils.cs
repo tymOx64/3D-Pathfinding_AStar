@@ -7,7 +7,7 @@
 /// </summary>
 public class Utils
 {
-	static readonly int maxHeight = 150;
+	static readonly int maxHeight = 140;
 	static readonly float smooth = 0.01f;
 	static readonly int octaves = 4;
 	static readonly float persistence = 0.5f;

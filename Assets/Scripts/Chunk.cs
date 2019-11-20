@@ -38,7 +38,7 @@ class BlockData
 /// </summary>
 public class Chunk
 {
-	public Material cubeMaterial;   // Materia for solid blocks
+	public Material cubeMaterial;   // Material for solid blocks
 	public Material fluidMaterial;  // Material for transparent blocks
 	public Block[,,] chunkData;     // 3D Array containing all blocks of the chunk
 	public GameObject chunk;        // GameObject that holds the mesh of the solid parts of the chunk
@@ -174,21 +174,33 @@ public class Chunk
                     // Place trunks of a tree or grass blocks on the surface
 					else if(worldY == surfaceHeight)
 					{
-						if(Utils.fBM3D(worldX, worldY, worldZ, 0.4f, 2) < 0.4f)
-							chunkData[x,y,z] = new Block(Block.BlockType.WOODBASE, pos, 
-						                chunk.gameObject, this);
-						else
-							chunkData[x,y,z] = new Block(Block.BlockType.GRASS, pos, 
+                        /*if(Utils.fBM3D(worldX, worldY, worldZ, 0.4f, 2) < 0.4f)
+                                    chunkData[x,y,z] = new Block(Block.BlockType.WOODBASE, pos, 
+                                                chunk.gameObject, this);
+                                else*/
+                        chunkData[x,y,z] = new Block(Block.BlockType.GRASS, pos, 
 						                chunk.gameObject, this);
 					}
                     // Place dirt blocks
 					else if(worldY < surfaceHeight)
 						chunkData[x,y,z] = new Block(Block.BlockType.DIRT, pos, 
 						                chunk.gameObject, this);
-                    // Place water blocks below height 65
-					else if(worldY < 65)
-						chunkData[x,y,z] = new Block(Block.BlockType.WATER, pos, 
+
+
+                    // Place water blocks below height 65    Change: Water replaced by grass  
+                    else if (worldY < 65)
+                        {
+
+                        chunkData[x, y, z] = new Block(Block.BlockType.GRASS, pos,
+                                       chunk.gameObject, this);
+
+                    }
+
+					/*chunkData[x,y,z] = new Block(Block.BlockType.WATER, pos, 
 						                fluid.gameObject, this);
+
+
+    */                         
                     // Place air blocks
 					else
 					{
