@@ -14,7 +14,7 @@ public class World : MonoBehaviour
     public Material textureAtlas;
     public Material fluidTexture;
     public static int columnHeight = 16;
-    public static int chunkSize = 8;
+    public static int chunkSize = 4;
     public static int radius = 3;
     public static uint maxCoroutines = 1000;
 
@@ -230,8 +230,22 @@ public class World : MonoBehaviour
                  
                     for (int z = startZ; z < zMax ; z++)
                     {
-                       BuildChunkAt(x,startY,z);
-                        Debug.Log("236");
+
+
+                
+
+                // World Height equals 6 Chunks
+                  BuildChunkAt(x,startY,z);
+                  BuildChunkAt(x, startY+1, z);
+                  BuildChunkAt(x, startY -1 , z);
+                  BuildChunkAt(x, startY, z);
+                  BuildChunkAt(x, startY +2, z);
+                  BuildChunkAt(x, startY - 2, z);
+
+
+
+
+                Debug.Log("236");
                     }
 
                 }
