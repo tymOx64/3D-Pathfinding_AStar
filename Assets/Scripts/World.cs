@@ -206,35 +206,70 @@ public class World : MonoBehaviour
 
 
         //Creates static world, TODO caves,..
-    private void BuildWorld(int xMax, int yMax, int zMax)   
+    private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
+        int startX = (int)(player.transform.position.x / chunkSize);
+        int startY = (int)(player.transform.position.y / chunkSize);
+        int startZ = (int)(player.transform.position.z / chunkSize);
 
-        BuildChunkAt((int)(player.transform.position.x / chunkSize),
-                                            (int)(player.transform.position.y / chunkSize),
-                                            (int)(player.transform.position.z / chunkSize));
-        Debug.Log("215");
-      //  BuildChunkAt(0, 0, 0);
+        //Build first chunk
+        
 
-        DrawChunks();
-        /*  for (int x=0; x<xMax; x++)
-          {
-              for( int y=0; y<yMax; y++ )
-              {
-
-                  for (int z = 0; z<zMax; z++ )
-                  {
-                      BuildChunkAt(x, y, z);
-
-                  }
-
-              }
+            BuildChunkAt(startX,startY,startZ);
 
 
-          }
+        BuildChunkAt(startX + 1, startY, startZ);
+        
+     
+
+            //Build the whole world from the position of the first chunk.
+
+
+            for (int x = startX; x < xMax ; x++)
+            {
+                 
+                    for (int z = startZ; z < zMax ; z++)
+                    {
+                       BuildChunkAt(x,startY,z);
+                        Debug.Log("236");
+                    }
+
+                }
+
+            
+
+            /*
+              // Build chunk front
+              BuildChunkAt(x, y, z + 1);
+
+
+
+              // Build chunk back
+              BuildChunkAt(x, y, z - 1);
+
+
+              // Build chunk left
+              BuildChunkAt(x - 1, y, z);
+
+
+              // Build chunk right
+              BuildChunkAt(x + 1, y, z);
+
+
+              // Build chunk up
+              BuildChunkAt(x, y + 1, z);
+
+
+              // Build chunk down
+              BuildChunkAt(x, y - 1, z);
+
+              */
+
+        
 
 
           DrawChunks();
-          */
+          
     }
 
 
@@ -336,7 +371,7 @@ public class World : MonoBehaviour
                                             (int)(player.transform.position.z / chunkSize), radius, radius));*/
 
     
-       BuildWorld(20,20,20);
+       BuildWorld(20,20);
     }
 
     /// <summary>
