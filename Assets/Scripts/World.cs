@@ -208,8 +208,12 @@ public class World : MonoBehaviour
         //Creates static world, TODO caves,..
     private void BuildWorld(int xMax, int yMax, int zMax)   
     {
-        Debug.Log("Methodenaufruf BuildWorld");
-        BuildChunkAt(0, 0, 0);
+
+        BuildChunkAt((int)(player.transform.position.x / chunkSize),
+                                            (int)(player.transform.position.y / chunkSize),
+                                            (int)(player.transform.position.z / chunkSize));
+        Debug.Log("215");
+      //  BuildChunkAt(0, 0, 0);
 
         DrawChunks();
         /*  for (int x=0; x<xMax; x++)
