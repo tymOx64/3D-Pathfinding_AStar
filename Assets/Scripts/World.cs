@@ -6,24 +6,39 @@ using Realtime.Messaging.Internal;
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
 /// These mechanisms are completed with the help of Coroutines (IEnumerator methods). https://docs.unity3d.com/Manual/Coroutines.html
+/// Der Unterschied zwischen Koroutinen und Funktionen ist, dass Koroutinen ihren Ablauf unterbrechen und später wieder aufnehmen können, wobei sie ihren Status beibehalten
 /// </summary>
 public class World : MonoBehaviour
 {
-	public GameObject player;
-	public Material textureAtlas;
-	public Material fluidTexture;
-	public static int columnHeight = 16;
-	public static int chunkSize = 8;
-	public static int radius = 3;
-	public static uint maxCoroutines = 1000;
-	public static ConcurrentDictionary<string, Chunk> chunks;
-	public static List<string> toRemove = new List<string>();
+    public GameObject player;
+    public Material textureAtlas;
+    public Material fluidTexture;
+    public static int columnHeight = 16;
+    public static int chunkSize = 8;
+    public static int radius = 3;
+    public static uint maxCoroutines = 1000;
 
-	public static bool firstbuild = true;
 
-	public static CoroutineQueue queue;
 
-	public Vector3 lastbuildPos;
+    //public static ConcurrentDictionary<string, Chunk> chunks;
+
+    public static Dictionary<string, Chunk> chunks ;
+
+
+
+
+
+    public static List<string> toRemove = new List<string>();        //TODO:delete
+
+    public static bool firstbuild = true;                             //TODO:delete
+
+    public static CoroutineQueue queue;                               //TODO:delete
+
+
+
+
+
+    public Vector3 lastbuildPos;
 
     /// <summary>
     /// Creates a name for the chunk based on its position
@@ -31,11 +46,11 @@ public class World : MonoBehaviour
     /// <param name="v">Position of tje chunk</param>
     /// <returns>Returns a string witht he chunk's name</returns>
 	public static string BuildChunkName(Vector3 v)
-	{
-		return (int)v.x + "_" + 
-			         (int)v.y + "_" + 
-			         (int)v.z;
-	}
+    {
+        return (int)v.x + "_" +
+                     (int)v.y + "_" +
+                     (int)v.z;
+    }
 
     /// <summary>
     /// Creates a name for the column based on its position
@@ -43,9 +58,9 @@ public class World : MonoBehaviour
     /// <param name="v">Position of the column</param>
     /// <returns>Returns a string witht he column's name</returns>
 	public static string BuildColumnName(Vector3 v)
-	{
-		return (int)v.x + "_" + (int)v.z;
-	}
+    {
+        return (int)v.x + "_" + (int)v.z;
+    }
 
     /// <summary>
     /// Get block based on world coordinates
@@ -93,25 +108,29 @@ public class World : MonoBehaviour
     /// <param name="y">y position of the chunk</param>
     /// <param name="z">z position of the chunk</param>
 	private void BuildChunkAt(int x, int y, int z)
-	{
-		Vector3 chunkPosition = new Vector3(x*chunkSize, 
-											y*chunkSize, 
-											z*chunkSize);
-					
-		string n = BuildChunkName(chunkPosition);
-		Chunk c;
+    {
 
-		if(!chunks.TryGetValue(n, out c))
-		{
-			c = new Chunk(chunkPosition, textureAtlas, fluidTexture);
-			c.chunk.transform.parent = this.transform;
-			c.fluid.transform.parent = this.transform;
-			chunks.TryAdd(c.chunk.name, c);
-		}
-	}
+        Debug.Log("Methodenaufruf BuildChunkAt");
+        Vector3 chunkPosition = new Vector3(x * chunkSize,
+                                            y * chunkSize,
+                                            z * chunkSize);
 
+        string n = BuildChunkName(chunkPosition);
+        Chunk c;
+
+        if (!chunks.TryGetValue(n, out c))
+        {
+            c = new Chunk(chunkPosition, textureAtlas, fluidTexture);
+            c.chunk.transform.parent = this.transform;
+            c.fluid.transform.parent = this.transform;
+            chunks.Add(c.chunk.name, c); // add chunk to the dictionary
+        }
+    }
+
+
+    /*
     /// <summary>
-    /// Coroutine to to recursively build chunks of the world depending on some location and a radius.
+    /// Coroutine to recursively build chunks of the world depending on some location and a radius.
     /// </summary>
     /// <param name="x">x position</param>
     /// <param name="y">y position</param>
@@ -120,149 +139,235 @@ public class World : MonoBehaviour
     /// <param name="rad">Desired radius</param>
     /// <returns></returns>
 	IEnumerator BuildRecursiveWorld(int x, int y, int z, int startrad, int rad)
-	{
-		int nextrad = rad-1;
-		if(rad <= 0 || y < 0 || y > columnHeight) yield break;
-		// Build chunk front
-		BuildChunkAt(x,y,z+1);
-		queue.Run(BuildRecursiveWorld(x,y,z+1,rad,nextrad));
-		yield return null;
+    {
+        int nextrad = rad - 1;
+        if (rad <= 0 || y < 0 || y > columnHeight) yield break;
+        // Build chunk front
+        BuildChunkAt(x, y, z + 1);
+        queue.Run(BuildRecursiveWorld(x, y, z + 1, rad, nextrad));
+        yield return null;
 
-		// Build chunk back
-		BuildChunkAt(x,y,z-1);
-		queue.Run(BuildRecursiveWorld(x,y,z-1,rad,nextrad));
-		yield return null;
-		
-		// Build chunk left
-		BuildChunkAt(x-1,y,z);
-		queue.Run(BuildRecursiveWorld(x-1,y,z,rad,nextrad));
-		yield return null;
+        // Build chunk back
+        BuildChunkAt(x, y, z - 1);
+        queue.Run(BuildRecursiveWorld(x, y, z - 1, rad, nextrad));
+        yield return null;
 
-		// Build chunk right
-		BuildChunkAt(x+1,y,z);
-		queue.Run(BuildRecursiveWorld(x+1,y,z,rad,nextrad));
-		yield return null;
-		
-		// Build chunk up
-		BuildChunkAt(x,y+1,z);
-		queue.Run(BuildRecursiveWorld(x,y+1,z,rad,nextrad));
-		yield return null;
-		
-		// Build chunk down
-		BuildChunkAt(x,y-1,z);
-		queue.Run(BuildRecursiveWorld(x,y-1,z,rad,nextrad));
-		yield return null;
-	}
+        // Build chunk left
+        BuildChunkAt(x - 1, y, z);
+        queue.Run(BuildRecursiveWorld(x - 1, y, z, rad, nextrad));
+        yield return null;
 
+        // Build chunk right
+        BuildChunkAt(x + 1, y, z);
+        queue.Run(BuildRecursiveWorld(x + 1, y, z, rad, nextrad));
+        yield return null;
+
+        // Build chunk up
+        BuildChunkAt(x, y + 1, z);
+        queue.Run(BuildRecursiveWorld(x, y + 1, z, rad, nextrad));
+        yield return null;
+
+        // Build chunk down
+        BuildChunkAt(x, y - 1, z);
+        queue.Run(BuildRecursiveWorld(x, y - 1, z, rad, nextrad));
+        yield return null;
+    }
+
+
+        */
     /// <summary>
     /// Coroutine to render chunks that are in the DRAW state. Adds chunks to the toRemove list, which are outside the player's radius.
     /// </summary>
     /// <returns></returns>
-	IEnumerator DrawChunks()
-	{
-		toRemove.Clear();
-		foreach(KeyValuePair<string, Chunk> c in chunks)
-		{
-			if(c.Value.status == Chunk.ChunkStatus.DRAW) 
-			{
-				c.Value.DrawChunk();
-			}
-			if(c.Value.chunk && Vector3.Distance(player.transform.position,
-								c.Value.chunk.transform.position) > radius*chunkSize)
-				toRemove.Add(c.Key);
+/*	IEnumerator DrawChunks()
+    {
+        toRemove.Clear();
+        foreach (KeyValuePair<string, Chunk> c in chunks)
+        {
+            if (c.Value.status == Chunk.ChunkStatus.DRAW)
+            {
+                c.Value.DrawChunk();
+            }
+            if (c.Value.chunk && Vector3.Distance(player.transform.position,
+                                c.Value.chunk.transform.position) > radius * chunkSize)
+                toRemove.Add(c.Key);
 
-			yield return null;
-		}
-	}
+            yield return null;
+        }
+    }
 
+    
+    */
+
+
+
+
+    //New methods
+
+
+        //Creates static world, TODO caves,..
+    private void BuildWorld(int xMax, int yMax, int zMax)   
+    {
+        Debug.Log("Methodenaufruf BuildWorld");
+        BuildChunkAt(0, 0, 0);
+
+        DrawChunks();
+        /*  for (int x=0; x<xMax; x++)
+          {
+              for( int y=0; y<yMax; y++ )
+              {
+
+                  for (int z = 0; z<zMax; z++ )
+                  {
+                      BuildChunkAt(x, y, z);
+
+                  }
+
+              }
+
+
+          }
+
+
+          DrawChunks();
+          */
+    }
+
+
+
+    //Draws all the chunks with status draw
+    private void DrawChunks()
+    {
+
+        Debug.Log("Methodenaufruf DrawChunks");
+        foreach (KeyValuePair<string, Chunk> c in chunks)
+        {
+            if (c.Value.status == Chunk.ChunkStatus.DRAW)
+            {
+                c.Value.DrawChunk();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+/*
     /// <summary>
     /// Coroutine to save and then to unload unused chunks.
     /// </summary>
     /// <returns></returns>
-	IEnumerator RemoveOldChunks()
-	{
-		for(int i = 0; i < toRemove.Count; i++)
-		{
-			string n = toRemove[i];
-			Chunk c;
-			if(chunks.TryGetValue(n, out c))
-			{
-				Destroy(c.chunk);
-				c.Save();
-				chunks.TryRemove(n, out c);
-				yield return null;
-			}
-		}
-	}
+    IEnumerator RemoveOldChunks()
+    {
+        for (int i = 0; i < toRemove.Count; i++)
+        {
+            string n = toRemove[i];
+            Chunk c;
+            if (chunks.TryGetValue(n, out c))
+            {
+                Destroy(c.chunk);
+                c.Save();
+                chunks.TryRemove(n, out c);
+                yield return null;
+            }
+        }
+    }
 
+
+    */
+
+        /*
     /// <summary>
     /// Builds chunks that are inside the player's radius.
     /// </summary>
 	public void BuildNearPlayer()
-	{
+    {
         // Stop the coroutine of building the world, because it is getting replaced
-		StopCoroutine("BuildRecursiveWorld");
-		queue.Run(BuildRecursiveWorld((int)(player.transform.position.x/chunkSize),
-											(int)(player.transform.position.y/chunkSize),
-											(int)(player.transform.position.z/chunkSize), radius, radius));
-	}
+        StopCoroutine("BuildRecursiveWorld");
+        queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
+                                            (int)(player.transform.position.y / chunkSize),
+                                            (int)(player.transform.position.z / chunkSize), radius, radius));
+    }
 
-	/// <summary>
+
+    */
+    /// <summary>
     /// Unity lifecycle start method. Initializes the world and its first chunk and triggers the building of further chunks.
     /// Player is disabled during Start() to avoid him falling through the floor. Chunks are built using coroutines.
     /// </summary>
-	void Start ()
+    void Start()
     {
-		Vector3 ppos = player.transform.position;
-		player.transform.position = new Vector3(ppos.x,
-											Utils.GenerateHeight(ppos.x,ppos.z) + 1,
-											ppos.z);
-		lastbuildPos = player.transform.position;
-		player.SetActive(false);
+        
+        Vector3 ppos = player.transform.position;
+        player.transform.position = new Vector3(ppos.x,
+                                            Utils.GenerateHeight(ppos.x, ppos.z) + 1,
+                                            ppos.z);
+        lastbuildPos = player.transform.position;
+        player.SetActive(false);
 
-		firstbuild = true;
-		chunks = new ConcurrentDictionary<string, Chunk>();
-		this.transform.position = Vector3.zero;
-		this.transform.rotation = Quaternion.identity;	
+        firstbuild = true;
+        chunks = new Dictionary<string, Chunk>();
+        this.transform.position = Vector3.zero;
+        this.transform.rotation = Quaternion.identity;
 
-		queue = new CoroutineQueue(maxCoroutines, StartCoroutine);
+        // queue = new CoroutineQueue(maxCoroutines, StartCoroutine);
 
-		// Build starting chunk
-		BuildChunkAt((int)(player.transform.position.x/chunkSize),
-											(int)(player.transform.position.y/chunkSize),
-											(int)(player.transform.position.z/chunkSize));
-		// Draw starting chunk
-		queue.Run(DrawChunks());
 
-		// Create further chunks
-		queue.Run(BuildRecursiveWorld((int)(player.transform.position.x/chunkSize),
-											(int)(player.transform.position.y/chunkSize),
-											(int)(player.transform.position.z/chunkSize),radius,radius));
-	}
-	
+        /*
+        // Build starting chunk
+        BuildChunkAt((int)(player.transform.position.x / chunkSize),
+                                            (int)(player.transform.position.y / chunkSize),
+                                            (int)(player.transform.position.z / chunkSize));
+        // Draw starting chunk
+        queue.Run(DrawChunks());
+
+        // Create further chunks
+        queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
+                                            (int)(player.transform.position.y / chunkSize),
+                                            (int)(player.transform.position.z / chunkSize), radius, radius));*/
+
+    
+       BuildWorld(20,20,20);
+    }
+
     /// <summary>
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
-	void Update ()
+    void Update()
     {
-        // Determine whether to build/load more chunks around the player's location
-		Vector3 movement = lastbuildPos - player.transform.position;
+        /* // Determine whether to build/load more chunks around the player's location
+         Vector3 movement = lastbuildPos - player.transform.position;
 
-		if(movement.magnitude > chunkSize )
-		{
-			lastbuildPos = player.transform.position;
-			BuildNearPlayer();
-		}
+         if (movement.magnitude > chunkSize)
+         {
+             lastbuildPos = player.transform.position;
+             BuildNearPlayer();
+         }
+
+         // Activate the player's GameObject
+         if (!player.activeSelf)
+         {
+             player.SetActive(true);
+             firstbuild = false;
+         }
+
+         // Draw new chunks and removed deprecated chunks
+         queue.Run(DrawChunks());
+         queue.Run(RemoveOldChunks());
+
+     */
+
 
         // Activate the player's GameObject
-		if(!player.activeSelf)
-		{
-			player.SetActive(true);	
-			firstbuild = false;
-		}
-
-        // Draw new chunks and removed deprecated chunks
-		queue.Run(DrawChunks());
-		queue.Run(RemoveOldChunks());
-	}
+        if (!player.activeSelf)
+        {
+            player.SetActive(true);
+            
+        }
+    }
 }

@@ -442,3 +442,4 @@ public class Block
 			CreateQuad(Cubeside.RIGHT);
 	}
 }
+
