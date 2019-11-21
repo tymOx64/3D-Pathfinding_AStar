@@ -395,6 +395,61 @@ public class World : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+
+
+
+
+    public Path findPath(Block startBlock, Block endBlock)
+    {
+        Heap<Block> openSet = new Heap<Block>(chunkSize * columnHeight * chunkSize * columnHeight);
+        HashSet<Block> closedSet = new HashSet<Block>();
+
+        openSet.Add(startBlock);
+
+        while(openSet.Count > 0)
+        {
+            Block currentBlock = openSet.RemoveFirst();
+            closedSet.Add(currentBlock);
+
+            if(currentBlock == endBlock)
+            {
+                return RetracePath(startBlock, endBlock, endBlock.getFCost());
+            }
+        }
+    }
+
+    public Path RetracePath(Block startBlock, Block endBlock, float cost)
+    {
+        List<Block> blockList = new List<Block>();
+        Block currentBlock = endBlock;
+        while(currentBlock != startBlock)
+        {
+            blockList.Add(currentBlock);
+            currentBlock = currentBlock.pathParent;
+        }
+        return new Path(startBlock, endBlock, cost, blockList);
+    }
+
     public Vector3 roundVector3(Vector3 vec)
     {
         return new Vector3((float)Mathf.RoundToInt(vec.x),
@@ -433,22 +488,24 @@ public class World : MonoBehaviour
         return resultBlock;
     }
 
-    //returns false if worldPos is not a valid position in a chunk; returns true on success
-    public bool createBlockAtWorldPos(Vector3 worldPos, Block.BlockType blockType)
+    //returns null if worldPos is not a valid position in a chunk; returns the created block on success
+    public Block createBlockAtWorldPos(Vector3 worldPos, Block.BlockType blockType)
     {
         Block block = GetWorldBlock(worldPos);
         if (block == null)
-            return false;
+            return null;
         Chunk chunk = block.owner;
         chunk.chunkData[(int)block.position.x, (int)block.position.y, (int)block.position.z] =
                     new Block(blockType, new Vector3(block.position.x, block.position.y, block.position.z), chunk.chunk.gameObject, chunk);
         chunk.UpdateChunk();
         chunk.Redraw();
-        return true;
+        Block createdBlock = chunk.chunkData[(int)block.position.x, (int)block.position.y, (int)block.position.z];
+        createdBlock.worldPosition = worldPos;
+        return createdBlock;
     }
 
 
-    float timer = 3f;
+    float timer = 1f;
     public GameObject testCube;
 
 

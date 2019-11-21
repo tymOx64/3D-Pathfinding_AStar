@@ -5,14 +5,21 @@ using UnityEngine;
 /// Block object that represents all possible blocks.
 /// It is in charge of rendering a block as weö as managing its state and appearance.
 /// </summary>
-public class Block
+public class Block : IHeapItem<Block>
 {
     //to be overwritten with its actual world coordinates
     public Vector3 worldPosition = Vector3.positiveInfinity;
 
+    public Block pathParent;
+    public float gCost, hCost;
+
+    int heapIndex;
 
 
-
+    public float getFCost()
+    {
+        return gCost + hCost;
+    }
     public void printPosition()
     {
         Debug.Log(position);
@@ -22,6 +29,29 @@ public class Block
     {
         return position;
     }
+
+    public int HeapIndex
+    {
+        get {
+            return heapIndex;
+        }
+        set {
+            heapIndex = value;
+        }
+    }
+
+    public int CompareTo(Block otherBlock)
+    {
+        int compare = gCost.CompareTo(otherBlock.gCost);
+        if(compare == 0)
+        {
+            compare = hCost.CompareTo(otherBlock.hCost);
+        }
+        return -compare;
+    }
+
+
+
 
 
 
