@@ -394,20 +394,62 @@ public class World : MonoBehaviour
 
 
 
+
+    public Vector3 roundVector3(Vector3 vec)
+    {
+        return new Vector3((float)Mathf.RoundToInt(vec.x),
+            (float)Mathf.RoundToInt(vec.y),
+            (float)Mathf.RoundToInt(vec.z));
+    }
+
+    public Block getFirstNonsolidBlockAboveGround(Vector3 row)
+    {
+        Vector3 currentBlockPos = roundVector3(row);
+        //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
+        while(GetWorldBlock(currentBlockPos) != null)
+        {
+            currentBlockPos += Vector3.up;
+        }
+        currentBlockPos += Vector3.down;
+        //traverse until reaching a solid block
+        while (!GetWorldBlock(currentBlockPos).isSolid)
+        {
+            currentBlockPos += Vector3.down;
+        }
+        currentBlockPos += Vector3.up;
+        Block resultBlock = GetWorldBlock(currentBlockPos);
+        resultBlock.worldPosition = currentBlockPos;
+        return resultBlock;
+    }
+
+    //E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction
+    public Block getNeighbourBlock(Block block, Vector3 relativePos)
+    {
+        Vector3 worldPosOfNeighbourBlock = block.worldPosition + relativePos;
+        Block resultBlock = GetWorldBlock(worldPosOfNeighbourBlock);
+        if (resultBlock == null)
+            return null;
+        resultBlock.worldPosition = worldPosOfNeighbourBlock;
+        return resultBlock;
+    }
+
+    //returns false if worldPos is not a valid position in a chunk; returns true on success
+    public bool createBlockAtWorldPos(Vector3 worldPos, Block.BlockType blockType)
+    {
+        Block block = GetWorldBlock(worldPos);
+        if (block == null)
+            return false;
+        Chunk chunk = block.owner;
+        chunk.chunkData[(int)block.position.x, (int)block.position.y, (int)block.position.z] =
+                    new Block(blockType, new Vector3(block.position.x, block.position.y, block.position.z), chunk.chunk.gameObject, chunk);
+        chunk.UpdateChunk();
+        chunk.Redraw();
+        return true;
+    }
+
+
     float timer = 3f;
     public GameObject testCube;
-
-    void calcPosOfBlockAboveGround(Vector3 _rowToCheck) 
-    {
-        Vector3 rowToCheck = new Vector3((float)Mathf.RoundToInt(_rowToCheck.x), (float)Mathf.RoundToInt(_rowToCheck.y), (float)Mathf.RoundToInt(_rowToCheck.z));
-        while (GetWorldBlock(rowToCheck) == null)
-            rowToCheck += Vector3.down;
-        while (!GetWorldBlock(rowToCheck).isSolid)
-        {
-            rowToCheck += Vector3.down;
-        }
-        Instantiate(testCube, rowToCheck + Vector3.up, Quaternion.identity);
-    }
 
 
     /// <summary>
@@ -415,10 +457,13 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
+        //für testzwecke; wird alle 2sek ausgeführt
         if(timer < Time.timeSinceLevelLoad)
         {
-            timer += 1f;
-            calcPosOfBlockAboveGround(player.transform.position + new Vector3(2f, 2f, 2f));
+            timer += 2f;
+            createBlockAtWorldPos(player.transform.position + new Vector3(2f,1f,2f), Block.BlockType.REDSTONE);
+
+            
         }
 
 

@@ -7,6 +7,12 @@ using UnityEngine;
 /// </summary>
 public class Block
 {
+    //to be overwritten with its actual world coordinates
+    public Vector3 worldPosition = Vector3.positiveInfinity;
+
+
+
+
     public void printPosition()
     {
         Debug.Log(position);
@@ -163,12 +169,6 @@ public class Block
     /// <returns>Returns true if the block was destroyed. Returns false if the block is still alive.</returns>
 	public bool HitBlock()
 	{
-        printPosition();
-        GetBlock((int)getPosition().x, (int)getPosition().y, (int)getPosition().z).printPosition();
-        GetBlock((int)getPosition().x + 1, (int)getPosition().y, (int)getPosition().z).printPosition();
-        GetBlock((int)getPosition().x + 2, (int)getPosition().y, (int)getPosition().z).printPosition();
-        GetBlock((int)getPosition().x + 3, (int)getPosition().y, (int)getPosition().z).printPosition();
-
         if (currentHealth == -1) return false;
 		currentHealth--;
 		health++;
