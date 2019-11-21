@@ -433,9 +433,27 @@ public class World : MonoBehaviour
 
             if(currentBlock == endBlock)
             {
-                return RetracePath(startBlock, endBlock, endBlock.getFCost());
+                return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
+            }
+
+            foreach(Block neighbourBlock in GetNeighbourBlocks(currentBlock))
+            {
+                if (closedSet.Contains(neighbourBlock))
+                    continue;
+                float newMovementCostToNeighbour = currentBlock.gCost + calcDistance(currentBlock, neighbourBlock);
+                if(newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
+                {
+                    neighbourBlock.gCost = newMovementCostToNeighbour;
+                    neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
+                    neighbourBlock.pathParent = currentBlock;
+
+                    if (!openSet.Contains(neighbourBlock))
+                        openSet.Add(neighbourBlock);
+                }
             }
         }
+        Debug.Log("Unable to find path");
+        return null;
     }
 
     public List<Block> GetNeighbourBlocks(Block block)
@@ -447,7 +465,7 @@ public class World : MonoBehaviour
             {
                 if (x == 0 && z == 0)
                     continue;
-                Block neighbour = getNeighbourBlock(block, new Vector3(x, 0f, z));
+                Block neighbour = getNeighbourBlockAboveGround(block, new Vector3(x, 0f, z));
                 if (neighbour != null)
                 {
                     neighbourList.Add(neighbour);
@@ -468,7 +486,7 @@ public class World : MonoBehaviour
         return dstX * 1.41f + dstY;
     }
 
-    public Path RetracePath(Block startBlock, Block endBlock, float cost)
+    public Path RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
     {
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
@@ -507,11 +525,11 @@ public class World : MonoBehaviour
         return resultBlock;
     }
 
-    //E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction
-    public Block getNeighbourBlock(Block block, Vector3 relativePos)
+    //E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction (or whatever y is needed to be above ground)
+    public Block getNeighbourBlockAboveGround(Block block, Vector3 relativePos)
     {
         Vector3 worldPosOfNeighbourBlock = block.worldPosition + relativePos;
-        Block resultBlock = GetWorldBlock(worldPosOfNeighbourBlock);
+        Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
         if (resultBlock == null)
             return null;
         resultBlock.worldPosition = worldPosOfNeighbourBlock;

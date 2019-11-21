@@ -14,6 +14,8 @@ public class Path : MonoBehaviour
         endBlock = _endBlock;
         cost = _cost;
         blockList = _blockList;
+        //because of the way retracing paths works, we have to reserve it in order to get the path from startblock to endblock
+        blockList.Reverse();
     }
 
 
