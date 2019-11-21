@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Path : MonoBehaviour
+public class Blockpath : MonoBehaviour
 {
     public Block startBlock, endBlock;
     public List<Block> blockList;
     public float cost;
 
-    public Path(Block _startBlock, Block _endBlock, float _cost, List<Block> _blockList)
+    public Blockpath(Block _startBlock, Block _endBlock, float _cost, List<Block> _blockList)
     {
         startBlock = _startBlock;
         endBlock = _endBlock;

@@ -413,13 +413,14 @@ public class World : MonoBehaviour
 
     
 
-    
+    //valid world coordinates for simple testing purposes
+    //33 65 23
+    //43 65 32
 
 
 
 
-
-    public Path findPath(Block startBlock, Block endBlock)
+    public Blockpath findPath(Block startBlock, Block endBlock)
     {
         Heap<Block> openSet = new Heap<Block>(chunkSize * columnHeight * chunkSize * columnHeight);
         HashSet<Block> closedSet = new HashSet<Block>();
@@ -446,6 +447,7 @@ public class World : MonoBehaviour
                     neighbourBlock.gCost = newMovementCostToNeighbour;
                     neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
                     neighbourBlock.pathParent = currentBlock;
+                    openSet.UpdateItem(neighbourBlock);
 
                     if (!openSet.Contains(neighbourBlock))
                         openSet.Add(neighbourBlock);
@@ -486,16 +488,19 @@ public class World : MonoBehaviour
         return dstX * 1.41f + dstY;
     }
 
-    public Path RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
+    public Blockpath RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
     {
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
         while(currentBlock != startBlock)
         {
+            //TESTING
+            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            //TESTING
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
         }
-        return new Path(startBlock, endBlock, cost, blockList);
+        return new Blockpath(startBlock, endBlock, cost, blockList);
     }
 
     public Vector3 roundVector3(Vector3 vec)
@@ -508,12 +513,29 @@ public class World : MonoBehaviour
     public Block getFirstNonsolidBlockAboveGround(Vector3 row)
     {
         Vector3 currentBlockPos = roundVector3(row);
+        Debug.Log("0**  currentBlockPos: " + currentBlockPos);
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
         while(GetWorldBlock(currentBlockPos) != null)
         {
+            Debug.Log("1**  currentBlockPos: " + currentBlockPos);            
             currentBlockPos += Vector3.up;
         }
-        currentBlockPos += Vector3.down;
+        if (GetWorldBlock(currentBlockPos + Vector3.down) == null)
+        {
+            Debug.Log("sollte nicht passieren. außerhalb vom kartenrand gelandet?!");
+            return null;
+        }            
+        int errorCheck = 0;
+        while (GetWorldBlock(currentBlockPos) == null)
+        {
+            currentBlockPos += Vector3.down;
+            errorCheck++;
+            if (errorCheck >= 200)
+            {
+                Debug.Log("couldnt get first nonsolid block above ground");
+                break;
+            }                
+        }
         //traverse until reaching a solid block
         while (!GetWorldBlock(currentBlockPos).isSolid)
         {
@@ -553,7 +575,7 @@ public class World : MonoBehaviour
     }
 
 
-    float timer = 1f;
+    float timer = 7f;
     public GameObject testCube;
 
 
@@ -565,12 +587,14 @@ public class World : MonoBehaviour
         //für testzwecke; wird alle 2sek ausgeführt
         if(timer < Time.timeSinceLevelLoad)
         {
-            timer += 2f;
-            createBlockAtWorldPos(player.transform.position + new Vector3(2f,1f,2f), Block.BlockType.REDSTONE);
-
+            timer += 10f;
+            
+            
+            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 23), Block.BlockType.REDSTONE);
+            Block testBlockB = createBlockAtWorldPos(new Vector3(43, 65, 32), Block.BlockType.REDSTONE);
+            findPath(testBlockA, testBlockB);
             
         }
-
 
 
         /* // Determine whether to build/load more chunks around the player's location
