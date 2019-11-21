@@ -110,7 +110,7 @@ public class World : MonoBehaviour
 	private void BuildChunkAt(int x, int y, int z)
     {
 
-        Debug.Log("Methodenaufruf BuildChunkAt");
+        //Debug.Log("Methodenaufruf BuildChunkAt");
         Vector3 chunkPosition = new Vector3(x * chunkSize,
                                             y * chunkSize,
                                             z * chunkSize);
@@ -244,7 +244,7 @@ public class World : MonoBehaviour
                   
 
 
-                Debug.Log("236");
+                //Debug.Log("236");
                     }
 
                 }
@@ -291,7 +291,7 @@ public class World : MonoBehaviour
     private void DrawChunks()
     {
 
-        Debug.Log("Methodenaufruf DrawChunks");
+        //Debug.Log("Methodenaufruf DrawChunks");
         foreach (KeyValuePair<string, Chunk> c in chunks)
         {
             if (c.Value.status == Chunk.ChunkStatus.DRAW)
@@ -387,11 +387,42 @@ public class World : MonoBehaviour
        BuildWorld(20,20);
     }
 
+
+
+
+
+
+
+
+    float timer = 3f;
+    public GameObject testCube;
+
+    void calcPosOfBlockAboveGround(Vector3 _rowToCheck) 
+    {
+        Vector3 rowToCheck = new Vector3((float)Mathf.RoundToInt(_rowToCheck.x), (float)Mathf.RoundToInt(_rowToCheck.y), (float)Mathf.RoundToInt(_rowToCheck.z));
+        while (GetWorldBlock(rowToCheck) == null)
+            rowToCheck += Vector3.down;
+        while (!GetWorldBlock(rowToCheck).isSolid)
+        {
+            rowToCheck += Vector3.down;
+        }
+        Instantiate(testCube, rowToCheck + Vector3.up, Quaternion.identity);
+    }
+
+
     /// <summary>
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
     void Update()
     {
+        if(timer < Time.timeSinceLevelLoad)
+        {
+            timer += 1f;
+            calcPosOfBlockAboveGround(player.transform.position + new Vector3(2f, 2f, 2f));
+        }
+
+
+
         /* // Determine whether to build/load more chunks around the player's location
          Vector3 movement = lastbuildPos - player.transform.position;
 
