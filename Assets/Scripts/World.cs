@@ -438,6 +438,36 @@ public class World : MonoBehaviour
         }
     }
 
+    public List<Block> GetNeighbourBlocks(Block block)
+    {
+        List<Block> neighbourList = new List<Block>();
+        for(int x = -1; x < 1; x++)
+        {
+            for (int z = -1; z < 1; z++)
+            {
+                if (x == 0 && z == 0)
+                    continue;
+                Block neighbour = getNeighbourBlock(block, new Vector3(x, 0f, z));
+                if (neighbour != null)
+                {
+                    neighbourList.Add(neighbour);
+                }
+            }
+        }
+        return neighbourList;
+    }
+
+    public float calcDistance(Block blockA, Block blockB)
+    {
+        float dstX = Mathf.Abs(blockA.worldPosition.x - blockB.worldPosition.x);
+        float dstY = Mathf.Abs(blockA.worldPosition.y - blockB.worldPosition.y);
+
+        //moving diagonally to a neighbourblock results in a distance of roughly 1.41 worldunits
+        if (dstX > dstY)
+            return dstY * 1.41f + dstX;
+        return dstX * 1.41f + dstY;
+    }
+
     public Path RetracePath(Block startBlock, Block endBlock, float cost)
     {
         List<Block> blockList = new List<Block>();
