@@ -15,6 +15,11 @@ public class Block : IHeapItem<Block>
 
     int heapIndex;
 
+    //testzwecke
+    public float getGCost()
+    {
+        return gCost;
+    }
 
     public float getFCost()
     {
@@ -42,7 +47,7 @@ public class Block : IHeapItem<Block>
 
     public int CompareTo(Block otherBlock)
     {
-        int compare = gCost.CompareTo(otherBlock.gCost);
+        int compare = getFCost().CompareTo(otherBlock.getFCost());
         if(compare == 0)
         {
             compare = hCost.CompareTo(otherBlock.hCost);

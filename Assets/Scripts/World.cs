@@ -411,18 +411,17 @@ public class World : MonoBehaviour
 
 
 
-    
+
 
     //valid world coordinates for simple testing purposes
     //33 65 23
     //43 65 32
 
 
-
-
     public Blockpath findPath(Block startBlock, Block endBlock)
     {
         Heap<Block> openSet = new Heap<Block>(chunkSize * columnHeight * chunkSize * columnHeight);
+
         HashSet<Block> closedSet = new HashSet<Block>();
 
         openSet.Add(startBlock);
@@ -430,10 +429,15 @@ public class World : MonoBehaviour
         while(openSet.Count > 0)
         {
             Block currentBlock = openSet.RemoveFirst();
+            //TESTING: visualize pathfinding
+            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            //TESTING
             closedSet.Add(currentBlock);
 
-            if(currentBlock == endBlock)
+            //didnt work with condition (currentBlock == endBlock) for some reason
+            if (currentBlock.worldPosition == endBlock.worldPosition)
             {
+                Debug.Log("PATH COMPLETE");
                 return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
             }
 
@@ -447,10 +451,12 @@ public class World : MonoBehaviour
                     neighbourBlock.gCost = newMovementCostToNeighbour;
                     neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
                     neighbourBlock.pathParent = currentBlock;
-                    openSet.UpdateItem(neighbourBlock);
+                    Debug.Log(neighbourBlock.worldPosition + " , gCost: " + neighbourBlock.gCost + " , hCost: " + neighbourBlock.hCost);
 
                     if (!openSet.Contains(neighbourBlock))
                         openSet.Add(neighbourBlock);
+                    else
+                        openSet.UpdateItem(neighbourBlock);
                 }
             }
         }
@@ -461,9 +467,9 @@ public class World : MonoBehaviour
     public List<Block> GetNeighbourBlocks(Block block)
     {
         List<Block> neighbourList = new List<Block>();
-        for(int x = -1; x < 1; x++)
+        for(int x = -1; x <= 1; x++)
         {
-            for (int z = -1; z < 1; z++)
+            for (int z = -1; z <= 1; z++)
             {
                 if (x == 0 && z == 0)
                     continue;
@@ -474,18 +480,19 @@ public class World : MonoBehaviour
                 }
             }
         }
+        //Debug.Log("NeighbourSize: " + neighbourList.Count);
         return neighbourList;
     }
 
     public float calcDistance(Block blockA, Block blockB)
     {
         float dstX = Mathf.Abs(blockA.worldPosition.x - blockB.worldPosition.x);
-        float dstY = Mathf.Abs(blockA.worldPosition.y - blockB.worldPosition.y);
+        float dstY = Mathf.Abs(blockA.worldPosition.z - blockB.worldPosition.z);
 
         //moving diagonally to a neighbourblock results in a distance of roughly 1.41 worldunits
         if (dstX > dstY)
-            return dstY * 1.41f + dstX;
-        return dstX * 1.41f + dstY;
+            return dstY * 1.41f + (dstX - dstY);
+        return dstX * 1.41f + (dstY - dstX);
     }
 
     public Blockpath RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
@@ -513,11 +520,9 @@ public class World : MonoBehaviour
     public Block getFirstNonsolidBlockAboveGround(Vector3 row)
     {
         Vector3 currentBlockPos = roundVector3(row);
-        Debug.Log("0**  currentBlockPos: " + currentBlockPos);
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
         while(GetWorldBlock(currentBlockPos) != null)
-        {
-            Debug.Log("1**  currentBlockPos: " + currentBlockPos);            
+        {         
             currentBlockPos += Vector3.up;
         }
         if (GetWorldBlock(currentBlockPos + Vector3.down) == null)
@@ -575,7 +580,7 @@ public class World : MonoBehaviour
     }
 
 
-    float timer = 7f;
+    float timer = 2f;
     public GameObject testCube;
 
 
@@ -590,8 +595,8 @@ public class World : MonoBehaviour
             timer += 10f;
             
             
-            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 23), Block.BlockType.REDSTONE);
-            Block testBlockB = createBlockAtWorldPos(new Vector3(43, 65, 32), Block.BlockType.REDSTONE);
+            Block testBlockA = createBlockAtWorldPos(new Vector3(29, 65, 32), Block.BlockType.REDSTONE);
+            Block testBlockB = createBlockAtWorldPos(new Vector3(35, 65, 41), Block.BlockType.REDSTONE);
             findPath(testBlockA, testBlockB);
             
         }
