@@ -55,7 +55,12 @@ public class Block : IHeapItem<Block>
         return -compare;
     }
 
-
+    public void ResetPathfindingVal()
+    {
+        pathParent = null;
+        gCost = 0f;
+        hCost = 0f;
+    }
 
 
 
