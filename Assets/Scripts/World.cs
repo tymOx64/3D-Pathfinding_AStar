@@ -476,7 +476,7 @@ public class World : MonoBehaviour
             {
                 if (x == 0 && z == 0)
                     continue;
-                Block neighbour = getNeighbourBlockAboveGround(block, new Vector3(x, 0f, z));
+                Block neighbour = getNeighbourBlockAboveGround(block.worldPosition, new Vector3(x, 0f, z));
                 if (neighbour != null)
                 {
                     neighbourList.Add(neighbour);
@@ -564,11 +564,13 @@ public class World : MonoBehaviour
     }
 
     //E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction (or whatever y is needed to be above ground)
-    public Block getNeighbourBlockAboveGround(Block block, Vector3 relativePos)
+    public Block getNeighbourBlockAboveGround(Vector3 blockPos, Vector3 relativePos)
     {
-        Vector3 worldPosOfNeighbourBlock = block.worldPosition + relativePos;
+        Vector3 worldPosOfNeighbourBlock = blockPos + relativePos;
         Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
-        if (resultBlock == null)
+        
+        //can not jump more than 1f in y direction (i think, needs to be confirmed)
+        if (resultBlock == null || resultBlock.worldPosition.y > blockPos.y + 1f)
             return null;
         return resultBlock;
     }
