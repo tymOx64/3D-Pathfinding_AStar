@@ -604,12 +604,22 @@ public class World : MonoBehaviour
         //für testzwecke; wird alle 'timer' sek ausgeführt
         if(timer < Time.timeSinceLevelLoad)
         {
-            timer += 20f;
-            
-            
-            Block testBlockA = createBlockAtWorldPos(new Vector3(25, 65, 30), Block.BlockType.REDSTONE);
-            Block testBlockB = createBlockAtWorldPos(new Vector3(35, 65, 41), Block.BlockType.REDSTONE);
-            findPath(testBlockA, testBlockB);
+            timer += 60f;
+
+            createBlockAtWorldPos(new Vector3(33, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(33, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(32, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(32, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(34, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(34, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(31, 66, 28), Block.BlockType.STONE);
+
+            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
+            Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
+            findPath(testBlockB, testBlockA);
             
         }
 
