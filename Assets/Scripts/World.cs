@@ -430,16 +430,8 @@ public class World : MonoBehaviour
         {
             Block currentBlock = openSet.RemoveFirst();
             //TESTING: visualize pathfinding
-            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
-            //TESTING
+            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
             closedSet.Add(currentBlock);
-
-            //didnt work with condition (currentBlock == endBlock) for some reason
-            if (currentBlock.worldPosition == endBlock.worldPosition)
-            {
-                Debug.Log("PATH COMPLETE");
-                return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
-            }
 
             foreach(Block neighbourBlock in GetNeighbourBlocks(currentBlock))
             {
@@ -451,6 +443,18 @@ public class World : MonoBehaviour
                     neighbourBlock.gCost = newMovementCostToNeighbour;
                     neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
                     neighbourBlock.pathParent = currentBlock;
+
+                    //reached the endblock, but due to how the neighbourblocks are found above the ground
+                    //it happens to find the destination above the endblock, correcting this before invoking RetracePath
+                    if (neighbourBlock.hCost <= 0.5f)
+                    {
+                        neighbourBlock.pathParent = null;
+                        endBlock.pathParent = currentBlock;
+
+                        Debug.Log("PATH COMPLETE");
+                        return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
+                    }
+
 
                     if (!openSet.Contains(neighbourBlock))
                         openSet.Add(neighbourBlock);
@@ -498,11 +502,12 @@ public class World : MonoBehaviour
     {
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
+
         while(currentBlock != startBlock)
         {
-            //TESTING
+            //Visualization for testing purposes
             Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
-            //TESTING
+
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
         }
@@ -565,7 +570,6 @@ public class World : MonoBehaviour
         Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
         if (resultBlock == null)
             return null;
-        resultBlock.worldPosition = worldPosOfNeighbourBlock;
         return resultBlock;
     }
 
@@ -601,7 +605,7 @@ public class World : MonoBehaviour
             timer += 20f;
             
             
-            Block testBlockA = createBlockAtWorldPos(new Vector3(29, 65, 32), Block.BlockType.REDSTONE);
+            Block testBlockA = createBlockAtWorldPos(new Vector3(25, 65, 30), Block.BlockType.REDSTONE);
             Block testBlockB = createBlockAtWorldPos(new Vector3(35, 65, 41), Block.BlockType.REDSTONE);
             findPath(testBlockA, testBlockB);
             
