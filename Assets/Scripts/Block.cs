@@ -7,34 +7,32 @@ using UnityEngine;
 /// </summary>
 public class Block : IHeapItem<Block>
 {
-    //to be overwritten with its actual world coordinates
+    /// <summary>
+    /// defaulted to Vector3.positiveInfinity to be able to check if a blocks worldPosition already has been set or still has its default value
+    /// </summary>
     public Vector3 worldPosition = Vector3.positiveInfinity;
 
+    /// <summary>
+    /// the parentblock on the path. can change during on ongoing path calcation!
+    /// </summary>
     public Block pathParent;
+    
     public float gCost, hCost;
 
     int heapIndex;
 
-    //testzwecke
-    public float getGCost()
-    {
-        return gCost;
-    }
-
+    /// <summary>
+    /// calculates the fCost which is simply the sum of gCost and hCost 
+    /// </summary>
+    /// <returns></returns>
     public float getFCost()
     {
         return gCost + hCost;
     }
-    public void printPosition()
-    {
-        Debug.Log(position);
-    }
 
-    public Vector3 getPosition()
-    {
-        return position;
-    }
-
+    /// <summary>
+    /// keeping track of its own index in the heap
+    /// </summary>
     public int HeapIndex
     {
         get {
@@ -44,7 +42,12 @@ public class Block : IHeapItem<Block>
             heapIndex = value;
         }
     }
-
+    
+    /// <summary>
+    /// determine the block with the lowest fCost; if equal, hCost serves as a tie-breaker
+    /// </summary>
+    /// <param name="otherBlock">the block to be compared to</param>
+    /// <returns></returns>
     public int CompareTo(Block otherBlock)
     {
         int compare = getFCost().CompareTo(otherBlock.getFCost());
@@ -55,6 +58,9 @@ public class Block : IHeapItem<Block>
         return -compare;
     }
 
+    /// <summary>
+    /// resets the pathfinding relevant attributes gCost, hCost and pathParent back to its default value
+    /// </summary>
     public void ResetPathfindingVal()
     {
         pathParent = null;
