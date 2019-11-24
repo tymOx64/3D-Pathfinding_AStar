@@ -417,7 +417,9 @@ public class World : MonoBehaviour
     //33 65 23
     //43 65 32
 
-
+    /// <summary>
+    /// finds the shortest path between two blocks
+    /// </summary>
     public Blockpath findPath(Block startBlock, Block endBlock)
     {
         Heap<Block> openSet = new Heap<Block>(chunkSize * columnHeight * chunkSize * columnHeight);
@@ -467,6 +469,9 @@ public class World : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// finds all REACHABLE(!) neighbourblocks around given argument block
+    /// </summary>
     public List<Block> GetNeighbourBlocks(Block block)
     {
         List<Block> neighbourList = new List<Block>();
@@ -487,6 +492,9 @@ public class World : MonoBehaviour
         return neighbourList;
     }
 
+    /// <summary>
+    /// calculates the distance between two blocks along the x- and z-axis, where only block-to-direct-neighbourblock-movement is allowed
+    /// </summary>
     public float calcDistance(Block blockA, Block blockB)
     {
         float dstX = Mathf.Abs(blockA.worldPosition.x - blockB.worldPosition.x);
@@ -498,6 +506,10 @@ public class World : MonoBehaviour
         return dstX * 1.41f + (dstY - dstX);
     }
 
+    /// <summary>
+    /// retraces the path from end to start by going along the pathParents of each block
+    /// </summary>
+    /// <param name="cost"> the total cost of the path </param>
     public Blockpath RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
     {
         List<Block> blockList = new List<Block>();
@@ -529,6 +541,8 @@ public class World : MonoBehaviour
             (float)Mathf.RoundToInt(vec.z));
     }
 
+
+    /// <param name="column"> the block-column where we want to get the block above the ground </param>
     public Block getFirstNonsolidBlockAboveGround(Vector3 column)
     {
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
@@ -563,7 +577,9 @@ public class World : MonoBehaviour
         return resultBlock;
     }
 
-    //E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction (or whatever y is needed to be above ground)
+    /// <summary>
+    /// E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction (or whatever y is needed to get above the ground)
+    /// </summary>
     public Block getNeighbourBlockAboveGround(Vector3 blockPos, Vector3 relativePos)
     {
         Vector3 worldPosOfNeighbourBlock = blockPos + relativePos;
@@ -575,7 +591,9 @@ public class World : MonoBehaviour
         return resultBlock;
     }
 
-    //returns null if worldPos is not a valid position in a chunk; returns the created block on success
+    /// <summary>
+    /// returns null if worldPos is not a valid position in a chunk; returns the created block on success
+    /// </summary>
     public Block createBlockAtWorldPos(Vector3 worldPos, Block.BlockType blockType)
     {
         Block block = GetWorldBlock(worldPos);

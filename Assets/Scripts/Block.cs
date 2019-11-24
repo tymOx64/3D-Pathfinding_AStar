@@ -24,7 +24,6 @@ public class Block : IHeapItem<Block>
     /// <summary>
     /// calculates the fCost which is simply the sum of gCost and hCost 
     /// </summary>
-    /// <returns></returns>
     public float getFCost()
     {
         return gCost + hCost;
@@ -47,7 +46,6 @@ public class Block : IHeapItem<Block>
     /// determine the block with the lowest fCost; if equal, hCost serves as a tie-breaker
     /// </summary>
     /// <param name="otherBlock">the block to be compared to</param>
-    /// <returns></returns>
     public int CompareTo(Block otherBlock)
     {
         int compare = getFCost().CompareTo(otherBlock.getFCost());
