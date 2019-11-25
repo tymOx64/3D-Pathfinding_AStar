@@ -19,7 +19,6 @@ public class World : MonoBehaviour
     public static int radius = 3;
     public static uint maxCoroutines = 1000;
     public static Dictionary<string, Chunk> chunks ;
-    public static 
 
     //Worldsize
     public int WorldX;  
@@ -131,12 +130,84 @@ public class World : MonoBehaviour
     }
 
 
-     
+    /*
+    /// <summary>
+    /// Coroutine to recursively build chunks of the world depending on some location and a radius.
+    /// </summary>
+    /// <param name="x">x position</param>
+    /// <param name="y">y position</param>
+    /// <param name="z">z position</param>
+    /// <param name="startrad">Starting radius (is necessary for recursive calls of this function)</param>
+    /// <param name="rad">Desired radius</param>
+    /// <returns></returns>
+	IEnumerator BuildRecursiveWorld(int x, int y, int z, int startrad, int rad)
+    {
+        int nextrad = rad - 1;
+        if (rad <= 0 || y < 0 || y > columnHeight) yield break;
+        // Build chunk front
+        BuildChunkAt(x, y, z + 1);
+        queue.Run(BuildRecursiveWorld(x, y, z + 1, rad, nextrad));
+        yield return null;
 
- 
+        // Build chunk back
+        BuildChunkAt(x, y, z - 1);
+        queue.Run(BuildRecursiveWorld(x, y, z - 1, rad, nextrad));
+        yield return null;
+
+        // Build chunk left
+        BuildChunkAt(x - 1, y, z);
+        queue.Run(BuildRecursiveWorld(x - 1, y, z, rad, nextrad));
+        yield return null;
+
+        // Build chunk right
+        BuildChunkAt(x + 1, y, z);
+        queue.Run(BuildRecursiveWorld(x + 1, y, z, rad, nextrad));
+        yield return null;
+
+        // Build chunk up
+        BuildChunkAt(x, y + 1, z);
+        queue.Run(BuildRecursiveWorld(x, y + 1, z, rad, nextrad));
+        yield return null;
+
+        // Build chunk down
+        BuildChunkAt(x, y - 1, z);
+        queue.Run(BuildRecursiveWorld(x, y - 1, z, rad, nextrad));
+        yield return null;
+    }
 
 
-    //Creates static world
+        */
+    /// <summary>
+    /// Coroutine to render chunks that are in the DRAW state. Adds chunks to the toRemove list, which are outside the player's radius.
+    /// </summary>
+    /// <returns></returns>
+/*	IEnumerator DrawChunks()
+    {
+        toRemove.Clear();
+        foreach (KeyValuePair<string, Chunk> c in chunks)
+        {
+            if (c.Value.status == Chunk.ChunkStatus.DRAW)
+            {
+                c.Value.DrawChunk();
+            }
+            if (c.Value.chunk && Vector3.Distance(player.transform.position,
+                                c.Value.chunk.transform.position) > radius * chunkSize)
+                toRemove.Add(c.Key);
+
+            yield return null;
+        }
+    }
+
+    
+    */
+
+
+
+
+    //New methods
+
+
+        //Creates static world
     private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
         int startX = (int)(player.transform.position.x / chunkSize);
@@ -208,7 +279,45 @@ public class World : MonoBehaviour
 
 
 
- 
+
+/*
+    /// <summary>
+    /// Coroutine to save and then to unload unused chunks.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator RemoveOldChunks()
+    {
+        for (int i = 0; i < toRemove.Count; i++)
+        {
+            string n = toRemove[i];
+            Chunk c;
+            if (chunks.TryGetValue(n, out c))
+            {
+                Destroy(c.chunk);
+                c.Save();
+                chunks.TryRemove(n, out c);
+                yield return null;
+            }
+        }
+    }
+
+
+    */
+
+        /*
+    /// <summary>
+    /// Builds chunks that are inside the player's radius.
+    /// </summary>
+	public void BuildNearPlayer()
+    {
+        // Stop the coroutine of building the world, because it is getting replaced
+        StopCoroutine("BuildRecursiveWorld");
+        queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
+                                            (int)(player.transform.position.y / chunkSize),
+                                            (int)(player.transform.position.z / chunkSize), radius, radius));
+    }
+
+
     */
     /// <summary>
     /// Unity lifecycle start method. Initializes the world and its first chunk and triggers the building of further chunks.
@@ -532,7 +641,9 @@ public class World : MonoBehaviour
    */
     public void RandomAppleSpawn( ) 
     {
+
  
+         
         int amount = (int) Random.Range(10.0f, 20.0f);  //Amount of apples greater than or equal to 10 and less than or equal to 20
 
         Debug.Log("Amount" + amount.ToString());
@@ -588,11 +699,6 @@ public class World : MonoBehaviour
         }
     
 
+
     }
-
-
-  
- 
-
-    
 }
