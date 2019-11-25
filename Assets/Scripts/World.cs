@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Realtime.Messaging.Internal;
 
+
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
 /// These mechanisms are completed with the help of Coroutines (IEnumerator methods). https://docs.unity3d.com/Manual/Coroutines.html
@@ -17,12 +18,13 @@ public class World : MonoBehaviour
     public static int chunkSize = 4;
     public static int radius = 3;
     public static uint maxCoroutines = 1000;
-
-
-
-    //public static ConcurrentDictionary<string, Chunk> chunks;
-
     public static Dictionary<string, Chunk> chunks ;
+
+    //Worldsize
+    public int WorldX;  
+    public int WorldY;
+
+ 
 
 
 
@@ -218,7 +220,7 @@ public class World : MonoBehaviour
             BuildChunkAt(startX,startY,startZ);
 
 
-        BuildChunkAt(startX + 1, startY, startZ);
+        BuildChunkAt(startX + 1, startY, startZ); //?
         
      
 
@@ -244,45 +246,13 @@ public class World : MonoBehaviour
                   
 
 
-                //Debug.Log("236");
                     }
 
                 }
 
-            
-
-            /*
-              // Build chunk front
-              BuildChunkAt(x, y, z + 1);
+  
 
 
-
-              // Build chunk back
-              BuildChunkAt(x, y, z - 1);
-
-
-              // Build chunk left
-              BuildChunkAt(x - 1, y, z);
-
-
-              // Build chunk right
-              BuildChunkAt(x + 1, y, z);
-
-
-              // Build chunk up
-              BuildChunkAt(x, y + 1, z);
-
-
-              // Build chunk down
-              BuildChunkAt(x, y - 1, z);
-
-              */
-
-        
-
-
-          DrawChunks();
-          
     }
 
 
@@ -382,9 +352,12 @@ public class World : MonoBehaviour
         queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
                                             (int)(player.transform.position.y / chunkSize),
                                             (int)(player.transform.position.z / chunkSize), radius, radius));*/
-
+        
     
        BuildWorld(20,20);
+        RandomAppleSpawn();
+
+        DrawChunks();
     }
 
 
@@ -606,6 +579,7 @@ public class World : MonoBehaviour
         chunk.Redraw();
         Block createdBlock = chunk.chunkData[(int)block.position.x, (int)block.position.y, (int)block.position.z];
         createdBlock.worldPosition = worldPos;
+        Debug.Log("582");
         return createdBlock;
     }
 
@@ -632,37 +606,17 @@ public class World : MonoBehaviour
             createBlockAtWorldPos(new Vector3(34, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(31, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.REDSTONE);
+        
 
-            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
+         /*   Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
             Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
             findPath(testBlockB, testBlockA);
-            
+            */
         }
 
 
-        /* // Determine whether to build/load more chunks around the player's location
-         Vector3 movement = lastbuildPos - player.transform.position;
-
-         if (movement.magnitude > chunkSize)
-         {
-             lastbuildPos = player.transform.position;
-             BuildNearPlayer();
-         }
-
-         // Activate the player's GameObject
-         if (!player.activeSelf)
-         {
-             player.SetActive(true);
-             firstbuild = false;
-         }
-
-         // Draw new chunks and removed deprecated chunks
-         queue.Run(DrawChunks());
-         queue.Run(RemoveOldChunks());
-
-     */
+      
 
 
         // Activate the player's GameObject
@@ -671,5 +625,66 @@ public class World : MonoBehaviour
             player.SetActive(true);
             
         }
+    }
+
+
+    /*
+   * Method randomly distributes apples(currently redstones) on the surface of the world
+   */
+    public void RandomAppleSpawn( ) 
+    {
+
+ 
+         
+        int amount = (int) Random.Range(10.0f, 20.0f);  //Amount of apples greater than or equal to 10 and less than or equal to 20
+
+        Debug.Log("Amount" + amount.ToString());
+
+
+        while (amount > 0)
+        {
+
+        
+            foreach (KeyValuePair<string, Chunk> c in chunks)
+            {
+                if( amount <= 0)
+                {
+
+                    break;
+                }
+
+                float createApple= Random.Range(0f, 1f); //random decision whether an apple is spawned on the current chunk or not
+
+                if (createApple >0.5f)
+                {
+                    Debug.Log("651");
+
+               
+                    Block block = c.Value.chunkData[3, 3, 3];
+
+                    //ensures that there is at least one air block above the apple and a solid block below it and that it only replaces air blocks
+                    //and that 
+                    if (block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-1, (int)block.position.z) 
+                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y , (int)block.position.z) 
+                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1, (int)block.position.z))
+                        
+                    {
+                       block.BuildBlock(Block.BlockType.REDSTONE);
+                        
+
+                        amount--;
+                        Debug.Log(amount);
+                    }
+                   
+
+                }
+
+               
+            }
+
+        }
+    
+
+
     }
 }

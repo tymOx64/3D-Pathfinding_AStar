@@ -457,8 +457,9 @@ public class Block : IHeapItem<Block>
 		try
 		{
 			Block b = GetBlock(x,y,z);
-			if(b != null)
-				return (b.isSolid || b.blockType == blockType);
+            if (b != null)
+                return (b.isSolid);
+				//return (b.isSolid || b.blockType == blockType);
 		}
 		catch(System.IndexOutOfRangeException){}
 
