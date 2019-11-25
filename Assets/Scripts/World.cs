@@ -443,6 +443,9 @@ public class World : MonoBehaviour
         return null;
     }
 
+
+
+
     /// <summary>
     /// finds all REACHABLE(!) neighbourblocks around given argument block
     /// </summary>
@@ -465,6 +468,10 @@ public class World : MonoBehaviour
         //Debug.Log("NeighbourSize: " + neighbourList.Count);
         return neighbourList;
     }
+
+
+
+
 
     /// <summary>
     /// calculates the distance between two blocks along the x- and z-axis, where only block-to-direct-neighbourblock-movement is allowed
@@ -607,7 +614,7 @@ public class World : MonoBehaviour
             createBlockAtWorldPos(new Vector3(34, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.REDSTONE);
+          
         
 
          /*   Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
