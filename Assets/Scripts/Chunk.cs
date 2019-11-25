@@ -209,9 +209,9 @@ public class Chunk
 					}
 
                     // Create caves
-					if(chunkData[x,y,z].blockType != Block.BlockType.WATER && Utils.fBM3D(worldX, worldY, worldZ, 0.1f, 3) < 0.42f)
+					/*if(chunkData[x,y,z].blockType != Block.BlockType.WATER && Utils.fBM3D(worldX, worldY, worldZ, 0.1f, 3) < 0.42f)
 						chunkData[x,y,z] = new Block(Block.BlockType.AIR, pos, 
-						                chunk.gameObject, this);
+						                chunk.gameObject, this);*/
 
 					status = ChunkStatus.DRAW;
 				}

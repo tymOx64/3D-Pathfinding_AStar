@@ -207,7 +207,7 @@ public class World : MonoBehaviour
     //New methods
 
 
-        //Creates static world, TODO caves,..
+        //Creates static world
     private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
         int startX = (int)(player.transform.position.x / chunkSize);
@@ -234,19 +234,20 @@ public class World : MonoBehaviour
                     {
 
 
-                
 
-                // World Height equals 6 Chunks
-                  BuildChunkAt(x,startY,z);
-                  BuildChunkAt(x, startY+1, z);
+
+                // World Height equals 5 Chunks
+
+                  BuildChunkAt(x, startY -2 , z);
+                  BuildChunkAt(x, startY -1, z);
                   BuildChunkAt(x, startY, z);
-                  BuildChunkAt(x, startY - 1, z);
-                  BuildChunkAt(x, startY - 2, z);
-                  BuildChunkAt(x, startY - 3, z);
-                  
+                  BuildChunkAt(x, startY +1, z);
+                  BuildChunkAt(x, startY + 2, z);
+                  BuildChunkAt(x, startY + 3, z);
 
 
-                    }
+
+            }
 
                 }
 
@@ -659,22 +660,28 @@ public class World : MonoBehaviour
                 {
                     Debug.Log("651");
 
+                    
                
                     Block block = c.Value.chunkData[3, 3, 3];
 
-                    //ensures that there is at least one air block above the apple and a solid block below it and that it only replaces air blocks
-                    //and that 
-                    if (block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-1, (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y , (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1, (int)block.position.z))
+                    int xPos = (int)block.position.x;
+                    int yPos = (int)block.position.y;
+                    int zPos = (int)block.position.z;
+                    //ensures that apples spawn only on the surface ?
+                    if (
+                        block.HasSolidNeighbour(xPos, yPos - 1, zPos) 
+                            &&(!block.HasSolidNeighbour(xPos, yPos, zPos)
+                            && (!block.HasSolidNeighbour(xPos, yPos + 1, zPos))
+                           )   
+                               )
                         
-                    {
+                      {
                        block.BuildBlock(Block.BlockType.REDSTONE);
                         
 
                         amount--;
                         Debug.Log(amount);
-                    }
+                      }
                    
 
                 }
