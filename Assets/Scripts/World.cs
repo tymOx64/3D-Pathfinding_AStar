@@ -355,7 +355,9 @@ public class World : MonoBehaviour
         
     
        BuildWorld(20,20);
-        RandomAppleSpawn();
+        
+        
+        //RandomAppleSpawn();
 
         DrawChunks();
     }
@@ -491,7 +493,7 @@ public class World : MonoBehaviour
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
-            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
 
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
@@ -536,7 +538,7 @@ public class World : MonoBehaviour
             if (errorCheck >= 100)
             {
                 Debug.Log("couldnt get first nonsolid block above ground");
-                break;
+                return null;
             }                
         }
         //traverse until reaching a solid block
@@ -581,7 +583,6 @@ public class World : MonoBehaviour
         chunk.Redraw();
         Block createdBlock = chunk.chunkData[(int)block.position.x, (int)block.position.y, (int)block.position.z];
         createdBlock.worldPosition = worldPos;
-        Debug.Log("582");
         return createdBlock;
     }
 
@@ -602,6 +603,14 @@ public class World : MonoBehaviour
 
             createBlockAtWorldPos(new Vector3(33, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(33, 66, 28), Block.BlockType.STONE);
+
+            createBlockAtWorldPos(new Vector3(36, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(36, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(37, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(37, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(38, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(38, 66, 28), Block.BlockType.STONE);
+
             createBlockAtWorldPos(new Vector3(32, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(32, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(34, 65, 28), Block.BlockType.STONE);
@@ -609,16 +618,24 @@ public class World : MonoBehaviour
             createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
-        
+            createBlockAtWorldPos(new Vector3(31, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(30, 65, 28), Block.BlockType.STONE);
+            //createBlockAtWorldPos(new Vector3(30, 66, 28), Block.BlockType.STONE);            
 
-            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
-            //Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
-            //findPath(testBlockB, testBlockA);
+            createBlockAtWorldPos(new Vector3(29, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(29, 66, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(28, 65, 28), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(28, 66, 28), Block.BlockType.STONE);
 
-            foreach(Block randomApple in randomlySpawnedApples)
+
+            Block testBlockA = createBlockAtWorldPos(new Vector3(34, 65, 24), Block.BlockType.REDSTONE);
+            Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
+            findPath(testBlockB, testBlockA);
+
+            /*foreach(Block randomApple in randomlySpawnedApples)
             {
                 findPath(testBlockA, randomApple);
-            }
+            }*/
             
         }
 
