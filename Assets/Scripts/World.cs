@@ -546,6 +546,8 @@ public class World : MonoBehaviour
         }
         column += Vector3.up;
         Block resultBlock = GetWorldBlock(column);
+        if (resultBlock == null)
+            return null;
         resultBlock.worldPosition = column;
         return resultBlock;
     }
@@ -606,13 +608,18 @@ public class World : MonoBehaviour
             createBlockAtWorldPos(new Vector3(34, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.REDSTONE);
+            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
         
 
-         /*   Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
-            Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
-            findPath(testBlockB, testBlockA);
-            */
+            Block testBlockA = createBlockAtWorldPos(new Vector3(33, 65, 24), Block.BlockType.REDSTONE);
+            //Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
+            //findPath(testBlockB, testBlockA);
+
+            foreach(Block randomApple in randomlySpawnedApples)
+            {
+                findPath(testBlockA, randomApple);
+            }
+            
         }
 
 
@@ -627,24 +634,18 @@ public class World : MonoBehaviour
         }
     }
 
+    List<Block> randomlySpawnedApples = new List<Block>();
 
-    /*
-   * Method randomly distributes apples(currently redstones) on the surface of the world
-   */
+    /// <summary>
+    /// Method randomly distributes apples(currently redstones) on the surface of the world
+    /// </summary>
     public void RandomAppleSpawn( ) 
     {
-
- 
-         
-        int amount = (int) Random.Range(10.0f, 20.0f);  //Amount of apples greater than or equal to 10 and less than or equal to 20
+        int amount = (int) Random.Range(4.0f, 6.0f);  //Amount of apples greater than or equal to 10 and less than or equal to 20
 
         Debug.Log("Amount" + amount.ToString());
-
-
         while (amount > 0)
         {
-
-        
             foreach (KeyValuePair<string, Chunk> c in chunks)
             {
                 if( amount <= 0)
@@ -657,9 +658,7 @@ public class World : MonoBehaviour
 
                 if (createApple >0.5f)
                 {
-                    Debug.Log("651");
-
-               
+                    
                     Block block = c.Value.chunkData[3, 3, 3];
 
                     //ensures that there is at least one air block above the apple and a solid block below it and that it only replaces air blocks
@@ -669,22 +668,15 @@ public class World : MonoBehaviour
                         && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1, (int)block.position.z))
                         
                     {
-                       block.BuildBlock(Block.BlockType.REDSTONE);
-                        
+                        block.BuildBlock(Block.BlockType.REDSTONE);
+                        randomlySpawnedApples.Add(c.Value.chunkData[3, 3, 3]);
 
                         amount--;
                         Debug.Log(amount);
                     }
-                   
-
                 }
-
-               
             }
 
         }
-    
-
-
     }
 }
