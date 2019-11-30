@@ -517,23 +517,24 @@ public class World : MonoBehaviour
     }
 
 
-    /// <param name="column"> the block-column where we want to get the block above the ground </param>
-    public Block getFirstNonsolidBlockAboveGround(Vector3 column)
+    /// <param name="columnPos"> the block-column where we want to get the block above the ground </param>
+    public Block getFirstNonsolidBlockAboveGround(Vector3 columnPos)
     {
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
-        while(GetWorldBlock(column) != null)
+        while(GetWorldBlock(columnPos) != null)
         {         
-            column += Vector3.up;
+            columnPos += Vector3.up;
         }
-        if (GetWorldBlock(column + Vector3.down) == null)
+        if (GetWorldBlock(columnPos + Vector3.down) == null)
         {
-            Debug.Log("sollte nicht passieren. außerhalb vom kartenrand gelandet?!");
+            Debug.Log("tried getting block out of map-area");
             return null;
-        }            
+        }         
+        //mainly for debugging/testing purposes. probably not needed lateron
         int errorCheck = 0;
-        while (GetWorldBlock(column) == null)
+        while (GetWorldBlock(columnPos) == null)
         {
-            column += Vector3.down;
+            columnPos += Vector3.down;
             errorCheck++;
             if (errorCheck >= 100)
             {
@@ -542,15 +543,15 @@ public class World : MonoBehaviour
             }                
         }
         //traverse until reaching a solid block
-        while (!GetWorldBlock(column).isSolid)
+        while (!GetWorldBlock(columnPos).isSolid)
         {
-            column += Vector3.down;
+            columnPos += Vector3.down;
         }
-        column += Vector3.up;
-        Block resultBlock = GetWorldBlock(column);
+        columnPos += Vector3.up;
+        Block resultBlock = GetWorldBlock(columnPos);
         if (resultBlock == null)
             return null;
-        resultBlock.worldPosition = column;
+        resultBlock.worldPosition = columnPos;
         return resultBlock;
     }
 
@@ -618,6 +619,10 @@ public class World : MonoBehaviour
             createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
+
+            //block vor wand
+            //createBlockAtWorldPos(new Vector3(31, 65, 29), Block.BlockType.GOLD);
+
             createBlockAtWorldPos(new Vector3(31, 66, 28), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(30, 65, 28), Block.BlockType.STONE);
             //createBlockAtWorldPos(new Vector3(30, 66, 28), Block.BlockType.STONE);            
