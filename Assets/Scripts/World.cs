@@ -663,7 +663,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn( ) 
     {
-        int amount = (int) Random.Range(4.0f, 6.0f);  //Amount of apples greater than or equal to 10 and less than or equal to 20
+        int amount = (int) Random.Range(4.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount" + amount.ToString());
         while (amount > 0)
@@ -704,5 +704,4 @@ public class World : MonoBehaviour
 
 
 
-    public 
 }
