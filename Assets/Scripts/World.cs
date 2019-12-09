@@ -20,14 +20,15 @@ public class World : MonoBehaviour
     public static uint maxCoroutines = 1000;
     public static Dictionary<string, Chunk> chunks ;
 
+
     //Worldsize
     public int WorldX;  
     public int WorldY;
 
- 
 
 
 
+    List<Block> randomlySpawnedApples = new List<Block>();
 
 
     public static List<string> toRemove = new List<string>();        //TODO:delete
@@ -656,7 +657,9 @@ public class World : MonoBehaviour
         }
     }
 
-    List<Block> randomlySpawnedApples = new List<Block>();
+    List<Block> _blockList
+
+
 
     /// <summary>
     /// Method randomly distributes apples(currently redstones) on the surface of the world
