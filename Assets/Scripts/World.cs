@@ -657,7 +657,7 @@ public class World : MonoBehaviour
         }
     }
 
-    List<Block> _blockList
+    //List<Block> _blockList
 
 
 
