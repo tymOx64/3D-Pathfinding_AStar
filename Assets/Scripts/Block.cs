@@ -29,6 +29,9 @@ public class Block : IHeapItem<Block>
         return gCost + hCost;
     }
 
+    
+
+
     /// <summary>
     /// keeping track of its own index in the heap
     /// </summary>

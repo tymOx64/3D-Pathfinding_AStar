@@ -355,9 +355,9 @@ public class World : MonoBehaviour
         
     
        BuildWorld(20,20);
-        
-        
-        //RandomAppleSpawn();
+
+
+        RandomAppleSpawn();
 
         DrawChunks();
     }
@@ -597,7 +597,7 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //für testzwecke; wird alle 'timer' sek ausgeführt
+        /*//für testzwecke; wird alle 'timer' sek ausgeführt
         if(timer < Time.timeSinceLevelLoad)
         {
             timer += 60f;
@@ -640,10 +640,10 @@ public class World : MonoBehaviour
             /*foreach(Block randomApple in randomlySpawnedApples)
             {
                 findPath(testBlockA, randomApple);
-            }*/
+            }
             
         }
-
+        */
 
       
 
@@ -701,4 +701,8 @@ public class World : MonoBehaviour
 
         }
     }
+
+
+
+    public 
 }
