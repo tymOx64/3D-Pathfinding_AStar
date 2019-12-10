@@ -507,6 +507,11 @@ public class World : MonoBehaviour
 
         Blockpath result = new Blockpath(startBlock, endBlock, cost, blockList);
 
+        if(startBlock.edges == null)
+            startBlock.edges = new List<Blockpath>();
+        if (endBlock.edges == null)
+            endBlock.edges = new List<Blockpath>();
+
         startBlock.edges.Add(result);
         endBlock.edges.Add(result);
 
