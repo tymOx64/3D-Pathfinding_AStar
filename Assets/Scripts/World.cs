@@ -598,6 +598,10 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
+        //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
+
+
+
         /*//für testzwecke; wird alle 'timer' sek ausgeführt
         if(timer < Time.timeSinceLevelLoad)
         {
@@ -707,4 +711,52 @@ public class World : MonoBehaviour
 
 
 
+
+
+
+
+
+    //TSP simulated annealing
+
+    Block[] currentRoute;
+
+    void initTSP(List<Block> blockList)
+    {
+        currentRoute = blockList.ToArray();
+
+    }
+
+    /// <summary>
+    /// calculates the cost of the current path
+    /// </summary>
+    float calcCurrentCost()
+    {
+        float cost = 0f;
+        for(int i = 1; i < currentRoute.Length; i++)
+        {
+            Blockpath bp = getBlockpathFromAToB(currentRoute[i - 1], currentRoute[i]);
+            if(bp = null)
+            {
+                Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
+                return float.PositiveInfinity;
+            }
+            cost += bp.cost;
+        }
+        return cost;
+    }
+
+    /// <returns> The Blockpath between two given blocks </returns>
+    Blockpath getBlockpathFromAToB(Block blockA, Block blockB)
+    {
+        foreach(Blockpath bp in blockA.edges)
+        {
+            //blockA and blockB to be found as start- and endBlock in desired blockpath bp
+            if((bp.startBlock == blockB || bp.endBlock == blockB) && (bp.startBlock == blockA || bp.endBlock == blockA))
+            {
+                return bp;
+            }
+        }
+        return null;
+    }
 }
+

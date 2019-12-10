@@ -21,6 +21,8 @@ public class Block : IHeapItem<Block>
 
     int heapIndex;
 
+    public List<Blockpath> edges;
+
     /// <summary>
     /// calculates the fCost which is simply the sum of gCost and hCost 
     /// </summary>
