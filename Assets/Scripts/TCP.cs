@@ -31,10 +31,10 @@ namespace Assets.Scripts
 
         void simulatedAnnealing()
         {
-            while(sigma >= 1)
+            while (sigma >= 1)
             {
-                float nodeAIndex = (int) UnityEngine.Random.RandomRange(1f, currentRoute.Length - 1);
-                float nodeBIndex = (int) UnityEngine.Random.RandomRange(1f, currentRoute.Length - 1);
+                float nodeAIndex = (int)UnityEngine.Random.RandomRange(1f, currentRoute.Length);
+                float nodeBIndex = (int)UnityEngine.Random.RandomRange(1f, currentRoute.Length);
             }
         }
 
@@ -273,3 +273,4 @@ namespace Assets.Scripts
 
     }*/
     }
+}

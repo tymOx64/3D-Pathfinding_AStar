@@ -494,7 +494,7 @@ public class World : MonoBehaviour
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
-            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
 
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
@@ -544,9 +544,13 @@ public class World : MonoBehaviour
             }                
         }
         //traverse until reaching a solid block
-        while (!GetWorldBlock(columnPos).isSolid)
+        while (GetWorldBlock(columnPos) == null || !GetWorldBlock(columnPos).isSolid)
         {
             columnPos += Vector3.down;
+            if(errorCheck++ >= 125)
+            {
+                return null;
+            }
         }
         columnPos += Vector3.up;
         Block resultBlock = GetWorldBlock(columnPos);
@@ -594,6 +598,7 @@ public class World : MonoBehaviour
 
     int testtt = 0;
     bool einmal = true;
+    int[] testArray = new int[11];
     /// <summary>
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
@@ -601,11 +606,32 @@ public class World : MonoBehaviour
     {
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
 
-        while(testtt < 10000 && einmal)
+        while(testtt < 9000000 && einmal)
         {
-            float nodeAIndex = (int)UnityEngine.Random.RandomRange(1f, 10 - 1);
-            float nodeBIndex = (int)UnityEngine.Random.RandomRange(1f, 10 - 1);
+            int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, 10) - 0.000001f);
+            int nodeBIndex = (int)(UnityEngine.Random.RandomRange(1f, 10) - 0.000001f);
+            testArray[nodeAIndex] += 1;
+            testArray[nodeBIndex] += 1;
+            testtt++;
         }
+
+        if (einmal)
+        {
+            int i = 0;
+            foreach (int a in testArray)
+            {
+                Debug.Log("[random test] index " + i++ + " : " + a);
+            }
+            foreach(Block appleA in randomlySpawnedApples)
+            {
+                foreach (Block appleB in randomlySpawnedApples)
+                {
+                    findPath(appleA, appleB);
+                }
+            } 
+            
+        }
+        
 
         einmal = false;
         /*//für testzwecke; wird alle 'timer' sek ausgeführt
@@ -670,7 +696,7 @@ public class World : MonoBehaviour
     //List<Block> _blockList
 
 
-
+    /*
     /// <summary>
     /// Method randomly distributes apples(currently redstones) on the surface of the world
     /// </summary>
@@ -679,8 +705,12 @@ public class World : MonoBehaviour
         int amount = (int) Random.Range(4.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount" + amount.ToString());
-        while (amount > 0)
+        int testt = 0;
+        while (amount > 0 && testt < 1000)
         {
+            testt++;
+            if (testt > 900)
+                Debug.Log("testt failed");
             foreach (KeyValuePair<string, Chunk> c in chunks)
             {
                 if( amount <= 0)
@@ -696,26 +726,61 @@ public class World : MonoBehaviour
                     
                     Block block = c.Value.chunkData[3, 3, 3];
 
+                    int i = 0;
                     //ensures that there is at least one air block above the apple and a solid block below it and that it only replaces air blocks
                     //and that 
-                    if (block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-1, (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y , (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1, (int)block.position.z))
+                    while (!(block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-1-i, (int)block.position.z) 
+                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-i , (int)block.position.z) 
+                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1-i, (int)block.position.z)) && i < 3)
                         
                     {
-                        block.BuildBlock(Block.BlockType.REDSTONE);
-                        randomlySpawnedApples.Add(c.Value.chunkData[3, 3, 3]);
+                        block = c.Value.chunkData[3, 3-i, 3];
+                        i++;
+                        
 
                         amount--;
                         Debug.Log(amount);
                     }
+                    block.BuildBlock(Block.BlockType.REDSTONE);
+                    randomlySpawnedApples.Add(c.Value.chunkData[3, 3-i, 3]);
                 }
             }
 
         }
     }
+    */
+
+    /// <summary>
+    /// Method randomly distributes apples(currently redstones) on the surface of the world
+    /// </summary>
+    public void RandomAppleSpawn()
+    {
+        int amount = (int)Random.Range(1.0f, 1.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+
+        Debug.Log("Amount to be spawned" + amount.ToString());
+        int testt = 0;
+        Block block;
+
+        while (amount > 0 && testt < 1000)
+        {
+            testt++;
+            if (testt > 900)
+                Debug.Log("testt failed");
+            float xOffset = Random.Range(0f, 50f);
+            float zOffset = Random.Range(0f, 50f);
+
+            block = getFirstNonsolidBlockAboveGround(new Vector3(10f + xOffset, 65f, 10f + zOffset));
+
+            if (block == null)
+                continue;
+
+            amount--;
+            block.BuildBlock(Block.BlockType.REDSTONE);
+            randomlySpawnedApples.Add(block);
+        }
+    }
 
 
-   
+
 }
 
