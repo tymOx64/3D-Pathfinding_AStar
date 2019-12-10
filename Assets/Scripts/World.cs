@@ -596,32 +596,15 @@ public class World : MonoBehaviour
     float timer = 2f;
     public GameObject testCube;
 
-    int testtt = 0;
     bool einmal = true;
-    int[] testArray = new int[11];
     /// <summary>
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
     void Update()
     {
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
-
-        while(testtt < 9000000 && einmal)
-        {
-            int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, 10) - 0.000001f);
-            int nodeBIndex = (int)(UnityEngine.Random.RandomRange(1f, 10) - 0.000001f);
-            testArray[nodeAIndex] += 1;
-            testArray[nodeBIndex] += 1;
-            testtt++;
-        }
-
         if (einmal)
         {
-            int i = 0;
-            foreach (int a in testArray)
-            {
-                Debug.Log("[random test] index " + i++ + " : " + a);
-            }
             foreach(Block appleA in randomlySpawnedApples)
             {
                 foreach (Block appleB in randomlySpawnedApples)

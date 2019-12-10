@@ -33,8 +33,18 @@ namespace Assets.Scripts
         {
             while (sigma >= 1)
             {
-                float nodeAIndex = (int)UnityEngine.Random.RandomRange(1f, currentRoute.Length);
-                float nodeBIndex = (int)UnityEngine.Random.RandomRange(1f, currentRoute.Length);
+                int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, currentRoute.Length) - 0.000001f);
+                int nodeBIndex = (int)(UnityEngine.Random.RandomRange(1f, currentRoute.Length) - 0.000001f);
+                SwapTwoNodes(nodeAIndex, nodeBIndex);
+
+                recentCost = CalcCurrentCost();
+
+                if (!AcceptSwap())
+                {
+                    SwapTwoNodes(nodeBIndex, nodeAIndex);
+                }
+
+                sigma *= 1 - sigmaReduction;
             }
         }
 
