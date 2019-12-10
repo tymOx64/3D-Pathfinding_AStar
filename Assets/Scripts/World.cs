@@ -505,7 +505,12 @@ public class World : MonoBehaviour
         foreach(Block block in closedSet)
             block.ResetPathfindingVal();
 
-        return new Blockpath(startBlock, endBlock, cost, blockList);
+        Blockpath result = new Blockpath(startBlock, endBlock, cost, blockList);
+
+        startBlock.edges.Add(result);
+        endBlock.edges.Add(result);
+
+        return result;
     }
 
 
