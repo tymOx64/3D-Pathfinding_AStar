@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Realtime.Messaging.Internal;
-
+using Assets.Scripts;
 
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
@@ -407,8 +407,6 @@ public class World : MonoBehaviour
         while(openSet.Count > 0)
         {
             Block currentBlock = openSet.RemoveFirst();
-            //TESTING: visualize pathfinding
-            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
             closedSet.Add(currentBlock);
 
             foreach(Block neighbourBlock in GetNeighbourBlocks(currentBlock))
@@ -494,7 +492,7 @@ public class World : MonoBehaviour
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
-            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
 
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
@@ -508,6 +506,15 @@ public class World : MonoBehaviour
             block.ResetPathfindingVal();
 
         return new Blockpath(startBlock, endBlock, cost, blockList);
+    }
+
+
+    public void VisualizeBlockpath(Blockpath bp)
+    {
+        foreach(Block block in bp.blockList)
+        {
+            Instantiate(testCube, block.worldPosition, Quaternion.identity);
+        }
     }
 
     public Vector3 roundVector3(Vector3 vec)
@@ -615,6 +622,13 @@ public class World : MonoBehaviour
             
         }
         
+        TSP tsp = new TSP(randomlySpawnedApples);
+        Block[] roundTrip = tsp.simulatedAnnealing();
+
+        for(int i = 0; i < roundTrip.Length - 1; i++)
+        {
+            VisualizeBlockpath(tsp.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
+        }
 
         einmal = false;
         /*//für testzwecke; wird alle 'timer' sek ausgeführt
@@ -738,7 +752,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(1.0f, 1.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(4.0f, 4.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned" + amount.ToString());
         int testt = 0;

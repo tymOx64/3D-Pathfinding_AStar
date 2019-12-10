@@ -12,7 +12,7 @@ namespace Assets.Scripts
     /// <summary>
     /// open traveling salesman problem
     /// </summary>
-    class TSP : World
+    class TSP
     {
 
         //TSP simulated annealing
@@ -23,13 +23,12 @@ namespace Assets.Scripts
         float sigma = 5000f;
         float sigmaReduction = 0.005f;
 
-        void initTSP(List<Block> blockList)
+        public TSP(List<Block> blockList)
         {
             currentRoute = blockList.ToArray();
-
         }
 
-        void simulatedAnnealing()
+        public Block[] simulatedAnnealing()
         {
             while (sigma >= 1)
             {
@@ -46,6 +45,7 @@ namespace Assets.Scripts
 
                 sigma *= 1 - sigmaReduction;
             }
+            return currentRoute;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Assets.Scripts
         }
 
         /// <returns> The Blockpath between two given blocks </returns>
-        Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
+        public Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
         {
             foreach (Blockpath bp in blockA.edges)
             {
