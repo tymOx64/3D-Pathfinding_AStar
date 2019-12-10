@@ -729,12 +729,16 @@ public class World : MonoBehaviour
     /// <summary>
     /// calculates the cost of the current path
     /// </summary>
-    float calcCurrentCost()
+    float CalcCurrentCost()
     {
         float cost = 0f;
-        for(int i = 1; i < currentRoute.Length; i++)
+        Blockpath bp = null;
+        float sigma = 5000f;
+        float sigmaReduction = 0.005f;
+
+        for (int i = 1; i < currentRoute.Length; i++)
         {
-            Blockpath bp = getBlockpathFromAToB(currentRoute[i - 1], currentRoute[i]);
+            bp = GetBlockpathFromAToB(currentRoute[i - 1], currentRoute[i]);
             if(bp = null)
             {
                 Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
@@ -742,11 +746,21 @@ public class World : MonoBehaviour
             }
             cost += bp.cost;
         }
+
+        //back to start location
+        bp = GetBlockpathFromAToB(currentRoute[currentRoute.Length-1], currentRoute[0]);
+        if (bp = null)
+        {
+            Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
+            return float.PositiveInfinity;
+        }
+        cost += bp.cost;
+
         return cost;
     }
 
     /// <returns> The Blockpath between two given blocks </returns>
-    Blockpath getBlockpathFromAToB(Block blockA, Block blockB)
+    Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
     {
         foreach(Blockpath bp in blockA.edges)
         {
@@ -757,6 +771,16 @@ public class World : MonoBehaviour
             }
         }
         return null;
+    }
+
+    /// <summary>
+    /// Swap two nodes in the current path
+    /// </summary>    
+    void SwapTwoNodes(int i, int j)
+    {
+        Block firstBlock = currentRoute[i];
+        currentRoute[i] = currentRoute[j];
+        currentRoute[j] = firstBlock;
     }
 }
 
