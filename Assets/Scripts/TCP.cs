@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,169 @@ using UnityEngine;
 namespace Assets.Scripts
 {
 
-
-
     /// <summary>
     /// open traveling salesman problem
     /// </summary>
     class TSP : World
     {
 
+        //TSP simulated annealing
+
+        Block[] currentRoute;
+        float recentCost;
+
+        float sigma = 5000f;
+        float sigmaReduction = 0.005f;
+
+        void initTSP(List<Block> blockList)
+        {
+            currentRoute = blockList.ToArray();
+
+        }
+
+        void simulatedAnnealing()
+        {
+            while(sigma >= 1)
+            {
+                float nodeAIndex = (int) UnityEngine.Random.RandomRange(1f, currentRoute.Length - 1);
+                float nodeBIndex = (int) UnityEngine.Random.RandomRange(1f, currentRoute.Length - 1);
+            }
+        }
+
+        /// <summary>
+        /// calculates the cost of the current path
+        /// </summary>
+        float CalcCurrentCost()
+        {
+            float cost = 0f;
+            Blockpath bp = null;
+
+            for (int i = 1; i < currentRoute.Length; i++)
+            {
+                bp = GetBlockpathFromAToB(currentRoute[i - 1], currentRoute[i]);
+                if (bp = null)
+                {
+                    Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
+                    return float.PositiveInfinity;
+                }
+                cost += bp.cost;
+            }
+
+            //back to start location
+            bp = GetBlockpathFromAToB(currentRoute[currentRoute.Length - 1], currentRoute[0]);
+            if (bp = null)
+            {
+                Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
+                return float.PositiveInfinity;
+            }
+            cost += bp.cost;
+
+            return cost;
+        }
+
+        /// <returns> The Blockpath between two given blocks </returns>
+        Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
+        {
+            foreach (Blockpath bp in blockA.edges)
+            {
+                //blockA and blockB to be found as start- and endBlock in desired blockpath bp
+                if ((bp.startBlock == blockB || bp.endBlock == blockB) && (bp.startBlock == blockA || bp.endBlock == blockA))
+                {
+                    return bp;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Swap two nodes in the current path
+        /// </summary>    
+        void SwapTwoNodes(int i, int j)
+        {
+            Block firstBlock = currentRoute[i];
+            currentRoute[i] = currentRoute[j];
+            currentRoute[j] = firstBlock;
+        }
+
+        /// <summary>
+        /// accepts a swap with a certain chance depending on sigma and the total amount our current path became worse
+        /// </summary>
+        bool AcceptSwap()
+        {
+            //if the path improved we accept right away
+            float currentCost = CalcCurrentCost();
+            if (recentCost >= currentCost)
+                return true;
+
+            float delta = recentCost - currentCost;
+            float chance = Mathf.Exp(delta / sigma);
+
+            float randomVal = UnityEngine.Random.RandomRange(0f, 1f);
+
+            return chance > randomVal;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* TSP brute force
+        
         public List<Block> nodes;
         public float[,] distance;
 
@@ -42,8 +198,6 @@ namespace Assets.Scripts
 
 
         }
-
-
 
 
         /// <summary>
@@ -79,8 +233,6 @@ namespace Assets.Scripts
         public List<Block> BruteForce()
         {
 
-
-
             for (int i = 1; i <= faculty(nodes.Count - 1); i++)
             {
 
@@ -97,7 +249,6 @@ namespace Assets.Scripts
 
             return null;
         }
-
 
 
 
@@ -120,5 +271,5 @@ namespace Assets.Scripts
 
         }
 
+    }*/
     }
-}
