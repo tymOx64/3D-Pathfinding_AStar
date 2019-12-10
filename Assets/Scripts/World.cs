@@ -719,6 +719,7 @@ public class World : MonoBehaviour
     //TSP simulated annealing
 
     Block[] currentRoute;
+    float recentCost;
 
     void initTSP(List<Block> blockList)
     {
@@ -781,6 +782,18 @@ public class World : MonoBehaviour
         Block firstBlock = currentRoute[i];
         currentRoute[i] = currentRoute[j];
         currentRoute[j] = firstBlock;
+    }
+
+    /// <summary>
+    /// accepts a swap with a certain chance depending on sigma and the total amount our current path became worse
+    /// </summary>
+    bool AcceptSwap()
+    {
+        //if the path improved we accept right away
+        if (recentCost >= CalcCurrentCost())
+            return true;
+        //TODO
+        return false;
     }
 }
 
