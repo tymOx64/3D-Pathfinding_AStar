@@ -59,7 +59,7 @@ namespace Assets.Scripts
             for (int i = 1; i < currentRoute.Length; i++)
             {
                 bp = GetBlockpathFromAToB(currentRoute[i - 1], currentRoute[i]);
-                if (bp = null)
+                if (bp == null)
                 {
                     Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
                     return float.PositiveInfinity;
