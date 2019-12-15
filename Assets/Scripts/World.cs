@@ -19,7 +19,10 @@ public class World : MonoBehaviour
     public static int radius = 3;
     public static uint maxCoroutines = 1000;
     public static Dictionary<string, Chunk> chunks ;
-
+    List<Block> randomlySpawnedApples = new List<Block>();
+    public static List<string> toRemove = new List<string>();
+    public static bool firstbuild = true;
+    public Vector3 lastbuildPos;
 
     //Worldsize
     public int WorldX;  
@@ -28,25 +31,11 @@ public class World : MonoBehaviour
 
 
 
-    List<Block> randomlySpawnedApples = new List<Block>();
-
-
-    public static List<string> toRemove = new List<string>();        //TODO:delete
-
-    public static bool firstbuild = true;                             //TODO:delete
-
-    public static CoroutineQueue queue;                               //TODO:delete
-
-
-
-
-
-    public Vector3 lastbuildPos;
 
     /// <summary>
     /// Creates a name for the chunk based on its position
     /// </summary>
-    /// <param name="v">Position of tje chunk</param>
+    /// <param name="v">Position of the chunk</param>
     /// <returns>Returns a string witht he chunk's name</returns>
 	public static string BuildChunkName(Vector3 v)
     {
@@ -54,6 +43,7 @@ public class World : MonoBehaviour
                      (int)v.y + "_" +
                      (int)v.z;
     }
+
 
     /// <summary>
     /// Creates a name for the column based on its position
@@ -64,6 +54,8 @@ public class World : MonoBehaviour
     {
         return (int)v.x + "_" + (int)v.z;
     }
+
+
 
     /// <summary>
     /// Get block based on world coordinates
@@ -104,6 +96,7 @@ public class World : MonoBehaviour
             return null;
     }
 
+
     /// <summary>
     /// Instantiates a new chunk at a specified location.
     /// </summary>
@@ -131,84 +124,15 @@ public class World : MonoBehaviour
     }
 
 
-    /*
+
+
+
     /// <summary>
-    /// Coroutine to recursively build chunks of the world depending on some location and a radius.
+    /// Creates static world
     /// </summary>
-    /// <param name="x">x position</param>
-    /// <param name="y">y position</param>
-    /// <param name="z">z position</param>
-    /// <param name="startrad">Starting radius (is necessary for recursive calls of this function)</param>
-    /// <param name="rad">Desired radius</param>
-    /// <returns></returns>
-	IEnumerator BuildRecursiveWorld(int x, int y, int z, int startrad, int rad)
-    {
-        int nextrad = rad - 1;
-        if (rad <= 0 || y < 0 || y > columnHeight) yield break;
-        // Build chunk front
-        BuildChunkAt(x, y, z + 1);
-        queue.Run(BuildRecursiveWorld(x, y, z + 1, rad, nextrad));
-        yield return null;
-
-        // Build chunk back
-        BuildChunkAt(x, y, z - 1);
-        queue.Run(BuildRecursiveWorld(x, y, z - 1, rad, nextrad));
-        yield return null;
-
-        // Build chunk left
-        BuildChunkAt(x - 1, y, z);
-        queue.Run(BuildRecursiveWorld(x - 1, y, z, rad, nextrad));
-        yield return null;
-
-        // Build chunk right
-        BuildChunkAt(x + 1, y, z);
-        queue.Run(BuildRecursiveWorld(x + 1, y, z, rad, nextrad));
-        yield return null;
-
-        // Build chunk up
-        BuildChunkAt(x, y + 1, z);
-        queue.Run(BuildRecursiveWorld(x, y + 1, z, rad, nextrad));
-        yield return null;
-
-        // Build chunk down
-        BuildChunkAt(x, y - 1, z);
-        queue.Run(BuildRecursiveWorld(x, y - 1, z, rad, nextrad));
-        yield return null;
-    }
-
-
-        */
-    /// <summary>
-    /// Coroutine to render chunks that are in the DRAW state. Adds chunks to the toRemove list, which are outside the player's radius.
-    /// </summary>
-    /// <returns></returns>
-/*	IEnumerator DrawChunks()
-    {
-        toRemove.Clear();
-        foreach (KeyValuePair<string, Chunk> c in chunks)
-        {
-            if (c.Value.status == Chunk.ChunkStatus.DRAW)
-            {
-                c.Value.DrawChunk();
-            }
-            if (c.Value.chunk && Vector3.Distance(player.transform.position,
-                                c.Value.chunk.transform.position) > radius * chunkSize)
-                toRemove.Add(c.Key);
-
-            yield return null;
-        }
-    }
-
+    /// <param name="xMax"></param>
+    /// <param name="zMax"></param>
     
-    */
-
-
-
-
-    //New methods
-
-
-        //Creates static world, TODO caves,..
     private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
         int startX = (int)(player.transform.position.x / chunkSize);
@@ -251,14 +175,16 @@ public class World : MonoBehaviour
 
                 }
 
-  
-
 
     }
 
 
 
-    //Draws all the chunks with status draw
+
+    /// <summary>
+    /// renders chunks
+    /// </summary>
+
     private void DrawChunks()
     {
 
@@ -276,49 +202,6 @@ public class World : MonoBehaviour
 
 
 
-
-
-
-
-/*
-    /// <summary>
-    /// Coroutine to save and then to unload unused chunks.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator RemoveOldChunks()
-    {
-        for (int i = 0; i < toRemove.Count; i++)
-        {
-            string n = toRemove[i];
-            Chunk c;
-            if (chunks.TryGetValue(n, out c))
-            {
-                Destroy(c.chunk);
-                c.Save();
-                chunks.TryRemove(n, out c);
-                yield return null;
-            }
-        }
-    }
-
-
-    */
-
-        /*
-    /// <summary>
-    /// Builds chunks that are inside the player's radius.
-    /// </summary>
-	public void BuildNearPlayer()
-    {
-        // Stop the coroutine of building the world, because it is getting replaced
-        StopCoroutine("BuildRecursiveWorld");
-        queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
-                                            (int)(player.transform.position.y / chunkSize),
-                                            (int)(player.transform.position.z / chunkSize), radius, radius));
-    }
-
-
-    */
     /// <summary>
     /// Unity lifecycle start method. Initializes the world and its first chunk and triggers the building of further chunks.
     /// Player is disabled during Start() to avoid him falling through the floor. Chunks are built using coroutines.
@@ -338,24 +221,8 @@ public class World : MonoBehaviour
         this.transform.position = Vector3.zero;
         this.transform.rotation = Quaternion.identity;
 
-        // queue = new CoroutineQueue(maxCoroutines, StartCoroutine);
-
-
-        /*
-        // Build starting chunk
-        BuildChunkAt((int)(player.transform.position.x / chunkSize),
-                                            (int)(player.transform.position.y / chunkSize),
-                                            (int)(player.transform.position.z / chunkSize));
-        // Draw starting chunk
-        queue.Run(DrawChunks());
-
-        // Create further chunks
-        queue.Run(BuildRecursiveWorld((int)(player.transform.position.x / chunkSize),
-                                            (int)(player.transform.position.y / chunkSize),
-                                            (int)(player.transform.position.z / chunkSize), radius, radius));*/
-        
     
-       BuildWorld(20,20);
+        BuildWorld(20,20);
 
 
         RandomAppleSpawn();
@@ -364,34 +231,6 @@ public class World : MonoBehaviour
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //valid world coordinates for simple testing purposes
-    //33 65 23
-    //43 65 32
 
     /// <summary>
     /// finds the shortest path between two blocks
@@ -443,6 +282,7 @@ public class World : MonoBehaviour
         return null;
     }
 
+
     /// <summary>
     /// finds all REACHABLE(!) neighbourblocks around given argument block
     /// </summary>
@@ -466,6 +306,8 @@ public class World : MonoBehaviour
         return neighbourList;
     }
 
+
+
     /// <summary>
     /// calculates the distance between two blocks along the x- and z-axis, where only block-to-direct-neighbourblock-movement is allowed
     /// </summary>
@@ -479,6 +321,8 @@ public class World : MonoBehaviour
             return dstY * 1.41f + (dstX - dstY);
         return dstX * 1.41f + (dstY - dstX);
     }
+
+
 
     /// <summary>
     /// retraces the path from end to start by going along the pathParents of each block
@@ -519,6 +363,7 @@ public class World : MonoBehaviour
     }
 
 
+
     public void VisualizeBlockpath(Blockpath bp)
     {
         foreach(Block block in bp.blockList)
@@ -527,12 +372,15 @@ public class World : MonoBehaviour
         }
     }
 
+
+
     public Vector3 roundVector3(Vector3 vec)
     {
         return new Vector3((float)Mathf.RoundToInt(vec.x),
             (float)Mathf.RoundToInt(vec.y),
             (float)Mathf.RoundToInt(vec.z));
     }
+
 
 
     /// <param name="columnPos"> the block-column where we want to get the block above the ground </param>
@@ -577,6 +425,7 @@ public class World : MonoBehaviour
         return resultBlock;
     }
 
+
     /// <summary>
     /// E.g. relativePos of (-1,1,0) would return the neighbourblock which is -1 in x direction, +1 in y direction (or whatever y is needed to get above the ground)
     /// </summary>
@@ -590,6 +439,8 @@ public class World : MonoBehaviour
             return null;
         return resultBlock;
     }
+
+
 
     /// <summary>
     /// returns null if worldPos is not a valid position in a chunk; returns the created block on success
@@ -631,6 +482,7 @@ public class World : MonoBehaviour
             } 
             
         }
+
         
         TSP tsp = new TSP(randomlySpawnedApples);
         Block[] roundTrip = tsp.simulatedAnnealing();
@@ -641,57 +493,8 @@ public class World : MonoBehaviour
         }
 
         einmal = false;
-        /*//für testzwecke; wird alle 'timer' sek ausgeführt
-        if(timer < Time.timeSinceLevelLoad)
-        {
-            timer += 60f;
-
-            createBlockAtWorldPos(new Vector3(33, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(33, 66, 28), Block.BlockType.STONE);
-
-            createBlockAtWorldPos(new Vector3(36, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(36, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(37, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(37, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(38, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(38, 66, 28), Block.BlockType.STONE);
-
-            createBlockAtWorldPos(new Vector3(32, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(32, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(34, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(34, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(35, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(35, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(31, 65, 28), Block.BlockType.STONE);
-
-            //block vor wand
-            //createBlockAtWorldPos(new Vector3(31, 65, 29), Block.BlockType.GOLD);
-
-            createBlockAtWorldPos(new Vector3(31, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(30, 65, 28), Block.BlockType.STONE);
-            //createBlockAtWorldPos(new Vector3(30, 66, 28), Block.BlockType.STONE);            
-
-            createBlockAtWorldPos(new Vector3(29, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(29, 66, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(28, 65, 28), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(28, 66, 28), Block.BlockType.STONE);
-
-
-            Block testBlockA = createBlockAtWorldPos(new Vector3(34, 65, 24), Block.BlockType.REDSTONE);
-            Block testBlockB = createBlockAtWorldPos(new Vector3(33, 65, 45), Block.BlockType.REDSTONE);
-            findPath(testBlockB, testBlockA);
-
-            /*foreach(Block randomApple in randomlySpawnedApples)
-            {
-                findPath(testBlockA, randomApple);
-            }
-            
-        }
-        */
-
-
-
-
+        
+        
         // Activate the player's GameObject
         if (!player.activeSelf)
         {
@@ -700,62 +503,8 @@ public class World : MonoBehaviour
         }
     }
 
-    //List<Block> _blockList
+   
 
-
-    /*
-    /// <summary>
-    /// Method randomly distributes apples(currently redstones) on the surface of the world
-    /// </summary>
-    public void RandomAppleSpawn( ) 
-    {
-        int amount = (int) Random.Range(4.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
-
-        Debug.Log("Amount" + amount.ToString());
-        int testt = 0;
-        while (amount > 0 && testt < 1000)
-        {
-            testt++;
-            if (testt > 900)
-                Debug.Log("testt failed");
-            foreach (KeyValuePair<string, Chunk> c in chunks)
-            {
-                if( amount <= 0)
-                {
-
-                    break;
-                }
-
-                float createApple= Random.Range(0f, 1f); //random decision whether an apple is spawned on the current chunk or not
-
-                if (createApple >0.5f)
-                {
-                    
-                    Block block = c.Value.chunkData[3, 3, 3];
-
-                    int i = 0;
-                    //ensures that there is at least one air block above the apple and a solid block below it and that it only replaces air blocks
-                    //and that 
-                    while (!(block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-1-i, (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y-i , (int)block.position.z) 
-                        && !block.HasSolidNeighbour((int)block.position.x, (int)block.position.y + 1-i, (int)block.position.z)) && i < 3)
-                        
-                    {
-                        block = c.Value.chunkData[3, 3-i, 3];
-                        i++;
-                        
-
-                        amount--;
-                        Debug.Log(amount);
-                    }
-                    block.BuildBlock(Block.BlockType.REDSTONE);
-                    randomlySpawnedApples.Add(c.Value.chunkData[3, 3-i, 3]);
-                }
-            }
-
-        }
-    }
-    */
 
     /// <summary>
     /// Method randomly distributes apples(currently redstones) on the surface of the world
