@@ -23,6 +23,7 @@ public class World : MonoBehaviour
     public static List<string> toRemove = new List<string>();
     public static bool firstbuild = true;
     public Vector3 lastbuildPos;
+    public static CoroutineQueue queue;
 
     //Worldsize
     public int WorldX;  
