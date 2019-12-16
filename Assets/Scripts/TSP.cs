@@ -30,6 +30,7 @@ namespace Assets.Scripts
 
         public Block[] simulatedAnnealing()
         {
+            Debug.Log("Initial cost of randomized route: " + CalcCurrentCost());
             while (sigma >= 1)
             {
                 int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, currentRoute.Length) - 0.000001f);
@@ -40,13 +41,12 @@ namespace Assets.Scripts
                 SwapTwoNodes(nodeAIndex, nodeBIndex);                
 
                 if (!AcceptSwap())
-                {
-                    Debug.Log("Swap not accepted");
+                {                    
                     SwapTwoNodes(nodeBIndex, nodeAIndex);
-                }
-                Debug.Log("Sigma: " + sigma);
+                }                
                 sigma *= 1 - sigmaReduction;
             }
+            Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
         }
 
@@ -77,7 +77,7 @@ namespace Assets.Scripts
                 return float.PositiveInfinity;
             }
             cost += bp.cost;
-            Debug.Log("cost: " + cost);
+            //Debug.Log("cost: " + cost);
             return cost;
         }
 
@@ -121,7 +121,7 @@ namespace Assets.Scripts
             float chance = Mathf.Exp(delta / sigma);
 
             float randomVal = UnityEngine.Random.RandomRange(0f, 1f);
-            Debug.Log("Chance: " + chance);
+            //Debug.Log("Chance: " + chance);
             return chance > randomVal;
         }
 

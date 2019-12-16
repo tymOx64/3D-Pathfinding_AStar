@@ -548,7 +548,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(6.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(8.0f, 8.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
@@ -577,7 +577,7 @@ public class World : MonoBehaviour
             //coninue if newly spawned apple would be in a radius of 5 units within another apple
             foreach(Vector3 vec in spawnLocations)
             {
-                if(Mathf.Abs(vec.x - spawnPos.x) <= 5 && Mathf.Abs(vec.z - spawnPos.z) <= 5)
+                if(Mathf.Abs(vec.x - spawnPos.x) <= 4 && Mathf.Abs(vec.z - spawnPos.z) <= 4)
                 {
                     Debug.Log("Skipped spawnPos - too close to another apple");
                     goto proceed;
