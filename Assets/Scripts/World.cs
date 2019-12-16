@@ -537,25 +537,39 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(4.0f, 4.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(6.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned" + amount.ToString());
         int testt = 0;
         Block block;
+        HashSet<Vector3> spawnLocations = new HashSet<Vector3>();
 
-        while (amount > 0 && testt < 1000)
+        while (amount > 0 && testt < 400)
         {
             testt++;
-            if (testt > 900)
+            if (testt > 398)
                 Debug.Log("testt failed");
             float xOffset = Random.Range(0f, 50f);
             float zOffset = Random.Range(0f, 50f);
 
-            block = getFirstNonsolidBlockAboveGround(new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset));
+            Vector3 spawnPos = new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset);
 
+            block = getFirstNonsolidBlockAboveGround(spawnPos);
+            
             if (block == null)
                 continue;
 
+            //coninue if newly spawned apple would be in a radius of 5 units within another apple
+            foreach(Vector3 vec in spawnLocations)
+            {
+                if(Mathf.Abs(vec.x - spawnPos.x) <= 5 && Mathf.Abs(vec.z - spawnPos.z) <= 5)
+                {
+                    Debug.Log("Skipped spawnPos - too close to another apple");
+                    continue;
+                }
+            }
+
+            spawnLocations.Add(spawnPos);
             amount--;
             block.BuildBlock(Block.BlockType.REDSTONE);
             randomlySpawnedApples.Add(block);
