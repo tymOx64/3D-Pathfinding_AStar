@@ -488,7 +488,7 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
-        TSP tspTestObj = new TSP(new List<Block>());
+        //TSP tspTestObj = new TSP(new List<Block>());
 
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
         if (einmal)
@@ -503,20 +503,20 @@ public class World : MonoBehaviour
                         continue;
                     }                        
                     findPath(appleA, appleB);
-                    VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
+                    //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
             } 
             
         }
 
         
-        /*TSP tsp = new TSP(randomlySpawnedApples);
+        TSP tsp = new TSP(randomlySpawnedApples);
         Block[] roundTrip = tsp.simulatedAnnealing();
 
         for(int i = 0; i < roundTrip.Length - 1; i++)
         {
             VisualizeBlockpath(tsp.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
-        }*/
+        }
 
         einmal = false;
         
@@ -537,7 +537,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(3.0f, 3.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(4.0f, 4.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned" + amount.ToString());
         int testt = 0;
