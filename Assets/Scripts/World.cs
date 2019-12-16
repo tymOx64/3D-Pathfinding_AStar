@@ -337,7 +337,7 @@ public class World : MonoBehaviour
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
-            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
 
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
@@ -367,6 +367,11 @@ public class World : MonoBehaviour
 
     public void VisualizeBlockpath(Blockpath bp)
     {
+        if (bp == null)
+        {
+            Debug.Log("blockpath null");
+            return;
+        }            
         foreach(Block block in bp.blockList)
         {
             Instantiate(testCube, block.worldPosition, Quaternion.identity);
@@ -382,21 +387,33 @@ public class World : MonoBehaviour
             (float)Mathf.RoundToInt(vec.z));
     }
 
-
+    int amountOfCubesForTesting = 200;
 
     /// <param name="columnPos"> the block-column where we want to get the block above the ground </param>
     public Block getFirstNonsolidBlockAboveGround(Vector3 columnPos)
     {
+        if(GetWorldBlock(new Vector3(columnPos.x, 65f, columnPos.z)) == null)
+        {
+            if(amountOfCubesForTesting-- > 0)
+            {
+                //visualizing where the function is getting outside of the map area
+                Instantiate(testCube, new Vector3(columnPos.x, 65f, columnPos.z), Quaternion.identity);
+            }
+            Debug.Log("tried getting block out of map-area at WorldPos: " + new Vector3(columnPos.x, 65f, columnPos.z).ToString());           
+            return null;
+        }
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
         while(GetWorldBlock(columnPos) != null)
         {         
             columnPos += Vector3.up;
         }
-        if (GetWorldBlock(columnPos + Vector3.down) == null)
+        
+        /*if (GetWorldBlock(columnPos + Vector3.down) == null)
         {
             Debug.Log("tried getting block out of map-area");
             return null;
-        }         
+        }*/
+        
         //mainly for debugging/testing purposes. probably not needed lateron
         int errorCheck = 0;
         while (GetWorldBlock(columnPos) == null)
@@ -471,6 +488,8 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
+        TSP tspTestObj = new TSP(new List<Block>());
+
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
         if (einmal)
         {
@@ -478,20 +497,23 @@ public class World : MonoBehaviour
             {
                 foreach (Block appleB in randomlySpawnedApples)
                 {
-                    findPath(appleA, appleB);
+                    if (appleA == appleB)
+                        continue;
+                    //findPath(appleA, appleB);
+                    //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
             } 
             
         }
 
         
-        TSP tsp = new TSP(randomlySpawnedApples);
+        /*TSP tsp = new TSP(randomlySpawnedApples);
         Block[] roundTrip = tsp.simulatedAnnealing();
 
         for(int i = 0; i < roundTrip.Length - 1; i++)
         {
             VisualizeBlockpath(tsp.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
-        }
+        }*/
 
         einmal = false;
         
@@ -512,7 +534,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(4.0f, 4.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(2.0f, 2.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned" + amount.ToString());
         int testt = 0;
@@ -535,6 +557,9 @@ public class World : MonoBehaviour
             block.BuildBlock(Block.BlockType.REDSTONE);
             randomlySpawnedApples.Add(block);
         }
+
+        //testing
+        findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[1]);
     }
 
 

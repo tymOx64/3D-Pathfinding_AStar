@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blockpath : MonoBehaviour
+public class Blockpath
 {
     public Block startBlock, endBlock;
     public List<Block> blockList;
@@ -16,24 +16,6 @@ public class Blockpath : MonoBehaviour
         blockList = _blockList;
         //because of the way retracing paths works, we have to reserve it in order to get the path from startblock to endblock
         blockList.Reverse();
-    }
-
-
-
-
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
 }
