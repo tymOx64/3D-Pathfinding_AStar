@@ -337,7 +337,7 @@ public class World : MonoBehaviour
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
-            Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
+            //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
 
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
@@ -498,9 +498,12 @@ public class World : MonoBehaviour
                 foreach (Block appleB in randomlySpawnedApples)
                 {
                     if (appleA == appleB)
+                    {
+                        Debug.Log("Skipped iteration for Apple at: " + appleA.worldPosition);
                         continue;
-                    //findPath(appleA, appleB);
-                    //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
+                    }                        
+                    findPath(appleA, appleB);
+                    VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
             } 
             
@@ -534,7 +537,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(2.0f, 2.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(3.0f, 3.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned" + amount.ToString());
         int testt = 0;
@@ -548,7 +551,7 @@ public class World : MonoBehaviour
             float xOffset = Random.Range(0f, 50f);
             float zOffset = Random.Range(0f, 50f);
 
-            block = getFirstNonsolidBlockAboveGround(new Vector3(10f + xOffset, 65f, 10f + zOffset));
+            block = getFirstNonsolidBlockAboveGround(new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset));
 
             if (block == null)
                 continue;
@@ -559,7 +562,9 @@ public class World : MonoBehaviour
         }
 
         //testing
-        findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[1]);
+        /*findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[1]);
+        findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[2]);
+        findPath(randomlySpawnedApples.ToArray()[2], randomlySpawnedApples.ToArray()[1]);*/
     }
 
 
