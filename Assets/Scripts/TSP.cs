@@ -80,8 +80,10 @@ namespace Assets.Scripts
         }
 
         /// <returns> The Blockpath between two given blocks </returns>
-        public Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
+        public static Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
         {
+            if (blockA.edges == null || blockB.edges == null)
+                return null;
             foreach (Blockpath bp in blockA.edges)
             {
                 //blockA and blockB to be found as start- and endBlock in desired blockpath bp

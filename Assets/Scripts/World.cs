@@ -387,14 +387,20 @@ public class World : MonoBehaviour
             (float)Mathf.RoundToInt(vec.z));
     }
 
-    int amountOfCubesForTesting = 200;
+
+
+    int amountOfVisualizedCubesForTestingPurposes = 300;
+
+
 
     /// <param name="columnPos"> the block-column where we want to get the block above the ground </param>
     public Block getFirstNonsolidBlockAboveGround(Vector3 columnPos)
     {
+        //at yPos 65 there should a valid block at all valid x and z positions, thus we are outside of the map area if equals to null
         if(GetWorldBlock(new Vector3(columnPos.x, 65f, columnPos.z)) == null)
         {
-            if(amountOfCubesForTesting-- > 0)
+            //For bugfixing, to be deleted lateron
+            if(amountOfVisualizedCubesForTestingPurposes-- > 0)
             {
                 //visualizing where the function is getting outside of the map area
                 Instantiate(testCube, new Vector3(columnPos.x, 65f, columnPos.z), Quaternion.identity);
@@ -402,6 +408,7 @@ public class World : MonoBehaviour
             Debug.Log("tried getting block out of map-area at WorldPos: " + new Vector3(columnPos.x, 65f, columnPos.z).ToString());           
             return null;
         }
+
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
         while(GetWorldBlock(columnPos) != null)
         {         
@@ -426,6 +433,7 @@ public class World : MonoBehaviour
                 return null;
             }                
         }
+
         //traverse until reaching a solid block
         while (GetWorldBlock(columnPos) == null || !GetWorldBlock(columnPos).isSolid)
         {
@@ -435,6 +443,7 @@ public class World : MonoBehaviour
                 return null;
             }
         }
+
         columnPos += Vector3.up;
         Block resultBlock = GetWorldBlock(columnPos);
         if (resultBlock == null)
@@ -499,24 +508,26 @@ public class World : MonoBehaviour
                 {
                     if (appleA == appleB)
                     {
-                        Debug.Log("Skipped iteration for Apple at: " + appleA.worldPosition);
                         continue;
-                    }                        
-                    findPath(appleA, appleB);
+                    }
+                    if(TSP.GetBlockpathFromAToB(appleA, appleB) == null)
+                        findPath(appleA, appleB);
                     //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
-            } 
-            
+            }
+
+            TSP tsp = new TSP(randomlySpawnedApples);
+            Block[] roundTrip = tsp.simulatedAnnealing();
+
+            for (int i = 0; i < roundTrip.Length - 1; i++)
+            {
+                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
+            }
+
         }
 
         
-        TSP tsp = new TSP(randomlySpawnedApples);
-        Block[] roundTrip = tsp.simulatedAnnealing();
-
-        for(int i = 0; i < roundTrip.Length - 1; i++)
-        {
-            VisualizeBlockpath(tsp.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
-        }
+        
 
         einmal = false;
         
@@ -539,18 +550,22 @@ public class World : MonoBehaviour
     {
         int amount = (int)Random.Range(6.0f, 6.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
-        Debug.Log("Amount to be spawned" + amount.ToString());
+        Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
         Block block;
         HashSet<Vector3> spawnLocations = new HashSet<Vector3>();
 
-        while (amount > 0 && testt < 400)
+        while (amount > 0 && testt < 500)
         {
+            proceed:
             testt++;
-            if (testt > 398)
-                Debug.Log("testt failed");
-            float xOffset = Random.Range(0f, 50f);
-            float zOffset = Random.Range(0f, 50f);
+            if (testt > 498)
+            {
+                Debug.Log("random apple spawn failed to spawn all apples");
+                return;
+            }                
+            float xOffset = Random.Range(4f, 40f);
+            float zOffset = Random.Range(4f, 40f);
 
             Vector3 spawnPos = new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset);
 
@@ -565,7 +580,7 @@ public class World : MonoBehaviour
                 if(Mathf.Abs(vec.x - spawnPos.x) <= 5 && Mathf.Abs(vec.z - spawnPos.z) <= 5)
                 {
                     Debug.Log("Skipped spawnPos - too close to another apple");
-                    continue;
+                    goto proceed;
                 }
             }
 
