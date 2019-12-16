@@ -268,7 +268,7 @@ public class World : MonoBehaviour
                         endBlock.pathParent = currentBlock;
 
                         Debug.Log("PATH COMPLETE");
-                        return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
+                        return RetracePath(startBlock, endBlock, endBlock.pathParent.getFCost(), openSet, closedSet);
                     }
 
 
