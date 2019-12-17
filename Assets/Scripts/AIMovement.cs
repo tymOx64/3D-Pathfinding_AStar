@@ -30,7 +30,7 @@ public class AIMovement : MonoBehaviour
         Debug.Log("Distance: " + (transform.position - nextBlock.worldPosition).magnitude);
         if((transform.position - nextBlock.position).magnitude <= 1f)
         {
-            nextBlock = GetNextBlock();
+            IterateBlock();
         }            
 
         Vector3 lookDir = transform.position - nextBlock.worldPosition;
@@ -48,20 +48,21 @@ public class AIMovement : MonoBehaviour
         nextBlock = bpArray[0].blockList.ToArray()[0];
     }
 
-    public Block GetNextBlock()
+    public void IterateBlock()
     {
         indexBlock++;
+        Debug.Log("indexBlock: " + indexBlock + " , indexBP: " + indexBP);
         if (indexBlock >= bpArray.Length)
         {
             indexBlock = 0;
             indexBP++;
         }
-        if(indexBP >= bpArray.Length)
+        /*if(indexBP >= bpArray.Length)
         {
             return null;
-        }
+        }*/
         Blockpath currentBP = bpArray[indexBP];
-        Block nextBlock = currentBP.blockList.ToArray()[indexBlock];        
-        return nextBlock;
+        nextBlock = currentBP.blockList.ToArray()[indexBlock];
+        Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
     }
 }
