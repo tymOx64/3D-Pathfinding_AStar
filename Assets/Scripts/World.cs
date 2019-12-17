@@ -12,6 +12,9 @@ using Assets.Scripts;
 public class World : MonoBehaviour
 {
     public GameObject player;
+
+    public GameObject AIcam;
+
     public Material textureAtlas;
     public Material fluidTexture;
     public static int columnHeight = 16;
@@ -136,9 +139,9 @@ public class World : MonoBehaviour
     
     private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
-        int startX = (int)(player.transform.position.x / chunkSize);
-        int startY = (int)(player.transform.position.y / chunkSize);
-        int startZ = (int)(player.transform.position.z / chunkSize);
+        int startX = 2;
+        int startY = 17;
+        int startZ = 2;
 
         //Build first chunk
         
@@ -209,13 +212,13 @@ public class World : MonoBehaviour
     /// </summary>
     void Start()
     {
-        
+       /* 
         Vector3 ppos = player.transform.position;
         player.transform.position = new Vector3(ppos.x,
                                             Utils.GenerateHeight(ppos.x, ppos.z) + 1,
                                             ppos.z);
         lastbuildPos = player.transform.position;
-        player.SetActive(false);
+        player.SetActive(false);*/
 
         firstbuild = true;
         chunks = new Dictionary<string, Chunk>();
@@ -229,6 +232,7 @@ public class World : MonoBehaviour
         RandomAppleSpawn();
 
         DrawChunks();
+
     }
 
 
@@ -507,6 +511,8 @@ public class World : MonoBehaviour
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
         if (einmal)
         {
+            //player.active = false;
+            AIcam.active = true;
             foreach(Block appleA in randomlySpawnedApples)
             {
                 foreach (Block appleB in randomlySpawnedApples)
@@ -522,14 +528,18 @@ public class World : MonoBehaviour
             }
 
             TSP tsp = new TSP(randomlySpawnedApples);
-            Block[] roundTrip = tsp.simulatedAnnealing();
+            Block[] roundTrip = tsp.simulatedAnnealing();            
+            Blockpath[] bpArray = new Blockpath[roundTrip.Length];
 
             for (int i = 0; i < roundTrip.Length - 1; i++)
             {
-                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
-                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
+                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));  
+                bpArray[i] = TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]);                
             }
+            bpArray[bpArray.Length - 1] = TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]);
+            VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
 
+            AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
         }
 
         
@@ -537,13 +547,18 @@ public class World : MonoBehaviour
 
         einmal = false;
         
-        
+
+
+      /*  
         // Activate the player's GameObject
         if (!player.activeSelf)
         {
             player.SetActive(true);
             
         }
+        */
+
+
     }
 
    
@@ -554,14 +569,14 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(8.0f, 8.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(5.0f, 5.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
 
         Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
         Block block;
         HashSet<Vector3> spawnLocations = new HashSet<Vector3>();
 
-        randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(player.transform.position));
+        randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(AIcam.transform.position));
 
         while (amount > 0 && testt < 500)
         {
@@ -572,8 +587,8 @@ public class World : MonoBehaviour
                 Debug.Log("random apple spawn failed to spawn all apples");
                 return;
             }                
-            float xOffset = Random.Range(4f, 40f);
-            float zOffset = Random.Range(4f, 40f);
+            float xOffset = Random.Range(5f, 60f);
+            float zOffset = Random.Range(5f, 60f);
 
             Vector3 spawnPos = new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset);
 
