@@ -120,7 +120,7 @@ namespace Assets.Scripts
             float delta = recentCost - currentCost;
             float chance = Mathf.Exp(delta / sigma);
 
-            float randomVal = UnityEngine.Random.RandomRange(0f, 1f);
+            float randomVal = UnityEngine.Random.Range(0f, 1f);
             //Debug.Log("Chance: " + chance);
             return chance > randomVal;
         }

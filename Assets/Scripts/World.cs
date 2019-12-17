@@ -264,11 +264,16 @@ public class World : MonoBehaviour
                     //it happens to find the destination above the endblock, correcting this before invoking RetracePath
                     if (neighbourBlock.hCost <= 0.5f)
                     {
-                        neighbourBlock.pathParent = null;
+                        neighbourBlock.pathParent = null; 
                         endBlock.pathParent = currentBlock;
+                        endBlock.gCost = newMovementCostToNeighbour;
+                        endBlock.hCost = 0f;
+
+
+                        openSet.Add(endBlock);
 
                         Debug.Log("PATH COMPLETE");
-                        return RetracePath(startBlock, endBlock, endBlock.pathParent.getFCost(), openSet, closedSet);
+                        return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
                     }
 
 
@@ -403,9 +408,9 @@ public class World : MonoBehaviour
             if(amountOfVisualizedCubesForTestingPurposes-- > 0)
             {
                 //visualizing where the function is getting outside of the map area
-                Instantiate(testCube, new Vector3(columnPos.x, 65f, columnPos.z), Quaternion.identity);
+                //Instantiate(testCube, new Vector3(columnPos.x, 65f, columnPos.z), Quaternion.identity);
             }
-            Debug.Log("tried getting block out of map-area at WorldPos: " + new Vector3(columnPos.x, 65f, columnPos.z).ToString());           
+            //Debug.Log("tried getting block out of map-area at WorldPos: " + new Vector3(columnPos.x, 65f, columnPos.z).ToString());           
             return null;
         }
 
@@ -522,6 +527,7 @@ public class World : MonoBehaviour
             for (int i = 0; i < roundTrip.Length - 1; i++)
             {
                 VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
+                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
             }
 
         }
@@ -554,6 +560,8 @@ public class World : MonoBehaviour
         int testt = 0;
         Block block;
         HashSet<Vector3> spawnLocations = new HashSet<Vector3>();
+
+        randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(player.transform.position));
 
         while (amount > 0 && testt < 500)
         {
