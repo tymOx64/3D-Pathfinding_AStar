@@ -18,4 +18,11 @@ public class Blockpath
         blockList.Reverse();
     }
 
+    public void reverseBp()
+    {
+        blockList.Reverse();
+        Block temp = startBlock;
+        startBlock = endBlock;
+        endBlock = temp;
+    }
 }

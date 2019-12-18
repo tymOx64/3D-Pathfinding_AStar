@@ -268,7 +268,10 @@ public class World : MonoBehaviour
                     //it happens to find the destination above the endblock, correcting this before invoking RetracePath
                     if (neighbourBlock.hCost <= 0.5f)
                     {
-                        neighbourBlock.pathParent = null; 
+                        neighbourBlock.pathParent = null;
+                        neighbourBlock.gCost = 0f;
+                        neighbourBlock.hCost = 0f;
+
                         endBlock.pathParent = currentBlock;
                         endBlock.gCost = newMovementCostToNeighbour;
                         endBlock.hCost = 0f;
@@ -342,17 +345,18 @@ public class World : MonoBehaviour
     {
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
-
+        //Debug.Log("START RETRACE");
         while(currentBlock != startBlock)
         {
             //Visualization for testing purposes
             //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
-
+            //Debug.Log("WorldPos: " + currentBlock.worldPosition);
             blockList.Add(currentBlock);
             currentBlock = currentBlock.pathParent;
         }
+        //Debug.Log("END RETRACE");
         //reset all pathfinding Val (gCost, hCost, pathParent) for potential upcoming pathfinding runs
-        while(openSet.Count > 0)
+        while (openSet.Count > 0)
         {
             openSet.RemoveFirst().ResetPathfindingVal();
         }
@@ -497,6 +501,18 @@ public class World : MonoBehaviour
     }
 
 
+    public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
+    {
+        for(int i = 0; i < bpArr.Length - 1; i++)
+        {
+            if(bpArr[i].endBlock != bpArr[i + 1].startBlock)
+            {
+                bpArr[i + 1].reverseBp();
+            }
+        }
+    }
+
+
     float timer = 2f;
     public GameObject testCube;
 
@@ -538,6 +554,8 @@ public class World : MonoBehaviour
             }
             bpArray[bpArray.Length - 1] = TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]);
             VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
+
+            CorrectBlockpathsDirectionForRoundtrip(bpArray);
 
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
         }

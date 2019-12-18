@@ -9,6 +9,8 @@ public class AIMovement : MonoBehaviour
     int indexBP;
     int indexBlock;
     Block nextBlock;
+    float rotationSpeed = 22f;
+    float moveSpeed = 8f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,20 +27,24 @@ public class AIMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (nextBlock == null)
+        if (nextBlock == null || moveSpeed == 0f)
             return;
-        Debug.Log("Distance: " + (transform.position - nextBlock.worldPosition).magnitude);
-        if((transform.position - nextBlock.position).magnitude <= 1f)
+        //Debug.Log("Distance: " + (transform.position - nextBlock.worldPosition).magnitude);
+        if((transform.position - nextBlock.worldPosition).magnitude <= 0.15f)
         {
             IterateBlock();
         }            
 
-        Vector3 lookDir = transform.position - nextBlock.worldPosition;
+        Vector3 lookDir = (nextBlock.worldPosition - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(lookDir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
 
-        float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
+        //  transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
 
-        transform.eulerAngles = (new Vector3(0, angle + 180, 0));
-        transform.position += transform.forward * Time.deltaTime;
+        /*float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
+        transform.eulerAngles = (new Vector3(0, angle + 180, 0));*/
+
+        transform.position += transform.forward * Time.deltaTime * moveSpeed;
     }
 
 
@@ -52,15 +58,16 @@ public class AIMovement : MonoBehaviour
     {
         indexBlock++;
         Debug.Log("indexBlock: " + indexBlock + " , indexBP: " + indexBP);
-        if (indexBlock >= bpArray.Length)
+        if (indexBlock >= bpArray[indexBP].blockList.ToArray().Length)
         {
             indexBlock = 0;
             indexBP++;
         }
-        /*if(indexBP >= bpArray.Length)
+        if(indexBP >= bpArray.Length)
         {
-            return null;
-        }*/
+            moveSpeed = 0f;
+            return;
+        }
         Blockpath currentBP = bpArray[indexBP];
         nextBlock = currentBP.blockList.ToArray()[indexBlock];
         Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
