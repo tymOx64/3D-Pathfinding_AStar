@@ -22,8 +22,8 @@ public class BlockInteraction : MonoBehaviour
 			buildtype = Block.BlockType.STONE;
 		if(Input.GetKeyDown("3"))
 			buildtype = Block.BlockType.DIAMOND;
-		if(Input.GetKeyDown("4"))
-			buildtype = Block.BlockType.REDSTONE;
+        if (Input.GetKeyDown("4"))
+            buildtype = Block.BlockType.REDSTONE; 
 		if(Input.GetKeyDown("5"))
 			buildtype = Block.BlockType.GOLD;
         if (Input.GetKeyDown("6"))

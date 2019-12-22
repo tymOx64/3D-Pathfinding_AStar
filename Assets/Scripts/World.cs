@@ -147,7 +147,7 @@ public class World : MonoBehaviour
         
 
             BuildChunkAt(startX,startY,startZ);
-
+        
 
         BuildChunkAt(startX + 1, startY, startZ); //?
         
@@ -522,6 +522,7 @@ public class World : MonoBehaviour
     /// </summary>
     void Update()
     {
+         
         //TSP tspTestObj = new TSP(new List<Block>());
 
         //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
@@ -574,8 +575,8 @@ public class World : MonoBehaviour
             player.SetActive(true);
             
         }
-        */
-
+      */
+        
 
     }
 
@@ -628,7 +629,8 @@ public class World : MonoBehaviour
             spawnLocations.Add(spawnPos);
             amount--;
             block.BuildBlock(Block.BlockType.REDSTONE);
-            randomlySpawnedApples.Add(block);
+           //block.BuildBlock(Block.BlockType.APPLE);
+           randomlySpawnedApples.Add(block);
         }
 
         //testing

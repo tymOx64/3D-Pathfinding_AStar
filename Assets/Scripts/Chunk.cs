@@ -165,12 +165,17 @@ public class Chunk
 							chunkData[x,y,z] = new Block(Block.BlockType.DIAMOND, pos, 
 						                chunk.gameObject, this);
 						else if(Utils.fBM3D(worldX, worldY, worldZ, 0.03f, 3) < 0.41f && worldY < 20)
-							chunkData[x,y,z] = new Block(Block.BlockType.REDSTONE, pos, 
+                            chunkData[x,y,z] = new Block(Block.BlockType.REDSTONE, pos, 
 						                chunk.gameObject, this);
-						else
-							chunkData[x,y,z] = new Block(Block.BlockType.STONE, pos, 
+
+                            
+
+                        else
+                            chunkData[x,y,z] = new Block(Block.BlockType.STONE, pos, 
 						                chunk.gameObject, this);
-					}
+                       /* chunkData[x, y, z] = new Block(Block.BlockType.APPLE, pos,
+                                        chunk.gameObject, this);*/
+                    }
                     // Place trunks of a tree or grass blocks on the surface
 					else if(worldY == surfaceHeight)
 					{
