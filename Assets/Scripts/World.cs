@@ -588,7 +588,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(5.0f, 5.0f);  //Amount of apples greater than or equal to 4 and less than or equal to 6
+        int amount = (int)Random.Range(5.0f, 5.0f);  //Amount of apples
 
         Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;

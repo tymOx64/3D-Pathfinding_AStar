@@ -8,9 +8,10 @@ public class AIMovement : MonoBehaviour
     Blockpath[] bpArray;
     int indexBP;
     int indexBlock;
+    Block previousBlock = null;
     Block nextBlock;
-    float rotationSpeed = 22f;
-    float moveSpeed = 8f;
+    float rotationSpeed = 16f;
+    float moveSpeed = 4f;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,12 @@ public class AIMovement : MonoBehaviour
     {
         if (nextBlock == null || moveSpeed == 0f)
             return;
-        //Debug.Log("Distance: " + (transform.position - nextBlock.worldPosition).magnitude);
+        float heightDifference = float.NegativeInfinity;
+        if(previousBlock != null)
+        {
+            heightDifference = CalcHeightDifference();
+        }
+
         if((transform.position - nextBlock.worldPosition).magnitude <= 0.15f)
         {
             IterateBlock();
@@ -39,12 +45,13 @@ public class AIMovement : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(lookDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
 
-        //  transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
-
-        /*float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
-        transform.eulerAngles = (new Vector3(0, angle + 180, 0));*/
-
-        transform.position += transform.forward * Time.deltaTime * moveSpeed;
+        //if we just started moving, the heightdifference is neg inf and therefore we just move straight towards the next block
+        //if heightdifference is smaller than 0.5 the next block should be on the very same level => move straight forward to nextBlock
+        if (heightDifference == float.NegativeInfinity || Mathf.Abs(heightDifference) < 0.5f)
+        {
+            transform.position += transform.forward * Time.deltaTime * moveSpeed;
+        }
+        
     }
 
 
@@ -56,6 +63,8 @@ public class AIMovement : MonoBehaviour
 
     public void IterateBlock()
     {
+        if (nextBlock != null)
+            previousBlock = nextBlock;
         indexBlock++;
         Debug.Log("indexBlock: " + indexBlock + " , indexBP: " + indexBP);
         if (indexBlock >= bpArray[indexBP].blockList.ToArray().Length)
@@ -71,5 +80,10 @@ public class AIMovement : MonoBehaviour
         Blockpath currentBP = bpArray[indexBP];
         nextBlock = currentBP.blockList.ToArray()[indexBlock];
         Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
+    }
+
+    public float CalcHeightDifference()
+    {
+        return nextBlock.worldPosition.y - previousBlock.worldPosition.y;
     }
 }
