@@ -33,7 +33,7 @@ public class AIMovement : MonoBehaviour
         float heightDifference = float.NegativeInfinity;
         if(previousBlock != null)
         {
-            heightDifference = CalcHeightDifference();
+            heightDifference = CalcVerticalDistance();
         }
 
         if((transform.position - nextBlock.worldPosition).magnitude <= 0.15f)
@@ -50,6 +50,11 @@ public class AIMovement : MonoBehaviour
         if (heightDifference == float.NegativeInfinity || Mathf.Abs(heightDifference) < 0.5f)
         {
             transform.position += transform.forward * Time.deltaTime * moveSpeed;
+        }
+        //AI needs to go down at least 1 blocktile
+        else if(heightDifference < -0.4f)
+        {
+            //pseudo code [TODO]: move horizontally until there is just air beneath us, then dont move along x or z achsis and fall until y coordinate is reached
         }
         
     }
@@ -82,8 +87,13 @@ public class AIMovement : MonoBehaviour
         Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
     }
 
-    public float CalcHeightDifference()
+    public float CalcVerticalDistance()
     {
         return nextBlock.worldPosition.y - previousBlock.worldPosition.y;
+    }
+
+    public float CalcHorizontalDistance()
+    {
+        return new Vector2(nextBlock.worldPosition.y - previousBlock.worldPosition.y, nextBlock.worldPosition.z - previousBlock.worldPosition.z).magnitude;
     }
 }
