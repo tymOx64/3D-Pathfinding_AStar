@@ -12,6 +12,7 @@ public class AIMovement : MonoBehaviour
     Block nextBlock;
     float rotationSpeed = 16f;
     float moveSpeed = 4f;
+    float fallAccelerationFactor = 1.0f; //1.0f means there is no acceleration 
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +31,10 @@ public class AIMovement : MonoBehaviour
     {
         if (nextBlock == null || moveSpeed == 0f)
             return;
-        float heightDifference = float.NegativeInfinity;
+        float verticalDistance = float.NegativeInfinity;
         if(previousBlock != null)
         {
-            heightDifference = CalcVerticalDistance();
+            verticalDistance = CalcVerticalDistance();
         }
 
         if((transform.position - nextBlock.worldPosition).magnitude <= 0.15f)
@@ -47,14 +48,25 @@ public class AIMovement : MonoBehaviour
 
         //if we just started moving, the heightdifference is neg inf and therefore we just move straight towards the next block
         //if heightdifference is smaller than 0.5 the next block should be on the very same level => move straight forward to nextBlock
-        if (heightDifference == float.NegativeInfinity || Mathf.Abs(heightDifference) < 0.5f)
+        if (verticalDistance == float.NegativeInfinity || Mathf.Abs(verticalDistance) < 0.5f)
         {
             transform.position += transform.forward * Time.deltaTime * moveSpeed;
         }
         //AI needs to go down at least 1 blocktile
-        else if(heightDifference < -0.4f)
+        else if(verticalDistance < -0.15f)
         {
             //pseudo code [TODO]: move horizontally until there is just air beneath us, then dont move along x or z achsis and fall until y coordinate is reached
+            if(CalcHorizontalDistance() > 0.3f)
+            {
+                Vector3 horizontalMovDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+                transform.position += horizontalMovDir * Time.deltaTime * moveSpeed;
+            }
+            else
+            {
+                transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor;
+                //pro Sekunde um 100% schneller fallen
+                fallAccelerationFactor += 1.0f * Time.deltaTime;
+            }
         }
         
     }
@@ -85,6 +97,7 @@ public class AIMovement : MonoBehaviour
         Blockpath currentBP = bpArray[indexBP];
         nextBlock = currentBP.blockList.ToArray()[indexBlock];
         Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
+        fallAccelerationFactor = 1.0f;
     }
 
     public float CalcVerticalDistance()
