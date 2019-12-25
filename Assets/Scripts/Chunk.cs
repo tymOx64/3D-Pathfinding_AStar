@@ -242,7 +242,7 @@ public class Chunk
     /// </summary>
 	public void DrawChunk()
 	{
-		if(!treesCreated)
+		/*if(!treesCreated)
 		{
 			for(int z = 0; z < World.chunkSize; z++)
 				for(int y = 0; y < World.chunkSize; y++)
@@ -251,7 +251,7 @@ public class Chunk
 						BuildTrees(chunkData[x,y,z],x,y,z);
 					}
 			treesCreated = true;		
-		}
+		}*/
 		for(int z = 0; z < World.chunkSize; z++)
 			for(int y = 0; y < World.chunkSize; y++)
 				for(int x = 0; x < World.chunkSize; x++)
@@ -278,7 +278,7 @@ public class Chunk
     /// <param name="x">x position of the block</param>
     /// <param name="y">y position of the block</param>
     /// <param name="z">z position of the block</param>
-	private void BuildTrees(Block trunk, int x, int y, int z)
+	/*private void BuildTrees(Block trunk, int x, int y, int z)
 	{
         // Do not build a tree if there is no woodbase
 		if(trunk.blockType != Block.BlockType.WOODBASE) return;
@@ -312,7 +312,7 @@ public class Chunk
 			}
 		}
 	}
-
+	*/
     /// <summary>
     /// Empty constructor.
     /// </summary>

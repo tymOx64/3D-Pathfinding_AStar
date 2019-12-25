@@ -80,7 +80,7 @@ public class Block : IHeapItem<Block>
 
 
 	enum Cubeside {BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK};
-	public enum BlockType {GRASS, DIRT, WATER, STONE, LEAVES, WOOD, WOODBASE, SAND, GOLD, BEDROCK, REDSTONE, DIAMOND, APPLE, NOCRACK, 
+	public enum BlockType {GRASS, DIRT, WATER, STONE, APPLE,/* LEAVES*/ WOOD, WOODBASE, SAND, GOLD, BEDROCK, REDSTONE, DIAMOND,  NOCRACK, 
 							CRACK1, CRACK2, CRACK3, CRACK4, AIR};
 
 	public BlockType blockType;
@@ -91,7 +91,7 @@ public class Block : IHeapItem<Block>
 
 	public BlockType health;
 	public int currentHealth;
-	int[] blockHealthMax = {3, 3, 10, 4, 2, 4, 4, 2, 3, -1, 4, 4, 3, 0, 0, 0, 0, 0, 0};
+	int[] blockHealthMax = {3, 3, 10, 4, 4, 4, 2, 3, -1, 4, 4, 3, 0, 0, 0, 0, 0, 0};
 
 	// Hard-coded UVs based on blockuvs.txt
 	// bottom left, bottom right , top left , top right
@@ -110,8 +110,21 @@ public class Block : IHeapItem<Block>
  								new Vector2(0.875f,0.1875f), new Vector2(0.9375f,0.1875f)},
 		/*STONE*/			{new Vector2( 0, 0.875f ), new Vector2( 0.0625f, 0.875f),
 								new Vector2( 0, 0.9375f ),new Vector2( 0.0625f, 0.9375f )},
-		/*LEAVES*/			{ new Vector2(0.0625f,0.375f),  new Vector2(0.125f,0.375f),
- 								new Vector2(0.0625f,0.4375f), new Vector2(0.125f,0.4375f)},
+
+
+			/*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
+								new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )},
+
+		
+       
+	
+		
+		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
+
+		/*APPLESIDE*/      {new Vector2( 0.0625f, 0.4375f ), new Vector2( 0.125f, 0.4375f),
+								new Vector2( 0.0625f, 0.5f ),new Vector2( 0.125f, 0.5f )},
+		/*LEAVES			{ new Vector2(0.0625f,0.375f),  new Vector2(0.125f,0.375f),
+ 								new Vector2(0.0625f,0.4375f), new Vector2(0.125f,0.4375f)},*/
  		/*WOOD*/			{ new Vector2(0.375f,0.625f),  new Vector2(0.4375f,0.625f),
  								new Vector2(0.375f,0.6875f), new Vector2(0.4375f,0.6875f)},
  		/*WOODBASE*/		{ new Vector2(0.375f,0.625f),  new Vector2(0.4375f,0.625f),
@@ -127,17 +140,7 @@ public class Block : IHeapItem<Block>
 		/*DIAMOND*/			{new Vector2( 0.125f, 0.75f ), new Vector2( 0.1875f, 0.75f),
 								new Vector2( 0.125f, 0.8125f ),new Vector2( 0.1875f, 0.8125f )},
 
-		/*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
-								new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )},
-
-		
-       
 	
-		
-		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
-
-		/*APPLESIDE*/      {new Vector2( 0.9375f, 0.5f ), new Vector2( 1.0f, 0.5f),
-								new Vector2( 0.9375f, 0.5625f ),new Vector2( 1.0f, 0.5625f )},
 
 		/*NOCRACK*/			{new Vector2( 0.6875f, 0f ), new Vector2( 0.75f, 0f),
 								new Vector2( 0.6875f, 0.0625f ),new Vector2( 0.75f, 0.0625f )},
@@ -301,7 +304,7 @@ public class Block : IHeapItem<Block>
 
 
 		//Texture APPLESIDE is used for the sides and bottoms of the apples 
-       else if (blockType==BlockType.APPLE&&side != Cubeside.TOP)
+       else if (blockType==BlockType.APPLE &&side != Cubeside.TOP)
 		{ 
 
 			uv00 = blockUVs[(int)(blockType + 2), 0];
@@ -318,10 +321,10 @@ public class Block : IHeapItem<Block>
 		}
 
 		// Set cracks
-		suvs.Add(blockUVs[(int)(health+1),3]);
-		suvs.Add(blockUVs[(int)(health+1),2]);
-		suvs.Add(blockUVs[(int)(health+1),0]);
-		suvs.Add(blockUVs[(int)(health+1),1]);
+		suvs.Add(blockUVs[(int)(health+2),3]);
+		suvs.Add(blockUVs[(int)(health+2),2]);
+		suvs.Add(blockUVs[(int)(health+2),0]);
+		suvs.Add(blockUVs[(int)(health+2),1]);
 
 		//{uv11, uv01, uv00, uv10};
 
