@@ -136,8 +136,8 @@ public class Block : IHeapItem<Block>
 		
 		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
 
-		/*APPLESIDE*/      {new Vector2( 0.0625f, 0.4375f ), new Vector2( 0.125f, 0.4375f),
-								new Vector2( 0.0625f, 0.5f ),new Vector2( 0.125f, 0.5f )},
+		/*APPLESIDE*/      {new Vector2( 0.9375f, 0.5f ), new Vector2( 1.0f, 0.5f),
+								new Vector2( 0.9375f, 0.5625f ),new Vector2( 1.0f, 0.5625f )},
 
 		/*NOCRACK*/			{new Vector2( 0.6875f, 0f ), new Vector2( 0.75f, 0f),
 								new Vector2( 0.6875f, 0.0625f ),new Vector2( 0.75f, 0.0625f )},
