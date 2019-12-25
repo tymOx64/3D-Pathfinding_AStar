@@ -10,8 +10,8 @@ public class AIMovement : MonoBehaviour
     int indexBlock;
     Block previousBlock = null;
     Block nextBlock;
-    float rotationSpeed = 16f;
-    float moveSpeed = 4f;
+    float rotationSpeed = 15f; //16f smooth
+    float moveSpeed = 2f; //4f smooth
     float fallAccelerationFactor = 1.0f; //1.0f means there is no acceleration 
 
     //when iterating to the next block, store movement information in bool variable
@@ -58,8 +58,9 @@ public class AIMovement : MonoBehaviour
         }
         else if(fallDown)
         {
+            Debug.Log("Horizontal distance: " + CalcHorizontalDistanceAIPos());
             //pseudo code [TODO]: move horizontally until there is just air beneath us, then dont move along x or z achsis and fall until y coordinate is reached
-            if(CalcHorizontalDistanceAIPos() > 0.3f)
+            if(CalcHorizontalDistanceAIPos() > 0.1f)
             {
                 Vector3 horizontalMovDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
                 transform.position += horizontalMovDir * Time.deltaTime * moveSpeed;
@@ -67,8 +68,8 @@ public class AIMovement : MonoBehaviour
             else
             {
                 transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor;
-                //pro Sekunde um 100% schneller fallen
-                fallAccelerationFactor += 1.0f * Time.deltaTime;
+                //pro Sekunde um x % schneller fallen /// zurzeit mit 0% , also OHNE, sieht besser aus so glaube ich, ggf. loeschen
+                fallAccelerationFactor += 0.0f * Time.deltaTime;
             }
         }
         
@@ -139,11 +140,11 @@ public class AIMovement : MonoBehaviour
 
     public float CalcHorizontalDistance()
     {
-        return new Vector2(nextBlock.worldPosition.y - previousBlock.worldPosition.y, nextBlock.worldPosition.z - previousBlock.worldPosition.z).magnitude;
+        return new Vector2(nextBlock.worldPosition.x - previousBlock.worldPosition.x, nextBlock.worldPosition.z - previousBlock.worldPosition.z).magnitude;
     }
 
     public float CalcHorizontalDistanceAIPos()
     {
-        return new Vector2(nextBlock.worldPosition.y - transform.position.y, nextBlock.worldPosition.z - transform.position.z).magnitude;
+        return new Vector2(nextBlock.worldPosition.x - transform.position.x, nextBlock.worldPosition.z - transform.position.z).magnitude;
     }
 }
