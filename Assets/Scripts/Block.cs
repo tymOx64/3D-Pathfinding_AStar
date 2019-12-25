@@ -130,11 +130,14 @@ public class Block : IHeapItem<Block>
 		/*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
 								new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )},
 
-			/*APPLESIDE*/
+		
        
 	
 		
 		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
+
+		/*APPLESIDE*/      {new Vector2( 0.9375f, 0.5f ), new Vector2( 1.0f, 0.5f),
+								new Vector2( 0.9375f, 0.5625f ),new Vector2( 1.0f, 0.5625f )},
 
 		/*NOCRACK*/			{new Vector2( 0.6875f, 0f ), new Vector2( 0.75f, 0f),
 								new Vector2( 0.6875f, 0.0625f ),new Vector2( 0.75f, 0.0625f )},
@@ -293,6 +296,18 @@ public class Block : IHeapItem<Block>
 			uv10 = blockUVs[(int)(BlockType.DIRT+1),1];
 			uv01 = blockUVs[(int)(BlockType.DIRT+1),2];
 			uv11 = blockUVs[(int)(BlockType.DIRT+1),3];
+		}
+
+
+
+		//Texture APPLESIDE is used for the sides and bottoms of the apples 
+       else if (blockType==BlockType.APPLE&&side != Cubeside.TOP)
+		{ 
+
+			uv00 = blockUVs[(int)(blockType + 2), 0];
+			uv10 = blockUVs[(int)(blockType + 2), 1];
+			uv01 = blockUVs[(int)(blockType + 2), 2];
+			uv11 = blockUVs[(int)(blockType + 2), 3];
 		}
 		else
 		{
