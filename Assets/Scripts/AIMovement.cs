@@ -14,6 +14,11 @@ public class AIMovement : MonoBehaviour
     float moveSpeed = 4f;
     float fallAccelerationFactor = 1.0f; //1.0f means there is no acceleration 
 
+    //when iterating to the next block, store movement information in bool variable
+    bool stayOnSameLevel;
+    bool fallDown;
+    bool jump;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,17 +51,15 @@ public class AIMovement : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(lookDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
 
-        //if we just started moving, the heightdifference is neg inf and therefore we just move straight towards the next block
-        //if heightdifference is smaller than 0.5 the next block should be on the very same level => move straight forward to nextBlock
-        if (verticalDistance == float.NegativeInfinity || Mathf.Abs(verticalDistance) < 0.5f)
+        //if we just started moving, there is no prev block and therefore we just move straight towards the next block        
+        if (previousBlock == null || stayOnSameLevel)
         {
             transform.position += transform.forward * Time.deltaTime * moveSpeed;
         }
-        //AI needs to go down at least 1 blocktile
-        else if(verticalDistance < -0.15f)
+        else if(fallDown)
         {
             //pseudo code [TODO]: move horizontally until there is just air beneath us, then dont move along x or z achsis and fall until y coordinate is reached
-            if(CalcHorizontalDistance() > 0.3f)
+            if(CalcHorizontalDistanceAIPos() > 0.3f)
             {
                 Vector3 horizontalMovDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
                 transform.position += horizontalMovDir * Time.deltaTime * moveSpeed;
@@ -98,6 +101,30 @@ public class AIMovement : MonoBehaviour
         nextBlock = currentBP.blockList.ToArray()[indexBlock];
         Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
         fallAccelerationFactor = 1.0f;
+
+        SetMovementVariables();
+    }
+
+    private void SetMovementVariables()
+    {
+        if (Mathf.Abs(CalcVerticalDistance()) < 0.5f)
+        {
+            stayOnSameLevel = true;
+            fallDown = false;
+            jump = false;
+        }
+        else if (CalcVerticalDistance() < 0.0f)
+        {
+            stayOnSameLevel = false;
+            fallDown = true;
+            jump = false;
+        }
+        else if (CalcVerticalDistance() > 0.0f)
+        {
+            stayOnSameLevel = false;
+            fallDown = false;
+            jump = true;
+        }
     }
 
     public float CalcVerticalDistance()
@@ -105,8 +132,18 @@ public class AIMovement : MonoBehaviour
         return nextBlock.worldPosition.y - previousBlock.worldPosition.y;
     }
 
+    public float CalcVerticalDistanceAIPos()
+    {
+        return nextBlock.worldPosition.y - transform.position.y;
+    }
+
     public float CalcHorizontalDistance()
     {
         return new Vector2(nextBlock.worldPosition.y - previousBlock.worldPosition.y, nextBlock.worldPosition.z - previousBlock.worldPosition.z).magnitude;
+    }
+
+    public float CalcHorizontalDistanceAIPos()
+    {
+        return new Vector2(nextBlock.worldPosition.y - transform.position.y, nextBlock.worldPosition.z - transform.position.z).magnitude;
     }
 }
