@@ -80,8 +80,8 @@ public class Block : IHeapItem<Block>
 
 
 	enum Cubeside {BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK};
-	public enum BlockType {GRASS, DIRT, WATER, STONE, LEAVES, WOOD, WOODBASE, SAND, GOLD, BEDROCK, REDSTONE, DIAMOND, NOCRACK, 
-							CRACK1, CRACK2, CRACK3, CRACK4, AIR, APPLE};
+	public enum BlockType {GRASS, DIRT, WATER, STONE, LEAVES, WOOD, WOODBASE, SAND, GOLD, BEDROCK, REDSTONE, DIAMOND, APPLE, NOCRACK, 
+							CRACK1, CRACK2, CRACK3, CRACK4, AIR};
 
 	public BlockType blockType;
 	public bool isSolid;
@@ -91,10 +91,15 @@ public class Block : IHeapItem<Block>
 
 	public BlockType health;
 	public int currentHealth;
-	int[] blockHealthMax = {3, 3, 10, 4, 2, 4, 4, 2, 3, -1, 4, 4, 0, 0, 0, 0, 0, 0, 3};
+	int[] blockHealthMax = {3, 3, 10, 4, 2, 4, 4, 2, 3, -1, 4, 4, 3, 0, 0, 0, 0, 0, 0};
 
-    // Hard-coded UVs based on blockuvs.txt
+	// Hard-coded UVs based on blockuvs.txt
+	// bottom left, bottom right , top left , top right
+	
 	Vector2[,] blockUVs = { 
+
+		/*GRASS TOP{new Vector2( (2/16), (6/16) ), new Vector2( (3/16), (6/16)),
+								new Vector2( (2/16), (7/16) ),new Vector2( (3/16), (7/16) )},*
 		/*GRASS TOP*/		{new Vector2( 0.125f, 0.375f ), new Vector2( 0.1875f, 0.375f),
 								new Vector2( 0.125f, 0.4375f ),new Vector2( 0.1875f, 0.4375f )},
 		/*GRASS SIDE*/		{new Vector2( 0.1875f, 0.9375f ), new Vector2( 0.25f, 0.9375f),
@@ -121,6 +126,16 @@ public class Block : IHeapItem<Block>
 								new Vector2( 0.1875f, 0.8125f ),new Vector2( 0.25f, 0.8125f )},
 		/*DIAMOND*/			{new Vector2( 0.125f, 0.75f ), new Vector2( 0.1875f, 0.75f),
 								new Vector2( 0.125f, 0.8125f ),new Vector2( 0.1875f, 0.8125f )},
+
+		/*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
+								new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )},
+
+			/*APPLESIDE*/
+       
+	
+		
+		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
+
 		/*NOCRACK*/			{new Vector2( 0.6875f, 0f ), new Vector2( 0.75f, 0f),
 								new Vector2( 0.6875f, 0.0625f ),new Vector2( 0.75f, 0.0625f )},
 		/*CRACK1*/			{ new Vector2(0f,0f),  new Vector2(0.0625f,0f),
@@ -132,10 +147,7 @@ public class Block : IHeapItem<Block>
  		/*CRACK4*/			{ new Vector2(0.1875f,0f),  new Vector2(0.25f,0f),
  								new Vector2(0.1875f,0.0625f), new Vector2(0.25f,0.0625f)},
         
-
-       /*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
-                                new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )} 
-
+	
 
                         }; 
 

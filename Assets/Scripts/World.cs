@@ -628,8 +628,8 @@ public class World : MonoBehaviour
 
             spawnLocations.Add(spawnPos);
             amount--;
-            block.BuildBlock(Block.BlockType.REDSTONE);
-           //block.BuildBlock(Block.BlockType.APPLE);
+           // block.BuildBlock(Block.BlockType.WOOD);
+           block.BuildBlock(Block.BlockType.APPLE);
            randomlySpawnedApples.Add(block);
         }
 
