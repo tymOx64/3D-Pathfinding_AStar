@@ -72,6 +72,11 @@ public class AIMovement : MonoBehaviour
                 fallAccelerationFactor += 0.0f * Time.deltaTime;
             }
         }
+        else if(jump)
+        {
+            //just temporary, needs to be replaced with actual jump movement
+            transform.position += transform.forward * Time.deltaTime * moveSpeed;
+        }
         
     }
 
