@@ -65,7 +65,7 @@ public class AIMovement : MonoBehaviour
             }
             else
             {
-                transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor * 2.0f;
+                transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor * 1.9f;
                 //pro Sekunde um x % schneller fallen /// zurzeit mit 0% , also OHNE, sieht besser aus so glaube ich, ggf. loeschen
                 fallAccelerationFactor += 0.0f * Time.deltaTime;
             }
@@ -74,7 +74,7 @@ public class AIMovement : MonoBehaviour
         {
             if(CalcVerticalDistanceAIPos() > 0.3f)
             {
-                transform.position += Vector3.up * Time.deltaTime * 3.0f;
+                transform.position += Vector3.up * Time.deltaTime * 2.3f;
             }
             else
             {
