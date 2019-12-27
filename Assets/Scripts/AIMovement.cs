@@ -58,8 +58,6 @@ public class AIMovement : MonoBehaviour
         }
         else if(fallDown)
         {
-            Debug.Log("Horizontal distance: " + CalcHorizontalDistanceAIPos());
-            //pseudo code [TODO]: move horizontally until there is just air beneath us, then dont move along x or z achsis and fall until y coordinate is reached
             if(CalcHorizontalDistanceAIPos() > 0.1f)
             {
                 Vector3 horizontalMovDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
@@ -67,15 +65,22 @@ public class AIMovement : MonoBehaviour
             }
             else
             {
-                transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor;
+                transform.position += transform.forward * Time.deltaTime * moveSpeed * fallAccelerationFactor * 2.0f;
                 //pro Sekunde um x % schneller fallen /// zurzeit mit 0% , also OHNE, sieht besser aus so glaube ich, ggf. loeschen
                 fallAccelerationFactor += 0.0f * Time.deltaTime;
             }
         }
         else if(jump)
         {
-            //just temporary, needs to be replaced with actual jump movement
-            transform.position += transform.forward * Time.deltaTime * moveSpeed;
+            if(CalcVerticalDistanceAIPos() > 0.3f)
+            {
+                transform.position += Vector3.up * Time.deltaTime * 3.0f;
+            }
+            else
+            {
+                //Vector3 horizontalMovDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+                transform.position += transform.forward * Time.deltaTime * moveSpeed;
+            }
         }
         
     }
