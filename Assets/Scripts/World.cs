@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Realtime.Messaging.Internal;
 using Assets.Scripts;
+using System.Diagnostics;
 
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
@@ -279,7 +280,7 @@ public class World : MonoBehaviour
 
                         openSet.Add(endBlock);
 
-                        Debug.Log("PATH COMPLETE");
+                        UnityEngine.Debug.Log("PATH COMPLETE");
                         return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
                     }
 
@@ -291,7 +292,7 @@ public class World : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Unable to find path");
+        UnityEngine.Debug.Log("Unable to find path");
         return null;
     }
 
@@ -382,7 +383,7 @@ public class World : MonoBehaviour
     {
         if (bp == null)
         {
-            Debug.Log("blockpath null");
+            UnityEngine.Debug.Log("blockpath null");
             return;
         }            
         foreach(Block block in bp.blockList)
@@ -442,7 +443,7 @@ public class World : MonoBehaviour
             errorCheck++;
             if (errorCheck >= 100)
             {
-                Debug.Log("couldnt get first nonsolid block above ground");
+                UnityEngine.Debug.Log("couldnt get first nonsolid block above ground");
                 return null;
             }                
         }
@@ -521,13 +522,12 @@ public class World : MonoBehaviour
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
     void Update()
-    {
-         
-        //TSP tspTestObj = new TSP(new List<Block>());
-
-        //beim aufruf von findPath muss der zurückgegebene blockpath im start- und zielblock gespeichert werden (im attribut edges) 
+    {                         
         if (einmal)
         {
+            Stopwatch swA = new Stopwatch();
+            swA.Start();
+
             //player.active = false;
             AIcam.active = true;
             foreach(Block appleA in randomlySpawnedApples)
@@ -543,6 +543,8 @@ public class World : MonoBehaviour
                     //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
             }
+            swA.Stop();
+            UnityEngine.Debug.Log("Time used to calculate all paths/edges: " + swA.ElapsedMilliseconds + " ms");
 
             TSP tsp = new TSP(randomlySpawnedApples);
             Block[] roundTrip = tsp.simulatedAnnealing();            
@@ -590,7 +592,7 @@ public class World : MonoBehaviour
     {
         int amount = (int)Random.Range(5.0f, 5.0f);  //Amount of apples
 
-        Debug.Log("Amount to be spawned: " + amount.ToString());
+        UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
         Block block;
         HashSet<Vector3> spawnLocations = new HashSet<Vector3>();
@@ -603,7 +605,7 @@ public class World : MonoBehaviour
             testt++;
             if (testt > 498)
             {
-                Debug.Log("random apple spawn failed to spawn all apples");
+                UnityEngine.Debug.Log("random apple spawn failed to spawn all apples");
                 return;
             }                
             float xOffset = Random.Range(5f, 60f);
@@ -621,7 +623,7 @@ public class World : MonoBehaviour
             {
                 if(Mathf.Abs(vec.x - spawnPos.x) <= 4 && Mathf.Abs(vec.z - spawnPos.z) <= 4)
                 {
-                    Debug.Log("Skipped spawnPos - too close to another apple");
+                    UnityEngine.Debug.Log("Skipped spawnPos - too close to another apple");
                     goto proceed;
                 }
             }
