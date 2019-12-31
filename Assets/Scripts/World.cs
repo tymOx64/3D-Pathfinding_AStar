@@ -546,9 +546,15 @@ public class World : MonoBehaviour
             swA.Stop();
             UnityEngine.Debug.Log("Time used to calculate all paths/edges: " + swA.ElapsedMilliseconds + " ms");
 
+            Stopwatch swB = new Stopwatch();
+            swB.Start();
+
             TSP tsp = new TSP(randomlySpawnedApples);
             Block[] roundTrip = tsp.simulatedAnnealing();            
             Blockpath[] bpArray = new Blockpath[roundTrip.Length];
+
+            swB.Stop();
+            UnityEngine.Debug.Log("Time used to calculate the roundtrip (TSP sim. annealing): " + swB.ElapsedMilliseconds + " ms");
 
             for (int i = 0; i < roundTrip.Length - 1; i++)
             {
@@ -590,7 +596,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(5.0f, 5.0f);  //Amount of apples
+        int amount = (int)Random.Range(10.0f, 10.0f);  //Amount of apples
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
