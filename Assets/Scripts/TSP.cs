@@ -17,6 +17,8 @@ namespace Assets.Scripts
 
         //TSP simulated annealing
 
+        public GameObject worldObj;
+
         Block[] currentRoute;
         float recentCost;
 
@@ -48,6 +50,15 @@ namespace Assets.Scripts
             }
             Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
+        }
+
+        public void VisualizeRoundtrip()
+        {
+            for(int i = 0; i < currentRoute.Length - 1; i++)
+            {
+                worldObj.GetComponent<World>().VisualizeBlockpath(GetBlockpathFromAToB(currentRoute[i], currentRoute[i + 1]));
+            }
+            worldObj.GetComponent<World>().VisualizeBlockpath(GetBlockpathFromAToB(currentRoute[currentRoute.Length-1], currentRoute[0]));
         }
 
         /// <summary>
@@ -123,6 +134,11 @@ namespace Assets.Scripts
             float randomVal = UnityEngine.Random.Range(0f, 1f);
             //Debug.Log("Chance: " + chance);
             return chance > randomVal;
+        }
+
+        public void SetWorldObj(GameObject _worldObj)
+        {
+            worldObj = _worldObj;
         }
 
 

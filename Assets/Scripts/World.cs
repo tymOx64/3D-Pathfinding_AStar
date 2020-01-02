@@ -550,6 +550,7 @@ public class World : MonoBehaviour
             swB.Start();
 
             TSP tsp = new TSP(randomlySpawnedApples);
+            tsp.SetWorldObj(this.gameObject);
             Block[] roundTrip = tsp.simulatedAnnealing();            
             Blockpath[] bpArray = new Blockpath[roundTrip.Length];
 
@@ -596,7 +597,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(10.0f, 10.0f);  //Amount of apples
+        int amount = (int)Random.Range(7.0f, 7.0f);  //Amount of apples
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;

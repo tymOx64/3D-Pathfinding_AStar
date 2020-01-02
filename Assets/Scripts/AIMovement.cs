@@ -10,7 +10,7 @@ public class AIMovement : MonoBehaviour
     int indexBlock;
     Block previousBlock = null;
     Block nextBlock;
-    float rotationSpeed = 15f; //16f smooth
+    float rotationSpeed = 12f; //16f smooth
     float moveSpeed = 2f; //4f smooth
     float fallAccelerationFactor = 1.0f; //1.0f means there is no acceleration 
 
