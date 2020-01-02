@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 //using MathNet.Numerics;
 namespace Assets.Scripts
@@ -30,6 +31,8 @@ namespace Assets.Scripts
             currentRoute = blockList.ToArray();
         }
 
+        int visualizingCounter = 0;
+
         public Block[] simulatedAnnealing()
         {
             Debug.Log("Initial cost of randomized route: " + CalcCurrentCost());
@@ -47,10 +50,17 @@ namespace Assets.Scripts
                     SwapTwoNodes(nodeBIndex, nodeAIndex);
                 }                
                 sigma *= 1 - sigmaReduction;
+
+                //Visualizing ongoing simulated Annealing
+                if(visualizingCounter++ % 20 == 0)
+                {
+                    //VisualizeRoundtrip();
+                    //Thread.Sleep(300);
+                }
             }
             Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
-        }
+        }        
 
         public void VisualizeRoundtrip()
         {

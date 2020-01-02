@@ -377,7 +377,7 @@ public class World : MonoBehaviour
         return result;
     }
 
-
+    HashSet<GameObject> visualizedBlocks = new HashSet<GameObject>();
 
     public void VisualizeBlockpath(Blockpath bp)
     {
@@ -388,11 +388,17 @@ public class World : MonoBehaviour
         }            
         foreach(Block block in bp.blockList)
         {
-            Instantiate(testCube, block.worldPosition, Quaternion.identity);
+            visualizedBlocks.Add(Instantiate(testCube, block.worldPosition, Quaternion.identity));
         }
     }
 
-
+    public void ClearRecentVisualization()
+    {
+        foreach (GameObject whiteCube in visualizedBlocks)
+        {
+            Destroy(whiteCube);
+        }
+    }
 
     public Vector3 roundVector3(Vector3 vec)
     {
