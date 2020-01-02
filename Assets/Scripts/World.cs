@@ -603,7 +603,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(7.0f, 7.0f);  //Amount of apples
+        int amount = 5;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
