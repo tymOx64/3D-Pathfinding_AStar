@@ -527,6 +527,19 @@ public class World : MonoBehaviour
                 bpArr[i + 1].reverseBp();
             }
         }
+
+        foreach (Blockpath bp in bpArr)
+        {
+            Block[] blockArr = bp.blockList.ToArray();
+
+            for(int i = 0; i < blockArr.Length - 1; i++)
+            {
+                if(blockArr[i].worldPosition.y + 1 < blockArr[i + 1].worldPosition.y)
+                {
+                    UnityEngine.Debug.Log("incosistent blockpath found, 1st block: " + blockArr[i].worldPosition + " , 2nd block: " + blockArr[i + 1].worldPosition);
+                }
+            }
+        }
     }
 
 
