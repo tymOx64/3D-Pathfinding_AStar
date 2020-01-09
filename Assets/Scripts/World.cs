@@ -482,7 +482,7 @@ public class World : MonoBehaviour
         Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
         
         //can not jump more than 1f in y direction (i think, needs to be confirmed)
-        if (resultBlock == null || resultBlock.worldPosition.y > blockPos.y + 1f)
+        if (resultBlock == null || resultBlock.worldPosition.z > blockPos.z + 1f)
             return null;
         return resultBlock;
     }
