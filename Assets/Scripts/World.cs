@@ -254,7 +254,17 @@ public class World : MonoBehaviour
             Block currentBlock = openSet.RemoveFirst();
             closedSet.Add(currentBlock);
 
-            foreach(Block neighbourBlock in GetNeighbourBlocks(currentBlock))
+            List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
+
+            foreach(Block b in neighbourBlocks)
+            {
+                if(currentBlock.worldPosition.y < b.worldPosition.y + 2)
+                {
+                    UnityEngine.Debug.Log("currentblock worldpos: " + currentBlock.worldPosition + " , neighbour worldPos: " + b.worldPosition);
+                }
+            }
+
+            foreach (Block neighbourBlock in neighbourBlocks)
             {
                 if (closedSet.Contains(neighbourBlock))
                     continue;
@@ -482,7 +492,7 @@ public class World : MonoBehaviour
         Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
         
         //can not jump more than 1f in y direction (i think, needs to be confirmed)
-        if (resultBlock == null || resultBlock.worldPosition.z > blockPos.z + 1f)
+        if (resultBlock == null || resultBlock.worldPosition.y > blockPos.y + 1f)
             return null;
         return resultBlock;
     }
