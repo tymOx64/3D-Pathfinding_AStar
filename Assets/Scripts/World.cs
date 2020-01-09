@@ -254,17 +254,7 @@ public class World : MonoBehaviour
             Block currentBlock = openSet.RemoveFirst();
             closedSet.Add(currentBlock);
 
-            List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
-
-            foreach(Block b in neighbourBlocks)
-            {
-                if(currentBlock.worldPosition.y + 1 < b.worldPosition.y)
-                {
-                    UnityEngine.Debug.Log("currentblock worldpos: " + currentBlock.worldPosition + " , neighbour worldPos: " + b.worldPosition);
-                }
-            }
-
-            foreach (Block neighbourBlock in neighbourBlocks)
+            foreach (Block neighbourBlock in GetNeighbourBlocks(currentBlock))
             {
                 if (closedSet.Contains(neighbourBlock))
                     continue;
