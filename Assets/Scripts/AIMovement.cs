@@ -97,7 +97,6 @@ public class AIMovement : MonoBehaviour
         if (nextBlock != null)
             previousBlock = nextBlock;
         indexBlock++;
-        Debug.Log("indexBlock: " + indexBlock + " , indexBP: " + indexBP);
         if (indexBlock >= bpArray[indexBP].blockList.ToArray().Length)
         {
             indexBlock = 0;
@@ -110,7 +109,6 @@ public class AIMovement : MonoBehaviour
         }
         Blockpath currentBP = bpArray[indexBP];
         nextBlock = currentBP.blockList.ToArray()[indexBlock];
-        Debug.Log("nextBlock worldPos: " + nextBlock.worldPosition);
         fallAccelerationFactor = 1.0f;
 
         SetMovementVariables();

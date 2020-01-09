@@ -258,7 +258,7 @@ public class World : MonoBehaviour
 
             foreach(Block b in neighbourBlocks)
             {
-                if(currentBlock.worldPosition.y < b.worldPosition.y + 2)
+                if(currentBlock.worldPosition.y + 1 < b.worldPosition.y)
                 {
                     UnityEngine.Debug.Log("currentblock worldpos: " + currentBlock.worldPosition + " , neighbour worldPos: " + b.worldPosition);
                 }
