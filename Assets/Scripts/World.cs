@@ -4,6 +4,9 @@ using UnityEngine;
 using Realtime.Messaging.Internal;
 using Assets.Scripts;
 using System.Diagnostics;
+using Unity.Collections;
+using Unity.Jobs;
+
 
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
@@ -12,7 +15,7 @@ using System.Diagnostics;
 /// </summary>
 public class World : MonoBehaviour
 {
-    public GameObject player;
+
 
     public GameObject AIcam;
 
@@ -22,7 +25,7 @@ public class World : MonoBehaviour
     public static int chunkSize = 4;
     public static int radius = 3;
     public static uint maxCoroutines = 1000;
-    public static Dictionary<string, Chunk> chunks ;
+    public static Dictionary<string, Chunk> chunks;
     List<Block> randomlySpawnedApples = new List<Block>();
     public static List<string> toRemove = new List<string>();
     public static bool firstbuild = true;
@@ -30,7 +33,7 @@ public class World : MonoBehaviour
     public static CoroutineQueue queue;
 
     //Worldsize
-    public int WorldX;  
+    public int WorldX;
     public int WorldY;
 
 
@@ -137,7 +140,7 @@ public class World : MonoBehaviour
     /// </summary>
     /// <param name="xMax"></param>
     /// <param name="zMax"></param>
-    
+
     private void BuildWorld(int xMax, int zMax)   // xMax, yMax, zMax determine the size of the world
     {
         int startX = 2;
@@ -145,40 +148,40 @@ public class World : MonoBehaviour
         int startZ = 2;
 
         //Build first chunk
-        
 
-            BuildChunkAt(startX,startY,startZ);
-        
+
+        BuildChunkAt(startX, startY, startZ);
+
 
         BuildChunkAt(startX + 1, startY, startZ); //?
-        
-     
-
-            //Build the whole world from the position of the first chunk.
 
 
-            for (int x = startX; x < xMax ; x++)
+
+        //Build the whole world from the position of the first chunk.
+
+
+        for (int x = startX; x < xMax; x++)
+        {
+
+            for (int z = startZ; z < zMax; z++)
             {
-                 
-                    for (int z = startZ; z < zMax ; z++)
-                    {
 
 
-                
+
 
                 // World Height equals 6 Chunks
-                  BuildChunkAt(x,startY,z);
-                  BuildChunkAt(x, startY+1, z);
-                  BuildChunkAt(x, startY, z);
-                  BuildChunkAt(x, startY - 1, z);
-                  BuildChunkAt(x, startY - 2, z);
-                  BuildChunkAt(x, startY - 3, z);
-                  
+                BuildChunkAt(x, startY, z);
+                BuildChunkAt(x, startY + 1, z);
+                BuildChunkAt(x, startY, z);
+                BuildChunkAt(x, startY - 1, z);
+                BuildChunkAt(x, startY - 2, z);
+                BuildChunkAt(x, startY - 3, z);
 
 
-                    }
 
-                }
+            }
+
+        }
 
 
     }
@@ -213,21 +216,21 @@ public class World : MonoBehaviour
     /// </summary>
     void Start()
     {
-       /* 
-        Vector3 ppos = player.transform.position;
-        player.transform.position = new Vector3(ppos.x,
-                                            Utils.GenerateHeight(ppos.x, ppos.z) + 1,
-                                            ppos.z);
-        lastbuildPos = player.transform.position;
-        player.SetActive(false);*/
+        /* 
+         Vector3 ppos = player.transform.position;
+         player.transform.position = new Vector3(ppos.x,
+                                             Utils.GenerateHeight(ppos.x, ppos.z) + 1,
+                                             ppos.z);
+         lastbuildPos = player.transform.position;
+         player.SetActive(false);*/
 
         firstbuild = true;
         chunks = new Dictionary<string, Chunk>();
         this.transform.position = Vector3.zero;
         this.transform.rotation = Quaternion.identity;
 
-    
-        BuildWorld(20,20);
+
+        BuildWorld(20, 20);
 
 
         RandomAppleSpawn();
@@ -249,7 +252,7 @@ public class World : MonoBehaviour
 
         openSet.Add(startBlock);
 
-        while(openSet.Count > 0)
+        while (openSet.Count > 0)
         {
             Block currentBlock = openSet.RemoveFirst();
             closedSet.Add(currentBlock);
@@ -259,7 +262,7 @@ public class World : MonoBehaviour
                 if (closedSet.Contains(neighbourBlock))
                     continue;
                 float newMovementCostToNeighbour = currentBlock.gCost + calcDistance(currentBlock, neighbourBlock);
-                if(newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
+                if (newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
                 {
                     neighbourBlock.gCost = newMovementCostToNeighbour;
                     neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
@@ -303,7 +306,7 @@ public class World : MonoBehaviour
     public List<Block> GetNeighbourBlocks(Block block)
     {
         List<Block> neighbourList = new List<Block>();
-        for(int x = -1; x <= 1; x++)
+        for (int x = -1; x <= 1; x++)
         {
             for (int z = -1; z <= 1; z++)
             {
@@ -347,7 +350,7 @@ public class World : MonoBehaviour
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
         //Debug.Log("START RETRACE");
-        while(currentBlock != startBlock)
+        while (currentBlock != startBlock)
         {
             //Visualization for testing purposes
             //Instantiate(testCube, currentBlock.worldPosition, Quaternion.identity);
@@ -361,12 +364,12 @@ public class World : MonoBehaviour
         {
             openSet.RemoveFirst().ResetPathfindingVal();
         }
-        foreach(Block block in closedSet)
+        foreach (Block block in closedSet)
             block.ResetPathfindingVal();
 
         Blockpath result = new Blockpath(startBlock, endBlock, cost, blockList);
 
-        if(startBlock.edges == null)
+        if (startBlock.edges == null)
             startBlock.edges = new List<Blockpath>();
         if (endBlock.edges == null)
             endBlock.edges = new List<Blockpath>();
@@ -385,8 +388,8 @@ public class World : MonoBehaviour
         {
             UnityEngine.Debug.Log("blockpath null");
             return;
-        }            
-        foreach(Block block in bp.blockList)
+        }
+        foreach (Block block in bp.blockList)
         {
             visualizedBlocks.Add(Instantiate(testCube, block.worldPosition, Quaternion.identity));
         }
@@ -417,10 +420,10 @@ public class World : MonoBehaviour
     public Block getFirstNonsolidBlockAboveGround(Vector3 columnPos)
     {
         //at yPos 65 there should a valid block at all valid x and z positions, thus we are outside of the map area if equals to null
-        if(GetWorldBlock(new Vector3(columnPos.x, 65f, columnPos.z)) == null)
+        if (GetWorldBlock(new Vector3(columnPos.x, 65f, columnPos.z)) == null)
         {
             //For bugfixing, to be deleted lateron
-            if(amountOfVisualizedCubesForTestingPurposes-- > 0)
+            if (amountOfVisualizedCubesForTestingPurposes-- > 0)
             {
                 //visualizing where the function is getting outside of the map area
                 //Instantiate(testCube, new Vector3(columnPos.x, 65f, columnPos.z), Quaternion.identity);
@@ -430,17 +433,17 @@ public class World : MonoBehaviour
         }
 
         //traverse to highest valid blockPos, to avoid finding a nonsolid block under the ground
-        while(GetWorldBlock(columnPos) != null)
-        {         
+        while (GetWorldBlock(columnPos) != null)
+        {
             columnPos += Vector3.up;
         }
-        
+
         /*if (GetWorldBlock(columnPos + Vector3.down) == null)
         {
             Debug.Log("tried getting block out of map-area");
             return null;
         }*/
-        
+
         //mainly for debugging/testing purposes. probably not needed lateron
         int errorCheck = 0;
         while (GetWorldBlock(columnPos) == null)
@@ -451,14 +454,14 @@ public class World : MonoBehaviour
             {
                 UnityEngine.Debug.Log("couldnt get first nonsolid block above ground");
                 return null;
-            }                
+            }
         }
 
         //traverse until reaching a solid block
         while (GetWorldBlock(columnPos) == null || !GetWorldBlock(columnPos).isSolid)
         {
             columnPos += Vector3.down;
-            if(errorCheck++ >= 125)
+            if (errorCheck++ >= 125)
             {
                 return null;
             }
@@ -480,7 +483,7 @@ public class World : MonoBehaviour
     {
         Vector3 worldPosOfNeighbourBlock = blockPos + relativePos;
         Block resultBlock = getFirstNonsolidBlockAboveGround(worldPosOfNeighbourBlock);
-        
+
         //can not jump more than 1f in y direction (i think, needs to be confirmed)
         if (resultBlock == null || resultBlock.worldPosition.y > blockPos.y + 1f)
             return null;
@@ -510,9 +513,9 @@ public class World : MonoBehaviour
 
     public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
     {
-        for(int i = 0; i < bpArr.Length - 1; i++)
+        for (int i = 0; i < bpArr.Length - 1; i++)
         {
-            if(bpArr[i].endBlock != bpArr[i + 1].startBlock)
+            if (bpArr[i].endBlock != bpArr[i + 1].startBlock)
             {
                 bpArr[i + 1].reverseBp();
             }
@@ -522,9 +525,9 @@ public class World : MonoBehaviour
         {
             Block[] blockArr = bp.blockList.ToArray();
 
-            for(int i = 0; i < blockArr.Length - 1; i++)
+            for (int i = 0; i < blockArr.Length - 1; i++)
             {
-                if(blockArr[i].worldPosition.y + 1 < blockArr[i + 1].worldPosition.y)
+                if (blockArr[i].worldPosition.y + 1 < blockArr[i + 1].worldPosition.y)
                 {
                     UnityEngine.Debug.Log("incosistent blockpath found, 1st block: " + blockArr[i].worldPosition + " , 2nd block: " + blockArr[i + 1].worldPosition);
                 }
@@ -541,15 +544,15 @@ public class World : MonoBehaviour
     /// Unity lifecycle update method. Actviates the player's GameObject. Updates chunks based on the player's position.
     /// </summary>
     void Update()
-    {                         
+    {
         if (einmal)
         {
             Stopwatch swA = new Stopwatch();
             swA.Start();
 
             //player.active = false;
-            AIcam.active = true;
-            foreach(Block appleA in randomlySpawnedApples)
+            //AIcam.active = true;
+            foreach (Block appleA in randomlySpawnedApples)
             {
                 foreach (Block appleB in randomlySpawnedApples)
                 {
@@ -557,7 +560,7 @@ public class World : MonoBehaviour
                     {
                         continue;
                     }
-                    if(TSP.GetBlockpathFromAToB(appleA, appleB) == null)
+                    if (TSP.GetBlockpathFromAToB(appleA, appleB) == null)
                         findPath(appleA, appleB);
                     //VisualizeBlockpath(tspTestObj.GetBlockpathFromAToB(appleA, appleB));
                 }
@@ -570,7 +573,7 @@ public class World : MonoBehaviour
 
             TSP tsp = new TSP(randomlySpawnedApples);
             tsp.SetWorldObj(this.gameObject);
-            Block[] roundTrip = tsp.simulatedAnnealing();            
+            Block[] roundTrip = tsp.simulatedAnnealing();
             Blockpath[] bpArray = new Blockpath[roundTrip.Length];
 
             swB.Stop();
@@ -578,8 +581,8 @@ public class World : MonoBehaviour
 
             for (int i = 0; i < roundTrip.Length - 1; i++)
             {
-                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));  
-                bpArray[i] = TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]);                
+                VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]));
+                bpArray[i] = TSP.GetBlockpathFromAToB(roundTrip[i], roundTrip[i + 1]);
             }
             bpArray[bpArray.Length - 1] = TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]);
             VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
@@ -589,26 +592,26 @@ public class World : MonoBehaviour
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
         }
 
-        
-        
+
+
 
         einmal = false;
-        
 
 
-      /*  
-        // Activate the player's GameObject
-        if (!player.activeSelf)
-        {
-            player.SetActive(true);
-            
-        }
-      */
-        
+
+        /*  
+          // Activate the player's GameObject
+          if (!player.activeSelf)
+          {
+              player.SetActive(true);
+
+          }
+        */
+
 
     }
 
-   
+
 
 
     /// <summary>
@@ -627,27 +630,27 @@ public class World : MonoBehaviour
 
         while (amount > 0 && testt < 500)
         {
-            proceed:
+        proceed:
             testt++;
             if (testt > 498)
             {
                 UnityEngine.Debug.Log("random apple spawn failed to spawn all apples");
                 return;
-            }                
+            }
             float xOffset = Random.Range(5f, 60f);
             float zOffset = Random.Range(5f, 60f);
 
             Vector3 spawnPos = new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset);
 
             block = getFirstNonsolidBlockAboveGround(spawnPos);
-            
+
             if (block == null)
                 continue;
 
             //coninue if newly spawned apple would be in a radius of 5 units within another apple
-            foreach(Vector3 vec in spawnLocations)
+            foreach (Vector3 vec in spawnLocations)
             {
-                if(Mathf.Abs(vec.x - spawnPos.x) <= 4 && Mathf.Abs(vec.z - spawnPos.z) <= 4)
+                if (Mathf.Abs(vec.x - spawnPos.x) <= 4 && Mathf.Abs(vec.z - spawnPos.z) <= 4)
                 {
                     UnityEngine.Debug.Log("Skipped spawnPos - too close to another apple");
                     goto proceed;
@@ -656,9 +659,9 @@ public class World : MonoBehaviour
 
             spawnLocations.Add(spawnPos);
             amount--;
-           // block.BuildBlock(Block.BlockType.WOOD);
-           block.BuildBlock(Block.BlockType.APPLE);
-           randomlySpawnedApples.Add(block);
+            // block.BuildBlock(Block.BlockType.WOOD);
+            block.BuildBlock(Block.BlockType.APPLE);
+            randomlySpawnedApples.Add(block);
         }
 
         //testing
@@ -669,5 +672,11 @@ public class World : MonoBehaviour
 
 
 
+
+
+
+
 }
+
+
 
