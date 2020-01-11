@@ -216,6 +216,9 @@ public class World : MonoBehaviour
     /// </summary>
     void Start()
     {
+
+
+
         /* 
          Vector3 ppos = player.transform.position;
          player.transform.position = new Vector3(ppos.x,
@@ -236,6 +239,8 @@ public class World : MonoBehaviour
         RandomAppleSpawn();
 
         DrawChunks();
+
+    
 
     }
 
@@ -619,7 +624,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = 5;
+        int amount =2;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;

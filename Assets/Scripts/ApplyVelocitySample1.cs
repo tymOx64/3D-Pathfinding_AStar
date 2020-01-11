@@ -2,8 +2,11 @@
 using Unity.Collections;
 using Unity.Jobs;
 
-class ApplyVelocitySample : MonoBehaviour
+class ApplyVelocitySample1 : MonoBehaviour
 {
+
+
+   
     struct VelocityJob : IJob
     {
         // Jobs declare all data that will be accessed in the job
@@ -22,14 +25,18 @@ class ApplyVelocitySample : MonoBehaviour
         // The code actually running on the job
         public void Execute()
         {
+            Debug.Log("ApplyVelocitySample.cs Line 25");
             // Move the positions based on delta time and velocity
             for (var i = 0; i < position.Length; i++)
                 position[i] = position[i] + velocity[i] * deltaTime;
+
+            Debug.Log("Line38");
         }
     }
 
     public void Update()
     {
+        Debug.Log("Line44");
         var position = new NativeArray<Vector3>(500, Allocator.Persistent);
 
         var velocity = new NativeArray<Vector3>(500, Allocator.Persistent);
