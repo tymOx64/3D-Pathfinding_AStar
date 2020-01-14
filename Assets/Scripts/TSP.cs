@@ -13,7 +13,7 @@ namespace Assets.Scripts
     /// <summary>
     /// open traveling salesman problem
     /// </summary>
-    class TSP : MonoBehaviour
+    class TSP
     {
 
         //TSP simulated annealing
@@ -26,7 +26,7 @@ namespace Assets.Scripts
         float sigma = 5000f;
         float sigmaReduction = 0.005f; //sigma = 5000 and reduction 0.005 results in 1700 while loop iterations
 
-        List<List<Block>> simulatedAnnealingIntermediateConfigs;
+        public List<List<Block>> simulatedAnnealingIntermediateConfigs;
 
         public TSP(List<Block> blockList)
         {
@@ -61,32 +61,14 @@ namespace Assets.Scripts
                     //VisualizeRoundtrip();
                     //Thread.Sleep(300);
                 }
-                if (currentIteration++ % 500 == 0)
+                if (currentIteration++ % 200 == 0)
                 {
                     SnapshotCurrentConfig();
                 }                
             }
             Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
-        }        
-
-        public IEnumerator VisualizeConfig(List<Block> config)
-        {
-            worldObj.GetComponent<World>().ClearRecentVisualization();
-            foreach(Block block in config)
-            {
-                worldObj.GetComponent<World>().InstantiateWhiteCubeAtWorldPos(block.worldPosition);                
-            }
-            yield return new WaitForSeconds(1f);
-        }
-
-        public IEnumerator VisualizeAllConfigs()
-        {
-            foreach(List<Block> config in simulatedAnnealingIntermediateConfigs)
-            {
-                yield return StartCoroutine(VisualizeConfig(config));
-            }
-        }
+        }                
 
         public void SnapshotCurrentConfig()
         {

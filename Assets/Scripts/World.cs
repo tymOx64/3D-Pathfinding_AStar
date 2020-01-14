@@ -590,6 +590,8 @@ public class World : MonoBehaviour
             //CorrectBlockpathsDirectionForRoundtrip(bpArray);
 
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
+
+            StartCoroutine(VisualizeAllConfigs(tsp.simulatedAnnealingIntermediateConfigs));
         }
 
         einmal = false;
@@ -605,12 +607,35 @@ public class World : MonoBehaviour
     }
 
 
+
+    public IEnumerator VisualizeConfig(List<Block> config)
+    {
+        ClearRecentVisualization();
+        foreach (Block block in config)
+        {
+            InstantiateWhiteCubeAtWorldPos(block.worldPosition);
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return new WaitForSeconds(1f);
+    }
+
+    public IEnumerator VisualizeAllConfigs(List<List<Block>> allTSPConfigs)
+    {
+        foreach (List<Block> config in allTSPConfigs)
+        {
+            yield return StartCoroutine(VisualizeConfig(config));
+        }
+    }
+
+
+
+
     /// <summary>
     /// Method randomly distributes apples(currently redstones) on the surface of the world
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = 4;
+        int amount = 3;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
