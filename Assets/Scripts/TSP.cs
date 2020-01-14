@@ -26,9 +26,12 @@ namespace Assets.Scripts
         float sigma = 5000f;
         float sigmaReduction = 0.005f;
 
+        List<List<Block>> simulatedAnnealingIntermediateConfigs;
+
         public TSP(List<Block> blockList)
         {
             currentRoute = blockList.ToArray();
+            simulatedAnnealingIntermediateConfigs = new List<List<Block>>();
         }
 
         int visualizingCounter = 0;
@@ -61,6 +64,16 @@ namespace Assets.Scripts
             Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
         }        
+
+        public void SnapshotCurrentConfig()
+        {
+            List<Block> currentConfig = new List<Block>();
+            foreach (Block block in currentRoute)
+            {
+                currentConfig.Add(block);
+            }
+            simulatedAnnealingIntermediateConfigs.Add(currentConfig);
+        }
 
         public void VisualizeRoundtrip()
         {

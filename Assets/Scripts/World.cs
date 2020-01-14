@@ -408,18 +408,12 @@ public class World : MonoBehaviour
         }
     }
 
-    public Vector3 roundVector3(Vector3 vec)
+    public void InstantiateWhiteCubeAtWorldPos(Vector3 worldPos)
     {
-        return new Vector3((float)Mathf.RoundToInt(vec.x),
-            (float)Mathf.RoundToInt(vec.y),
-            (float)Mathf.RoundToInt(vec.z));
+        visualizedBlocks.Add(Instantiate(testCube, worldPos, Quaternion.identity));
     }
 
-
-
     int amountOfVisualizedCubesForTestingPurposes = 300;
-
-
 
     /// <param name="columnPos"> the block-column where we want to get the block above the ground </param>
     public Block getFirstNonsolidBlockAboveGround(Vector3 columnPos)
@@ -516,7 +510,8 @@ public class World : MonoBehaviour
     }
 
     //will probably be not needed anymore since we have to calculate all paths in both directions
-    public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
+
+    /*public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
     {
         for (int i = 0; i < bpArr.Length - 1; i++)
         {
@@ -538,7 +533,7 @@ public class World : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
 
     float timer = 2f;
@@ -597,12 +592,7 @@ public class World : MonoBehaviour
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
         }
 
-
-
-
         einmal = false;
-
-
 
         /*  
           // Activate the player's GameObject
@@ -612,11 +602,7 @@ public class World : MonoBehaviour
 
           }
         */
-
-
     }
-
-
 
 
     /// <summary>
@@ -668,20 +654,5 @@ public class World : MonoBehaviour
             block.BuildBlock(Block.BlockType.APPLE);
             randomlySpawnedApples.Add(block);
         }
-
-        //testing
-        /*findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[1]);
-        findPath(randomlySpawnedApples.ToArray()[0], randomlySpawnedApples.ToArray()[2]);
-        findPath(randomlySpawnedApples.ToArray()[2], randomlySpawnedApples.ToArray()[1]);*/
     }
-
-
-
-
-
-
-
 }
-
-
-
