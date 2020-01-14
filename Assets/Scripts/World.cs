@@ -515,7 +515,7 @@ public class World : MonoBehaviour
         return createdBlock;
     }
 
-
+    //will probably be not needed anymore since we have to calculate all paths in both directions
     public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
     {
         for (int i = 0; i < bpArr.Length - 1; i++)
@@ -592,7 +592,7 @@ public class World : MonoBehaviour
             bpArray[bpArray.Length - 1] = TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]);
             VisualizeBlockpath(TSP.GetBlockpathFromAToB(roundTrip[roundTrip.Length - 1], roundTrip[0]));
 
-            CorrectBlockpathsDirectionForRoundtrip(bpArray);
+            //CorrectBlockpathsDirectionForRoundtrip(bpArray);
 
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
         }
@@ -624,7 +624,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount =2;
+        int amount = 4;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;

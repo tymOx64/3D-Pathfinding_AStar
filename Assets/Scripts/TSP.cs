@@ -102,7 +102,7 @@ namespace Assets.Scripts
             return cost;
         }
 
-        /// <returns> The Blockpath between two given blocks </returns>
+        /// <returns> The Blockpath between two given blocks, direction sensitive! </returns>
         public static Blockpath GetBlockpathFromAToB(Block blockA, Block blockB)
         {
             if (blockA.edges == null || blockB.edges == null)
@@ -110,7 +110,7 @@ namespace Assets.Scripts
             foreach (Blockpath bp in blockA.edges)
             {
                 //blockA and blockB to be found as start- and endBlock in desired blockpath bp
-                if ((bp.startBlock == blockB || bp.endBlock == blockB) && (bp.startBlock == blockA || bp.endBlock == blockA))
+                if (bp.endBlock == blockB)
                 {
                     return bp;
                 }
