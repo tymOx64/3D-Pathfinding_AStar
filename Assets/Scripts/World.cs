@@ -6,7 +6,7 @@ using Assets.Scripts;
 using System.Diagnostics;
 using Unity.Collections;
 using Unity.Jobs;
-
+using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
@@ -611,11 +611,23 @@ public class World : MonoBehaviour
     public IEnumerator VisualizeConfig(List<Block> config)
     {
         ClearRecentVisualization();
-        foreach (Block block in config)
+        Block[] configArr = config.ToArray();
+        for (int i = 0; i < configArr.Length - 1; i++)
+        {
+            Blockpath bp = TSP.GetBlockpathFromAToB(configArr[i], configArr[i + 1]);
+            if (bp == null)
+                continue;
+            foreach (Block block in bp.blockList)
+            {
+                InstantiateWhiteCubeAtWorldPos(block.worldPosition);                
+            }
+        }
+        Blockpath bpLast = TSP.GetBlockpathFromAToB(configArr[configArr.Length - 1], configArr[0]);
+        foreach (Block block in bpLast.blockList)
         {
             InstantiateWhiteCubeAtWorldPos(block.worldPosition);
-            yield return new WaitForSeconds(0.1f);
         }
+        Debug.Log("end of visualizing a single config");
         yield return new WaitForSeconds(1f);
     }
 
@@ -623,6 +635,7 @@ public class World : MonoBehaviour
     {
         foreach (List<Block> config in allTSPConfigs)
         {
+            Debug.Log("vis next config");
             yield return StartCoroutine(VisualizeConfig(config));
         }
     }
