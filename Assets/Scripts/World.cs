@@ -75,19 +75,19 @@ public class World : MonoBehaviour
         int cx, cy, cz;
 
         if (pos.x < 0)
-            cx = (int)((Mathf.Round(pos.x - chunkSize) + 1) / (double)chunkSize) * chunkSize;
+            cx = (int)((Mathf.Round(pos.x - chunkSize) + 1) / (float)chunkSize) * chunkSize;
         else
-            cx = (int)(Mathf.Round(pos.x) / (double)chunkSize) * chunkSize;
+            cx = (int)(Mathf.Round(pos.x) / (float)chunkSize) * chunkSize;
 
         if (pos.y < 0)
-            cy = (int)((Mathf.Round(pos.y - chunkSize) + 1) / (double)chunkSize) * chunkSize;
+            cy = (int)((Mathf.Round(pos.y - chunkSize) + 1) / (float)chunkSize) * chunkSize;
         else
-            cy = (int)(Mathf.Round(pos.y) / (double)chunkSize) * chunkSize;
+            cy = (int)(Mathf.Round(pos.y) / (float)chunkSize) * chunkSize;
 
         if (pos.z < 0)
-            cz = (int)((Mathf.Round(pos.z - chunkSize) + 1) / (double)chunkSize) * chunkSize;
+            cz = (int)((Mathf.Round(pos.z - chunkSize) + 1) / (float)chunkSize) * chunkSize;
         else
-            cz = (int)(Mathf.Round(pos.z) / (double)chunkSize) * chunkSize;
+            cz = (int)(Mathf.Round(pos.z) / (float)chunkSize) * chunkSize;
 
         int blx = (int)Mathf.Abs((int)Mathf.Round(pos.x) - cx);
         int bly = (int)Mathf.Abs((int)Mathf.Round(pos.y) - cy);
@@ -266,7 +266,7 @@ public class World : MonoBehaviour
             {
                 if (closedSet.Contains(neighbourBlock))
                     continue;
-                double newMovementCostToNeighbour = (double)(currentBlock.gCost + calcDistance(currentBlock, neighbourBlock));
+                float newMovementCostToNeighbour = (float)(currentBlock.gCost + calcDistance(currentBlock, neighbourBlock));
                 if (newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
                 {
                     neighbourBlock.gCost = newMovementCostToNeighbour;
@@ -333,10 +333,10 @@ public class World : MonoBehaviour
     /// <summary>
     /// calculates the distance between two blocks along the x- and z-axis, where only block-to-direct-neighbourblock-movement is allowed
     /// </summary>
-    public double calcDistance(Block blockA, Block blockB)
+    public float calcDistance(Block blockA, Block blockB)
     {
-        double dstX = Mathf.Abs(blockA.worldPosition.x - blockB.worldPosition.x);
-        double dstY = Mathf.Abs(blockA.worldPosition.z - blockB.worldPosition.z);
+        float dstX = Mathf.Abs(blockA.worldPosition.x - blockB.worldPosition.x);
+        float dstY = Mathf.Abs(blockA.worldPosition.z - blockB.worldPosition.z);
 
         //moving diagonally to a neighbourblock results in a distance of roughly 1.41 worldunits
         if (dstX > dstY)
@@ -351,7 +351,7 @@ public class World : MonoBehaviour
     /// s the path from end to start by going along the pathParents of each block
     /// </summary>
     /// <param name="cost"> the total cost of the path </param>
-    public Blockpath RetracePath(Block startBlock, Block endBlock, double cost, Heap<Block> openSet, HashSet<Block> closedSet)
+    public Blockpath RetracePath(Block startBlock, Block endBlock, float cost, Heap<Block> openSet, HashSet<Block> closedSet)
     {
         List<Block> blockList = new List<Block>();
         Block currentBlock = endBlock;
@@ -537,7 +537,7 @@ public class World : MonoBehaviour
     }*/
 
 
-    double timer = 2f;
+    float timer = 2f;
     public GameObject testCube;
 
     bool einmal = true;
@@ -667,8 +667,8 @@ public class World : MonoBehaviour
                 UnityEngine.Debug.Log("random apple spawn failed to spawn all apples");
                 return;
             }
-            double xOffset = Random.Range(5f, 60f);
-            double zOffset = Random.Range(5f, 60f);
+            float xOffset = Random.Range(5f, 60f);
+            float zOffset = Random.Range(5f, 60f);
 
             Vector3 spawnPos = new Vector3(10f + (int)xOffset, 65f, 10f + (int)zOffset);
 

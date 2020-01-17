@@ -1504,7 +1504,7 @@ namespace Realtime.Messaging.Internal
                 {
                     checked
                     {
-                        // Double the size of the buckets table and add one, so that we have an odd integer.
+                        // float the size of the buckets table and add one, so that we have an odd integer.
                         newLength = buckets.Length * 2 + 1;
 
                         // Now, we only need to check odd integers, and find the first that is not divisible 

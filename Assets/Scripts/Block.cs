@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+using Unity.Collections;
+using Unity.Jobs;
+using System.Collections.Generic;
 /// <summary>
 /// Block object that represents all possible blocks.
 /// It is in charge of rendering a block as weö as managing its state and appearance.
@@ -17,7 +18,7 @@ public class Block : IHeapItem<Block>
     /// </summary>
     public Block pathParent;
     
-    public double gCost, hCost;
+    public float gCost, hCost;
 
     int heapIndex;
 
@@ -25,15 +26,47 @@ public class Block : IHeapItem<Block>
 
 
 
-    //job?
     /// <summary>
-    /// calculates the fCost which is simply the sum of gCost and hCost 
+    /// calculates the fCost which is the sum of gCost and hCost 
     /// </summary>
-    public double getFCost()
+
+    struct FcostJob :IJob
     {
-        return gCost + hCost;
+        public NativeArray<float> fCost;
+        
+     
+        public void Execute()
+        {
+            fCost[2]= fCost[0]  + fCost[1] ;
+
+
+        }
+
     }
 
+ 
+
+    public float getFCost()
+    {
+        NativeArray<float> fCost = new NativeArray<float>(3, Allocator.TempJob);
+        fCost[0] = gCost;
+        fCost[1] = hCost;
+
+
+        var fcostJob = new FcostJob()
+        {
+
+            fCost = fCost
+        };
+        JobHandle jh=fcostJob.Schedule();
+        jh.Complete();
+
+        float fC = fCost[2];
+
+        fCost.Dispose();
+         
+        return fC;
+    }
     
 
 
