@@ -21,10 +21,10 @@ namespace Assets.Scripts
         public GameObject worldObj;
 
         Block[] currentRoute;
-        float recentCost;
+        double recentCost;
 
-        float sigma = 5000f;
-        float sigmaReduction = 0.005f; //sigma = 5000 and reduction 0.005 results in 1700 while loop iterations
+        double sigma = 5000f;
+        double sigmaReduction = 0.005f; //sigma = 5000 and reduction 0.005 results in 1700 while loop iterations
 
         public List<List<Block>> simulatedAnnealingIntermediateConfigs;
 
@@ -89,12 +89,20 @@ namespace Assets.Scripts
             worldObj.GetComponent<World>().VisualizeBlockpath(GetBlockpathFromAToB(currentRoute[currentRoute.Length-1], currentRoute[0]));
         }
 
+
+
+
+
+
+
+
+
         /// <summary>
         /// calculates the cost of the current path
         /// </summary>
-        float CalcCurrentCost()
+        double CalcCurrentCost()
         {
-            float cost = 0f;
+            double cost = 0f;
             Blockpath bp = null;
 
             for (int i = 1; i < currentRoute.Length; i++)
@@ -103,7 +111,7 @@ namespace Assets.Scripts
                 if (bp == null)
                 {
                     Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
-                    return float.PositiveInfinity;
+                    return double.PositiveInfinity;
                 }
                 cost += bp.cost;
             }
@@ -113,7 +121,7 @@ namespace Assets.Scripts
             if (bp == null)
             {
                 Debug.Log("ERROR: path between two blocks was not calculated before, or blockpath was not set accordingly");
-                return float.PositiveInfinity;
+                return double.PositiveInfinity;
             }
             cost += bp.cost;
             //Debug.Log("cost: " + cost);
@@ -136,6 +144,24 @@ namespace Assets.Scripts
             return null;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Swap two nodes in the current path
         /// </summary>    
@@ -152,14 +178,14 @@ namespace Assets.Scripts
         bool AcceptSwap()
         {
             //if the path improved we accept right away
-            float currentCost = CalcCurrentCost();
+            double currentCost = CalcCurrentCost();
             if (recentCost >= currentCost)
                 return true;
 
-            float delta = recentCost - currentCost;
-            float chance = Mathf.Exp(delta / sigma);
+            double delta = recentCost - currentCost;
+            double chance = (double)(Mathf.Exp((float)delta / (float)sigma));
 
-            float randomVal = UnityEngine.Random.Range(0f, 1f);
+            double randomVal = UnityEngine.Random.Range(0f, 1f);
             //Debug.Log("Chance: " + chance);
             return chance > randomVal;
         }
@@ -231,7 +257,7 @@ namespace Assets.Scripts
         /* TSP brute force
         
         public List<Block> nodes;
-        public float[,] distance;
+        public double[,] distance;
 
         /// <summary>
         /// adds startblock and apples to nodes
@@ -262,10 +288,10 @@ namespace Assets.Scripts
         /// classic TSP distance matrix
         /// </summary>
         /// <returns></returns>
-        public float[,] distanceMatrix()
+        public double[,] distanceMatrix()
         {
 
-            distance = new float[nodes.Count, nodes.Count];
+            distance = new double[nodes.Count, nodes.Count];
 
             for (int i = 0; i < nodes.Count; i++)
             {

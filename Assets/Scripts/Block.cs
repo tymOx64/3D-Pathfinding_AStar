@@ -17,16 +17,19 @@ public class Block : IHeapItem<Block>
     /// </summary>
     public Block pathParent;
     
-    public float gCost, hCost;
+    public double gCost, hCost;
 
     int heapIndex;
 
     public List<Blockpath> edges = null;
 
+
+
+    //job?
     /// <summary>
     /// calculates the fCost which is simply the sum of gCost and hCost 
     /// </summary>
-    public float getFCost()
+    public double getFCost()
     {
         return gCost + hCost;
     }
@@ -46,7 +49,12 @@ public class Block : IHeapItem<Block>
             heapIndex = value;
         }
     }
-    
+
+
+
+
+
+    //Job?
     /// <summary>
     /// determine the block with the lowest fCost; if equal, hCost serves as a tie-breaker
     /// </summary>
@@ -60,6 +68,12 @@ public class Block : IHeapItem<Block>
         }
         return -compare;
     }
+
+
+
+
+
+
 
     /// <summary>
     /// resets the pathfinding relevant attributes gCost, hCost and pathParent back to its default value
