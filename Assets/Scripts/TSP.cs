@@ -39,7 +39,7 @@ namespace Assets.Scripts
 
         public Block[] simulatedAnnealing()
         {
-           // Debug.Log("Initial cost of randomized route: " + CalcCurrentCost());
+       
             while (sigma >= 1)
             {
                 int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, currentRoute.Length) - 0.000001f);
@@ -55,12 +55,6 @@ namespace Assets.Scripts
                 }                
                 sigma *= 1 - sigmaReduction;
 
-                //Visualizing ongoing simulated Annealing
-                if(visualizingCounter++ % 20 == 0)
-                {
-                    //VisualizeRoundtrip();
-                    //Thread.Sleep(300);
-                }
                 if (currentIteration++ % 200 == 0)
                 {
                     SnapshotCurrentConfig();
