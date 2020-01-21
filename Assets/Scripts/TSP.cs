@@ -55,12 +55,12 @@ namespace Assets.Scripts
                 }                
                 sigma *= 1 - sigmaReduction;
 
-                if (currentIteration++ % 200 == 0)
+               /* if (currentIteration++ % 200 == 0)
                 {
                     SnapshotCurrentConfig();
-                }                
+                }          */    
             }
-            Debug.Log("Cost of optimized route: " + CalcCurrentCost());
+            //Debug.Log("Cost of optimized route: " + CalcCurrentCost());
             return currentRoute;
         }                
 
