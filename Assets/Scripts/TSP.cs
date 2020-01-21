@@ -39,7 +39,7 @@ namespace Assets.Scripts
 
         public Block[] simulatedAnnealing()
         {
-            Debug.Log("Initial cost of randomized route: " + CalcCurrentCost());
+           // Debug.Log("Initial cost of randomized route: " + CalcCurrentCost());
             while (sigma >= 1)
             {
                 int nodeAIndex = (int)(UnityEngine.Random.RandomRange(1f, currentRoute.Length) - 0.000001f);
@@ -143,19 +143,6 @@ namespace Assets.Scripts
             }
             return null;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -87,7 +87,6 @@ public class Block : IHeapItem<Block>
 
 
 
-    //Job?
     /// <summary>
     /// determine the block with the lowest fCost; if equal, hCost serves as a tie-breaker
     /// </summary>
@@ -159,16 +158,16 @@ public class Block : IHeapItem<Block>
 								new Vector2( 0, 0.9375f ),new Vector2( 0.0625f, 0.9375f )},
 
 
-			/*APPLE*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
+		/*APPLE TOP*/          {new Vector2( 0.9375f, 0.5625f ), new Vector2( 1.0f, 0.5625f),
 								new Vector2( 0.9375f, 0.625f ),new Vector2( 1.0f, 0.625f )},
 
 		
        
 	
 		
-		/*APPLETOP   (15/16),(9/16) ,  1, (9/16)   ,  (15/16) , (10/16),   1, (10 ,16 ) */
+		
 
-		/*APPLESIDE*/      {new Vector2( 0.0625f, 0.4375f ), new Vector2( 0.125f, 0.4375f),
+		/*APPLE SIDE*/      {new Vector2( 0.0625f, 0.4375f ), new Vector2( 0.125f, 0.4375f),
 								new Vector2( 0.0625f, 0.5f ),new Vector2( 0.125f, 0.5f )},
 		/*LEAVES			{ new Vector2(0.0625f,0.375f),  new Vector2(0.125f,0.375f),
  								new Vector2(0.0625f,0.4375f), new Vector2(0.125f,0.4375f)},*/

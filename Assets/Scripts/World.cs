@@ -512,29 +512,7 @@ public class World : MonoBehaviour
 
     //will probably be not needed anymore since we have to calculate all paths in both directions
 
-    /*public void CorrectBlockpathsDirectionForRoundtrip(Blockpath[] bpArr)
-    {
-        for (int i = 0; i < bpArr.Length - 1; i++)
-        {
-            if (bpArr[i].endBlock != bpArr[i + 1].startBlock)
-            {
-                bpArr[i + 1].reverseBp();
-            }
-        }
-
-        foreach (Blockpath bp in bpArr)
-        {
-            Block[] blockArr = bp.blockList.ToArray();
-
-            for (int i = 0; i < blockArr.Length - 1; i++)
-            {
-                if (blockArr[i].worldPosition.y + 1 < blockArr[i + 1].worldPosition.y)
-                {
-                    UnityEngine.Debug.Log("incosistent blockpath found, 1st block: " + blockArr[i].worldPosition + " , 2nd block: " + blockArr[i + 1].worldPosition);
-                }
-            }
-        }
-    }*/
+ 
 
 
     float timer = 2f;
@@ -597,14 +575,7 @@ public class World : MonoBehaviour
 
         einmal = false;
 
-        /*  
-          // Activate the player's GameObject
-          if (!player.activeSelf)
-          {
-              player.SetActive(true);
-
-          }
-        */
+      
     }
 
 
@@ -649,7 +620,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = 3;
+        int amount = (int)Random.Range(1,6); 
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
@@ -664,7 +635,7 @@ public class World : MonoBehaviour
             testt++;
             if (testt > 498)
             {
-                UnityEngine.Debug.Log("random apple spawn failed to spawn all apples");
+                //UnityEngine.Debug.Log("random apple spawn failed to spawn all apples");
                 return;
             }
             float xOffset = Random.Range(5f, 60f);
@@ -682,7 +653,7 @@ public class World : MonoBehaviour
             {
                 if (Mathf.Abs(vec.x - spawnPos.x) <= 4 && Mathf.Abs(vec.z - spawnPos.z) <= 4)
                 {
-                    UnityEngine.Debug.Log("Skipped spawnPos - too close to another apple");
+                    //UnityEngine.Debug.Log("Skipped spawnPos - too close to another apple");
                     goto proceed;
                 }
             }
