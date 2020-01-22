@@ -618,8 +618,11 @@ public class World : MonoBehaviour
     {
         for(int x = 22; x < 47; x++)
         {
-            createBlockAtWorldPos(new Vector3(x, 65, 33), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(x, 66, 33), Block.BlockType.STONE);
+            if(x != 40 && x != 41)
+            {
+                createBlockAtWorldPos(new Vector3(x, 65, 33), Block.BlockType.STONE);
+                createBlockAtWorldPos(new Vector3(x, 66, 33), Block.BlockType.STONE);
+            }            
 
             createBlockAtWorldPos(new Vector3(x, 65, 30), Block.BlockType.STONE);
             createBlockAtWorldPos(new Vector3(x, 66, 30), Block.BlockType.STONE);
@@ -632,9 +635,32 @@ public class World : MonoBehaviour
 
         for (int z = 22; z < 47; z++)
         {
-            createBlockAtWorldPos(new Vector3(38, 65, z), Block.BlockType.STONE);
-            createBlockAtWorldPos(new Vector3(38, 66, z), Block.BlockType.STONE);
+            if(z != 31 && z != 32)
+            {
+                createBlockAtWorldPos(new Vector3(38, 65, z), Block.BlockType.STONE);
+                createBlockAtWorldPos(new Vector3(38, 66, z), Block.BlockType.STONE);
+            }            
         }
+
+        for (int z = 34; z < 42; z++)
+        {
+            if (true || z != 31 && z != 32)
+            {
+                createBlockAtWorldPos(new Vector3(42, 65, z), Block.BlockType.STONE);
+                createBlockAtWorldPos(new Vector3(42, 66, z), Block.BlockType.STONE);
+            }
+        }
+
+        createBlockAtWorldPos(new Vector3(43, 65, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(43, 66, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(44, 65, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(44, 66, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(40, 65, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(40, 66, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(41, 65, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(41, 66, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(39, 65, 41), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(39, 66, 41), Block.BlockType.STONE);
     }
 
     /// <summary>
@@ -642,7 +668,7 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = 3;
+        int amount = 1;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
