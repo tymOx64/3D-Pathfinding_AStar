@@ -241,7 +241,7 @@ public class World : MonoBehaviour
 
     }
 
-
+    float totalTimePathfinding = 0f;
 
     /// <summary>
     /// finds the shortest path between two blocks
@@ -254,16 +254,31 @@ public class World : MonoBehaviour
 
         openSet.Add(startBlock);
 
+        Stopwatch swNeighbourblocks = new Stopwatch();
+        Stopwatch swCalcdistance = new Stopwatch();
+        Stopwatch swSetValues = new Stopwatch();
+
         while (openSet.Count > 0)
         {
             Block currentBlock = openSet.RemoveFirst();
             closedSet.Add(currentBlock);
 
-            foreach (Block neighbourBlock in GetNeighbourBlocks(currentBlock))
+            swNeighbourblocks.Start();
+            List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
+            //Debug.Log("elapsed ms neighbours: " + swNeighbourblocks.ElapsedMilliseconds);
+            swNeighbourblocks.Stop();
+
+            foreach (Block neighbourBlock in neighbourBlocks)
             {
+                swCalcdistance.Start();
+
                 if (closedSet.Contains(neighbourBlock))
                     continue;
                 float newMovementCostToNeighbour = (float)(currentBlock.gCost + calcDistance(currentBlock, neighbourBlock));
+
+                swCalcdistance.Stop();
+                swSetValues.Start();
+
                 if (newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
                 {
                     neighbourBlock.gCost = newMovementCostToNeighbour;
@@ -285,6 +300,14 @@ public class World : MonoBehaviour
 
                         openSet.Add(endBlock);
 
+                        UnityEngine.Debug.Log("swNeighbourblocks: " + swNeighbourblocks.ElapsedMilliseconds + " ms"); //51ms  605ms
+                        UnityEngine.Debug.Log("swCalcdistance: " + swCalcdistance.ElapsedMilliseconds + " ms"); //23ms   742ms
+                        UnityEngine.Debug.Log("swSetValues: " + swSetValues.ElapsedMilliseconds + " ms"); //13ms  96ms
+
+                        totalTimePathfinding += swNeighbourblocks.ElapsedMilliseconds + swCalcdistance.ElapsedMilliseconds;
+                        totalTimePathfinding += swSetValues.ElapsedMilliseconds;
+
+
                         UnityEngine.Debug.Log("PATH COMPLETE");
                         return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
                     }
@@ -295,6 +318,8 @@ public class World : MonoBehaviour
                     else
                         openSet.UpdateItem(neighbourBlock);
                 }
+
+                swSetValues.Stop();
             }
         }
         UnityEngine.Debug.Log("Unable to find path");
@@ -545,6 +570,8 @@ public class World : MonoBehaviour
             }
             swA.Stop();
             UnityEngine.Debug.Log("Time used to calculate all paths/edges: " + swA.ElapsedMilliseconds + " ms");
+
+            UnityEngine.Debug.Log("Total time Pathfinding: " + totalTimePathfinding + " ms");
 
             Stopwatch swB = new Stopwatch();
             swB.Start();
