@@ -243,11 +243,15 @@ public class World : MonoBehaviour
 
     float totalTimePathfinding = 0f;
 
+    List<List<Block>> aStarListsOfVistedBlocks = new List<List<Block>>();
+
     /// <summary>
     /// finds the shortest path between two blocks
     /// </summary>
     public Blockpath findPath(Block startBlock, Block endBlock)
     {
+        List<Block> visitedBlocks = new List<Block>();
+
         Heap<Block> openSet = new Heap<Block>(chunkSize * columnHeight * chunkSize * columnHeight);
 
         HashSet<Block> closedSet = new HashSet<Block>();
@@ -266,6 +270,7 @@ public class World : MonoBehaviour
             swRemoveFirstFromHeap.Stop();
 
             closedSet.Add(currentBlock);
+            visitedBlocks.Add(currentBlock);
 
             swNeighbourblocks.Start();
             List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
@@ -316,12 +321,12 @@ public class World : MonoBehaviour
                         UnityEngine.Debug.Log("Time elapsed whilst calculating the (up to 8) neighbourblocks: " + swNeighbourblocks.ElapsedMilliseconds + " ms"); //51ms  605ms
                         UnityEngine.Debug.Log("Time elapsed whilst checking if a neighbourblock is already in the closed set: " + swCalcdistance.ElapsedMilliseconds + " ms"); //23ms   742ms
                         UnityEngine.Debug.Log("Time elapsed whilst assigning the values: " + swSetValues.ElapsedMilliseconds + " ms"); //13ms  96ms
-                        UnityEngine.Debug.Log("Time elapsed whilst removing the 1st block from the heap: " + swRemoveFirstFromHeap.ElapsedMilliseconds + " ms");
+                        UnityEngine.Debug.Log("Time elapsed whilst grabbing the 1st block from the heap (and maintaining its structure!): " + swRemoveFirstFromHeap.ElapsedMilliseconds + " ms");
 
                         totalTimePathfinding += swNeighbourblocks.ElapsedMilliseconds + swCalcdistance.ElapsedMilliseconds;
                         totalTimePathfinding += swSetValues.ElapsedMilliseconds;
 
-
+                        aStarListsOfVistedBlocks.Add(visitedBlocks);
                         UnityEngine.Debug.Log("PATH COMPLETE");
                         return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
                     }
@@ -436,6 +441,14 @@ public class World : MonoBehaviour
         foreach (Block block in bp.blockList)
         {
             visualizedBlocks.Add(Instantiate(testCube, block.worldPosition, Quaternion.identity));
+        }
+    }
+
+    public void VisualizeBlocklist(List<Block> blocklist)
+    {
+        foreach (Block block in blocklist)
+        {
+            visualizedBlocks.Add(Instantiate(testCubeRed, block.worldPosition + new Vector3(0.2f, 0.2f, 0.2f), Quaternion.identity));
         }
     }
 
@@ -555,6 +568,7 @@ public class World : MonoBehaviour
 
     float timer = 2f;
     public GameObject testCube;
+    public GameObject testCubeRed;
 
     bool einmal = true;
     /// <summary>
@@ -613,6 +627,8 @@ public class World : MonoBehaviour
             AIcam.GetComponent<AIMovement>().SetRoundtrip(bpArray);
 
             StartCoroutine(VisualizeAllConfigs(tsp.simulatedAnnealingIntermediateConfigs));
+
+            StartCoroutine(VisualizedAllAStarCalcs());
         }
 
         einmal = false;
@@ -620,6 +636,29 @@ public class World : MonoBehaviour
       
     }
 
+    public List<GameObject> redBlocks = new List<GameObject>();
+
+    public IEnumerator VisualizeAStarList(List<Block> blocklist)
+    {
+        foreach (Block block in blocklist)
+        {
+            if (redBlocks.Count > 4)
+            {
+                Destroy(redBlocks[0]);
+                redBlocks.RemoveAt(0);
+            }
+            redBlocks.Add(Instantiate(testCubeRed, block.worldPosition + new Vector3(0.2f, 0.2f, 0.2f), Quaternion.identity));
+            yield return new WaitForSeconds(0.15f);
+        }        
+    }
+
+    public IEnumerator VisualizedAllAStarCalcs()
+    {
+        foreach (List<Block> blocklist in aStarListsOfVistedBlocks)
+        {
+            yield return VisualizeAStarList(blocklist);
+        }
+    }
 
 
     public IEnumerator VisualizeConfig(List<Block> config)
@@ -641,7 +680,7 @@ public class World : MonoBehaviour
         {
             InstantiateWhiteCubeAtWorldPos(block.worldPosition);
         }
-        Debug.Log("end of visualizing a single config");
+        //Debug.Log("end of visualizing a single config");
         yield return new WaitForSeconds(1f);
     }
 
@@ -649,7 +688,7 @@ public class World : MonoBehaviour
     {
         foreach (List<Block> config in allTSPConfigs)
         {
-            Debug.Log("vis next config");
+            //Debug.Log("vis next config");
             yield return StartCoroutine(VisualizeConfig(config));
         }
     }

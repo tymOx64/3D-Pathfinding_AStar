@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 2cb693d22e078467c9de6bcd19007402
-timeCreated: 1502778757
-licenseType: Free
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - AIcam: {instanceID: 0}
+  - textureAtlas: {instanceID: 0}
+  - fluidTexture: {instanceID: 0}
+  - testCube: {instanceID: 0}
+  - testCubeRed: {fileID: 3742061606469596952, guid: 122f59e5554a1924fa18d902b7bd896b,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
