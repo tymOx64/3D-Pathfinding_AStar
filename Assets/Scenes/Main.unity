@@ -307,7 +307,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb693d22e078467c9de6bcd19007402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   AIcam: {fileID: 962859927}
   textureAtlas: {fileID: 2100000, guid: 0beff685461bd4744bc433ab1599a347, type: 2}
   fluidTexture: {fileID: 2100000, guid: 033d6ae81142c4d80828ae3712a04408, type: 2}
@@ -315,6 +314,9 @@ MonoBehaviour:
   WorldX: 20
   WorldY: 20
   testCube: {fileID: 720220423373853127, guid: 7dc06113848dab948854c7f316b124ab, type: 3}
+  testCubeRed: {fileID: 3742061606469596952, guid: 122f59e5554a1924fa18d902b7bd896b,
+    type: 3}
+  redBlocks: []
 --- !u!4 &556296020
 Transform:
   m_ObjectHideFlags: 0
