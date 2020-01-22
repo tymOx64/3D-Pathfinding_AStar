@@ -668,6 +668,32 @@ public class World : MonoBehaviour
     /// </summary>
     public void RandomAppleSpawn()
     {
+        //hardcoded nonrandom spawn
+        randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(AIcam.transform.position));
+        
+        Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
+        blockA.BuildBlock(Block.BlockType.APPLE);
+        randomlySpawnedApples.Add(blockA);
+
+        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(20f, 65f, 30f));
+        blockB.BuildBlock(Block.BlockType.APPLE);
+        randomlySpawnedApples.Add(blockB);
+
+        Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(35f, 65f, 25f));
+        blockC.BuildBlock(Block.BlockType.APPLE);
+        randomlySpawnedApples.Add(blockC);
+
+        Block blockD = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
+        blockD.BuildBlock(Block.BlockType.APPLE);
+        randomlySpawnedApples.Add(blockD);
+
+        Block blockE = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 35f));
+        blockE.BuildBlock(Block.BlockType.APPLE);
+        randomlySpawnedApples.Add(blockE);
+
+        //random locations after return ----->
+        return;
+
         int amount = 1;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
