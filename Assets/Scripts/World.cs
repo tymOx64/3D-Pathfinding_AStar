@@ -526,6 +526,7 @@ public class World : MonoBehaviour
     {
         if (einmal)
         {
+            CreateStoneWalls();
             Stopwatch swA = new Stopwatch();
             swA.Start();
 
@@ -613,14 +614,35 @@ public class World : MonoBehaviour
     }
 
 
+    public void CreateStoneWalls()
+    {
+        for(int x = 22; x < 47; x++)
+        {
+            createBlockAtWorldPos(new Vector3(x, 65, 33), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(x, 66, 33), Block.BlockType.STONE);
 
+            createBlockAtWorldPos(new Vector3(x, 65, 30), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(x, 66, 30), Block.BlockType.STONE);
+        }
+
+        createBlockAtWorldPos(new Vector3(46, 65, 31), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(46, 66, 31), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(46, 65, 32), Block.BlockType.STONE);
+        createBlockAtWorldPos(new Vector3(46, 66, 32), Block.BlockType.STONE);
+
+        for (int z = 22; z < 47; z++)
+        {
+            createBlockAtWorldPos(new Vector3(38, 65, z), Block.BlockType.STONE);
+            createBlockAtWorldPos(new Vector3(38, 66, z), Block.BlockType.STONE);
+        }
+    }
 
     /// <summary>
     /// Method randomly distributes apples(currently redstones) on the surface of the world
     /// </summary>
     public void RandomAppleSpawn()
     {
-        int amount = (int)Random.Range(1,6); 
+        int amount = 3;
 
         UnityEngine.Debug.Log("Amount to be spawned: " + amount.ToString());
         int testt = 0;
