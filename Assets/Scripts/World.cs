@@ -256,33 +256,46 @@ public class World : MonoBehaviour
 
         Stopwatch swNeighbourblocks = new Stopwatch();
         Stopwatch swCalcdistance = new Stopwatch();
+        Stopwatch swRemoveFirstFromHeap = new Stopwatch();
         Stopwatch swSetValues = new Stopwatch();
 
         while (openSet.Count > 0)
         {
+            swRemoveFirstFromHeap.Start();
             Block currentBlock = openSet.RemoveFirst();
+            swRemoveFirstFromHeap.Stop();
+
             closedSet.Add(currentBlock);
 
             swNeighbourblocks.Start();
             List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
+
             //Debug.Log("elapsed ms neighbours: " + swNeighbourblocks.ElapsedMilliseconds);
             swNeighbourblocks.Stop();
 
             foreach (Block neighbourBlock in neighbourBlocks)
             {
+                //swCalcdistance.Start();
                 swCalcdistance.Start();
-
                 if (closedSet.Contains(neighbourBlock))
                     continue;
+                swCalcdistance.Stop();
+
+
                 float newMovementCostToNeighbour = (float)(currentBlock.gCost + calcDistance(currentBlock, neighbourBlock));
 
-                swCalcdistance.Stop();
+                
+
                 swSetValues.Start();
 
                 if (newMovementCostToNeighbour < neighbourBlock.gCost || !openSet.Contains(neighbourBlock))
                 {
                     neighbourBlock.gCost = newMovementCostToNeighbour;
+
+                    
                     neighbourBlock.hCost = calcDistance(neighbourBlock, endBlock);
+                    
+
                     neighbourBlock.pathParent = currentBlock;
 
                     //reached the endblock, but due to how the neighbourblocks are found above the ground
@@ -300,9 +313,10 @@ public class World : MonoBehaviour
 
                         openSet.Add(endBlock);
 
-                        UnityEngine.Debug.Log("swNeighbourblocks: " + swNeighbourblocks.ElapsedMilliseconds + " ms"); //51ms  605ms
-                        UnityEngine.Debug.Log("swCalcdistance: " + swCalcdistance.ElapsedMilliseconds + " ms"); //23ms   742ms
-                        UnityEngine.Debug.Log("swSetValues: " + swSetValues.ElapsedMilliseconds + " ms"); //13ms  96ms
+                        UnityEngine.Debug.Log("Time elapsed whilst calculating the (up to 8) neighbourblocks: " + swNeighbourblocks.ElapsedMilliseconds + " ms"); //51ms  605ms
+                        UnityEngine.Debug.Log("Time elapsed whilst checking if a neighbourblock is already in the closed set: " + swCalcdistance.ElapsedMilliseconds + " ms"); //23ms   742ms
+                        UnityEngine.Debug.Log("Time elapsed whilst assigning the values: " + swSetValues.ElapsedMilliseconds + " ms"); //13ms  96ms
+                        UnityEngine.Debug.Log("Time elapsed whilst removing the 1st block from the heap: " + swRemoveFirstFromHeap.ElapsedMilliseconds + " ms");
 
                         totalTimePathfinding += swNeighbourblocks.ElapsedMilliseconds + swCalcdistance.ElapsedMilliseconds;
                         totalTimePathfinding += swSetValues.ElapsedMilliseconds;
@@ -362,7 +376,9 @@ public class World : MonoBehaviour
 
         //moving diagonally to a neighbourblock results in a distance of roughly 1.41 worldunits
         if (dstX > dstY)
+        {
             return dstY * 1.41f + (dstX - dstY);
+        }            
         return dstX * 1.41f + (dstY - dstX);
     }
 
@@ -700,7 +716,7 @@ public class World : MonoBehaviour
         blockA.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockA);
 
-        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 34f));
+        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
         blockB.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockB);
 
