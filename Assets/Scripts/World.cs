@@ -233,10 +233,7 @@ public class World : MonoBehaviour
         this.transform.rotation = Quaternion.identity;
 
 
-        BuildWorld(20, 20);
-
-
-        RandomAppleSpawn();
+        BuildWorld(20, 20);        
 
         DrawChunks();
 
@@ -527,6 +524,7 @@ public class World : MonoBehaviour
         if (einmal)
         {
             CreateStoneWalls();
+            RandomAppleSpawn();
             Stopwatch swA = new Stopwatch();
             swA.Start();
 
@@ -671,25 +669,26 @@ public class World : MonoBehaviour
         //hardcoded nonrandom spawn
         randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(AIcam.transform.position));
         
-        Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
+        Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(55f, 65f, 39f));
         blockA.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockA);
 
-        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(20f, 65f, 30f));
+        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 34f));
         blockB.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockB);
 
-        Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(35f, 65f, 25f));
+        //dead end bait block
+        Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(40f, 65f, 44f));
         blockC.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockC);
 
-        Block blockD = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
+        /*Block blockD = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
         blockD.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockD);
 
         Block blockE = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 35f));
         blockE.BuildBlock(Block.BlockType.APPLE);
-        randomlySpawnedApples.Add(blockE);
+        randomlySpawnedApples.Add(blockE);*/
 
         //random locations after return ----->
         return;
