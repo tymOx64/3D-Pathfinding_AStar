@@ -84,7 +84,8 @@ public class Block : IHeapItem<Block>
     }
 
 
-    float approxFactor = 1.0f;
+    float approxFactor = 0.5f;
+
     float getAdjustedFCost()
     {
         return gCost * approxFactor + hCost;

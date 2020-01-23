@@ -268,7 +268,7 @@ public class World : MonoBehaviour
             swRemoveFirstFromHeap.Stop();
 
             closedSet.Add(currentBlock);
-            visitedBlocks.Add(currentBlock);
+            //visitedBlocks.Add(currentBlock);
 
             swNeighbourblocks.Start();
             List<Block> neighbourBlocks = GetNeighbourBlocks(currentBlock);
@@ -323,7 +323,7 @@ public class World : MonoBehaviour
                         UnityEngine.Debug.Log("Total cost of the path: " + endBlock.gCost);
 
 
-                        aStarListsOfVistedBlocks.Add(visitedBlocks);
+                        //aStarListsOfVistedBlocks.Add(visitedBlocks);
                         UnityEngine.Debug.Log("PATH COMPLETE");
                         return RetracePath(startBlock, endBlock, endBlock.getFCost(), openSet, closedSet);
                     }
@@ -623,7 +623,7 @@ public class World : MonoBehaviour
 
             StartCoroutine(VisualizeAllConfigs(tsp.simulatedAnnealingIntermediateConfigs));
 
-            StartCoroutine(VisualizedAllAStarCalcs());
+            //StartCoroutine(VisualizedAllAStarCalcs());
         }
 
         einmal = false;
@@ -747,26 +747,26 @@ public class World : MonoBehaviour
         //hardcoded nonrandom spawn
         randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(AIcam.transform.position));
         
-        /*Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(65f, 65f, 39f));
+        Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(55f, 66f, 42f));
         blockA.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockA);
 
         Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
         blockB.BuildBlock(Block.BlockType.APPLE);
-        randomlySpawnedApples.Add(blockB);*/
+        randomlySpawnedApples.Add(blockB);
 
         //dead end bait block
-        Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(40f, 65f, 44f));
+        Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(30f, 65f, 56f));
         blockC.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockC);
 
-        /*Block blockD = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 30f));
+        Block blockD = getFirstNonsolidBlockAboveGround(new Vector3(26f, 65f, 28f));
         blockD.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockD);
 
-        Block blockE = getFirstNonsolidBlockAboveGround(new Vector3(25f, 65f, 35f));
+        Block blockE = getFirstNonsolidBlockAboveGround(new Vector3(36f, 65f, 39f));
         blockE.BuildBlock(Block.BlockType.APPLE);
-        randomlySpawnedApples.Add(blockE);*/
+        randomlySpawnedApples.Add(blockE);
 
         //random locations after return ----->
         return;

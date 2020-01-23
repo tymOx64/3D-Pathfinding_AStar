@@ -55,7 +55,7 @@ namespace Assets.Scripts
                 }                
                 sigma *= 1 - sigmaReduction;
 
-                 if (currentIteration++ % 200 == 0)
+                 if (currentIteration++ % 75 == 0)
                  {
                      SnapshotCurrentConfig();
                  }          
