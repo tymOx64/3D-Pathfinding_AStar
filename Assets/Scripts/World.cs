@@ -755,9 +755,9 @@ public class World : MonoBehaviour
         blockA.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockA);
 
-        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
+        /*Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
         blockB.BuildBlock(Block.BlockType.APPLE);
-        randomlySpawnedApples.Add(blockB);
+        randomlySpawnedApples.Add(blockB);*/
 
         //dead end bait block
         Block blockC = getFirstNonsolidBlockAboveGround(new Vector3(40f, 65f, 44f));

@@ -19,6 +19,9 @@ public class Heap<T> where T : IHeapItem<T>
         items[currentItemCount] = item;
         SortUp(item);
         currentItemCount++;
+
+        Debug.Log("***** AFTER ADD ITEM******");
+        ConsistencyCheck();
     }
 
     public T RemoveFirst()
@@ -28,7 +31,21 @@ public class Heap<T> where T : IHeapItem<T>
         items[0] = items[currentItemCount];
         items[0].HeapIndex = 0;
         SortDown(items[0]);
+
+        Debug.Log("***** AFTER REMOVE FIRST ******");
+        ConsistencyCheck();
+
         return firstItem;
+    }
+
+    public void PrintHeap()
+    {
+        if (currentItemCount > 25)
+            return;
+        for(int i = 0; i < currentItemCount; i++)
+        {
+            Debug.Log("Heap Index: " + i + " , fCost: " + (items[i].getFCost()));
+        }
     }
 
     public void UpdateItem(T item)
@@ -47,6 +64,46 @@ public class Heap<T> where T : IHeapItem<T>
     public bool Contains(T item)
     {
         return Equals(items[item.HeapIndex], item);
+    }
+
+    void ConsistencyCheck()
+    {
+        for(int i = 0; i < currentItemCount / 2 + 5; i++)
+        {
+            if(GetChildIndexLeft(i) != -1)
+            {
+                if(items[i].getFCost() > items[GetChildIndexLeft(i)].getFCost())
+                {
+                    Debug.Log("Inconsistency at indexes: " + i + " , " + GetChildIndexLeft(i));
+                    PrintHeap();
+                }
+            }
+
+            if (GetChildIndexRight(i) != -1)
+            {
+                if (items[i].getFCost() > items[GetChildIndexRight(i)].getFCost())
+                {
+                    Debug.Log("Inconsistency at indexes: " + i + " , " + GetChildIndexRight(i));
+                    PrintHeap();
+                }
+            }
+        }
+    }
+
+    int GetChildIndexLeft(int index)
+    {
+        int childIndexLeft = items[index].HeapIndex * 2 + 1;
+        if (childIndexLeft >= currentItemCount)
+            return -1;
+        return childIndexLeft;
+    }
+
+    int GetChildIndexRight(int index)
+    {
+        int childIndexRight = items[index].HeapIndex * 2 + 2;
+        if (childIndexRight >= currentItemCount)
+            return -1;
+        return childIndexRight;
     }
 
     void SortDown(T item)
@@ -124,5 +181,7 @@ public interface IHeapItem<T> : IComparable<T>
         get;
         set;
     }
+
+    float getFCost();
 
 }
