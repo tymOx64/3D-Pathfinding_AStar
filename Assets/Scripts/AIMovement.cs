@@ -22,7 +22,9 @@ public class AIMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //AUSKOMMENTIEREN FALLS AI MOVEMENT GEWUENSCHT ************************************************** ---->>>>>>>>>
+
+        moveSpeed = 0.0f;
     }
 
     public AIMovement()

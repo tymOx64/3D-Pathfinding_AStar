@@ -20,8 +20,8 @@ public class Heap<T> where T : IHeapItem<T>
         SortUp(item);
         currentItemCount++;
 
-        Debug.Log("***** AFTER ADD ITEM******");
-        ConsistencyCheck();
+        //Debug.Log("***** AFTER ADD ITEM******");
+        //ConsistencyCheck();
     }
 
     public T RemoveFirst()
@@ -32,8 +32,8 @@ public class Heap<T> where T : IHeapItem<T>
         items[0].HeapIndex = 0;
         SortDown(items[0]);
 
-        Debug.Log("***** AFTER REMOVE FIRST ******");
-        ConsistencyCheck();
+        //Debug.Log("***** AFTER REMOVE FIRST ******");
+        //ConsistencyCheck();
 
         return firstItem;
     }
@@ -92,7 +92,7 @@ public class Heap<T> where T : IHeapItem<T>
 
     int GetChildIndexLeft(int index)
     {
-        int childIndexLeft = items[index].HeapIndex * 2 + 1;
+        int childIndexLeft = index * 2 + 1;
         if (childIndexLeft >= currentItemCount)
             return -1;
         return childIndexLeft;
@@ -100,7 +100,7 @@ public class Heap<T> where T : IHeapItem<T>
 
     int GetChildIndexRight(int index)
     {
-        int childIndexRight = items[index].HeapIndex * 2 + 2;
+        int childIndexRight = index * 2 + 2;
         if (childIndexRight >= currentItemCount)
             return -1;
         return childIndexRight;

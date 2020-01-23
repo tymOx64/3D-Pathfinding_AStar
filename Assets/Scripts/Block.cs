@@ -84,8 +84,11 @@ public class Block : IHeapItem<Block>
     }
 
 
-
-
+    float approxFactor = 1.0f;
+    float getAdjustedFCost()
+    {
+        return gCost * approxFactor + hCost;
+    }
 
     /// <summary>
     /// determine the block with the lowest fCost; if equal, hCost serves as a tie-breaker
@@ -93,7 +96,7 @@ public class Block : IHeapItem<Block>
     /// <param name="otherBlock">the block to be compared to</param>
     public int CompareTo(Block otherBlock)
     {
-        int compare = getFCost().CompareTo(otherBlock.getFCost());
+        int compare = getAdjustedFCost().CompareTo(otherBlock.getAdjustedFCost());
         if(compare == 0)
         {
             compare = hCost.CompareTo(otherBlock.hCost);

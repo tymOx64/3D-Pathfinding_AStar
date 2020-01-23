@@ -241,8 +241,6 @@ public class World : MonoBehaviour
 
     }
 
-    float totalTimePathfinding = 0f;
-
     List<List<Block>> aStarListsOfVistedBlocks = new List<List<Block>>();
 
     /// <summary>
@@ -322,9 +320,8 @@ public class World : MonoBehaviour
                         UnityEngine.Debug.Log("Time elapsed whilst checking if a neighbourblock is already in the closed set: " + swCalcdistance.ElapsedMilliseconds + " ms"); //23ms   742ms
                         UnityEngine.Debug.Log("Time elapsed whilst assigning the values: " + swSetValues.ElapsedMilliseconds + " ms"); //13ms  96ms
                         UnityEngine.Debug.Log("Time elapsed whilst grabbing the 1st block from the heap (and maintaining its structure!): " + swRemoveFirstFromHeap.ElapsedMilliseconds + " ms");
+                        UnityEngine.Debug.Log("Total cost of the path: " + endBlock.gCost);
 
-                        totalTimePathfinding += swNeighbourblocks.ElapsedMilliseconds + swCalcdistance.ElapsedMilliseconds;
-                        totalTimePathfinding += swSetValues.ElapsedMilliseconds;
 
                         aStarListsOfVistedBlocks.Add(visitedBlocks);
                         UnityEngine.Debug.Log("PATH COMPLETE");
@@ -601,8 +598,6 @@ public class World : MonoBehaviour
             swA.Stop();
             UnityEngine.Debug.Log("Time used to calculate all paths/edges: " + swA.ElapsedMilliseconds + " ms");
 
-            UnityEngine.Debug.Log("Total time Pathfinding: " + totalTimePathfinding + " ms");
-
             Stopwatch swB = new Stopwatch();
             swB.Start();
 
@@ -648,8 +643,9 @@ public class World : MonoBehaviour
                 redBlocks.RemoveAt(0);
             }
             redBlocks.Add(Instantiate(testCubeRed, block.worldPosition + new Vector3(0.2f, 0.2f, 0.2f), Quaternion.identity));
-            yield return new WaitForSeconds(0.15f);
-        }        
+            yield return new WaitForSeconds(0.06f);
+        }
+        yield return new WaitForSeconds(2f);
     }
 
     public IEnumerator VisualizedAllAStarCalcs()
@@ -751,11 +747,11 @@ public class World : MonoBehaviour
         //hardcoded nonrandom spawn
         randomlySpawnedApples.Add(getFirstNonsolidBlockAboveGround(AIcam.transform.position));
         
-        Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(55f, 65f, 39f));
+        /*Block blockA = getFirstNonsolidBlockAboveGround(new Vector3(65f, 65f, 39f));
         blockA.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockA);
 
-        /*Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
+        Block blockB = getFirstNonsolidBlockAboveGround(new Vector3(50f, 65f, 29f));
         blockB.BuildBlock(Block.BlockType.APPLE);
         randomlySpawnedApples.Add(blockB);*/
 
