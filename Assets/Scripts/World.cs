@@ -9,7 +9,8 @@ using Unity.Jobs;
 using Debug = UnityEngine.Debug;
 
 /// <summary>
-/// The world MonoBehavior is in charge of creating, updating and destroying chunks based on the player's location.
+/// The world MonoBehavior is in charge of creating, updating and destroying 
+/// based on the player's location.
 /// These mechanisms are completed with the help of Coroutines (IEnumerator methods). https://docs.unity3d.com/Manual/Coroutines.html
 /// Der Unterschied zwischen Koroutinen und Funktionen ist, dass Koroutinen ihren Ablauf unterbrechen und später wieder aufnehmen können, wobei sie ihren Status beibehalten
 /// </summary>
@@ -147,16 +148,6 @@ public class World : MonoBehaviour
         int startY = 17;
         int startZ = 2;
 
-        //Build first chunk
-
-
-        BuildChunkAt(startX, startY, startZ);
-
-
-        BuildChunkAt(startX + 1, startY, startZ); //?
-
-
-
         //Build the whole world from the position of the first chunk.
 
 
@@ -167,12 +158,9 @@ public class World : MonoBehaviour
             {
 
 
-
-
-                // World Height equals 6 Chunks
+                // World Height equals 5 Chunks
                 BuildChunkAt(x, startY, z);
                 BuildChunkAt(x, startY + 1, z);
-                BuildChunkAt(x, startY, z);
                 BuildChunkAt(x, startY - 1, z);
                 BuildChunkAt(x, startY - 2, z);
                 BuildChunkAt(x, startY - 3, z);

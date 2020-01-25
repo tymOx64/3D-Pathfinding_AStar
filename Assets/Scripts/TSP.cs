@@ -60,7 +60,7 @@ namespace Assets.Scripts
                      SnapshotCurrentConfig();
                  }          
             }
-            //Debug.Log("Cost of optimized route: " + CalcCurrentCost());
+          
 
             return currentRoute;
         }                
