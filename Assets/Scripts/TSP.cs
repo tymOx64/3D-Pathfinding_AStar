@@ -158,7 +158,8 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// accepts a swap with a certain chance depending on sigma and the total amount our current path became worse
+        /// accepts a swap with a certain chance depending on sigma 
+        /// and the total amount our current path became worse
         /// </summary>
         bool AcceptSwap()
         {
@@ -168,7 +169,7 @@ namespace Assets.Scripts
                 return true;
 
             float delta = recentCost - currentCost;
-            float chance = (float)(Mathf.Exp((float)delta / (float)sigma));
+            float chance = (float)(Mathf.Exp((float)-delta / (float)sigma));
 
             float randomVal = UnityEngine.Random.Range(0f, 1f);
             //Debug.Log("Chance: " + chance);
